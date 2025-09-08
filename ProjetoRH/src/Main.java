@@ -4,7 +4,7 @@ import javax.swing.*;//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> 
 public class Main {
     public static void main(String[] args) {
 
-        JFrame frame = new JFrame("Janela com Checkbox Fullscreen");
+        JFrame frame = new JFrame("RHidle");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 300);
         frame.setLayout(null);
@@ -35,12 +35,8 @@ public class Main {
             }
         });
 
-        JFrame frame = new JFrame("Jogo de RH");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 300);
-
         // Carregar o ícone
-        ImageIcon icon = new ImageIcon("caminho/do/icone.png");
+        ImageIcon icon = new ImageIcon("src/imagens/icon.png");
         frame.setIconImage(icon.getImage()); // Define o ícone da janela
 
         frame.setVisible(true);
