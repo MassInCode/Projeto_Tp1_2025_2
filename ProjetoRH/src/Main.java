@@ -1,6 +1,7 @@
 import java.awt.*;
 import javax.swing.*;//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
 public class Main {
     public static void main(String[] args) {
 
@@ -36,7 +37,7 @@ public class Main {
         });
 
         // Carregar o ícone
-        ImageIcon icon = new ImageIcon("src/imagens/icon.png");
+        ImageIcon icon = new ImageIcon("assets/images/icon.png");
         frame.setIconImage(icon.getImage()); // Define o ícone da janela
 
         frame.setVisible(true);
