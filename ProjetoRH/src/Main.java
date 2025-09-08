@@ -35,6 +35,16 @@ public class Main {
             }
         });
 
+        JFrame frame = new JFrame("Jogo de RH");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 300);
+
+        // Carregar o ícone
+        ImageIcon icon = new ImageIcon("caminho/do/icone.png");
+        frame.setIconImage(icon.getImage()); // Define o ícone da janela
+
+        frame.setVisible(true);
+
         // Adicionar checkbox à janela
         frame.add(chkFullscreen);
 
