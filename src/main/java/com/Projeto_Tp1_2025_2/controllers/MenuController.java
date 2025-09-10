@@ -19,7 +19,7 @@ public class MenuController {
         if (label != null) {
             label.setText("Button was clicked!");
         }
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/Projeto_Tp1_2025_2/view/LoginView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/Projeto_Tp1_2025_2/view/Cadastro/CadastroView.fxml"));
         Scene scene = new Scene(loader.load());
 
         Stage stage = (Stage) label.getScene().getWindow(); // pega a janela atual

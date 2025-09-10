@@ -1,5 +1,0 @@
-Nome: 
-Senha: 
-Cargo: Funcionário
-Salario: 1000
-
