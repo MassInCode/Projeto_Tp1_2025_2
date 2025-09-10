@@ -1,5 +1,6 @@
 package com.Projeto_Tp1_2025_2.controllers;
 import com.Projeto_Tp1_2025_2.models.Funcionario;
+import com.Projeto_Tp1_2025_2.util.SaveUser;
 import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
@@ -15,7 +16,7 @@ public class CadastroController implements Initializable {
 
     @FXML private TextField tfNome;
     @FXML private TextField tfSenha;
-    @FXML private Slider slSalario;
+    @FXML private TextField tfSalario;
     @FXML private TextField tfID;
     @FXML private ChoiceBox<String> cbCargos;
 
@@ -27,31 +28,14 @@ public class CadastroController implements Initializable {
 
     //ACTION PARA CADASTRAR USUARIO
     @FXML private void btnCadastro(ActionEvent event) {
-        Funcionario funcionario = new Funcionario(Integer.parseInt(tfID.getText()), tfNome.getText(),cbCargos.getValue(), (double) slSalario.getValue(), tfSenha.getText());
-
-        try{
-            FileWriter escrita = new FileWriter("data/usuarios.txt", true);
-            escrita.write("Nome: " + funcionario.getNome());
-            escrita.write("\n");
-            escrita.write("Senha: " + funcionario.getSenha());
-            escrita.write("\n");
-            escrita.write("Cargo: " + funcionario.getCargo());
-            escrita.write("\n");
-            escrita.write("Salario: " + funcionario.getSalario());
-            escrita.write("\n");
-            escrita.write("ID: " + funcionario.getId());
-            escrita.write("\n\n");
-            escrita.close();
-        } catch (IOException e){System.out.println("Erro ao criar escrita");}
+        Funcionario funcionario = new Funcionario(Integer.parseInt(tfID.getText()), tfNome.getText(),cbCargos.getValue(), Double.parseDouble(tfSalario.getText()), tfSenha.getText());
+        SaveUser.saveuser(funcionario);
     }
 
 
     //ACTION PARA IR PARA A TELA DE LOGIN
     @FXML private void btnSwitchLogar(ActionEvent event) throws IOException {
-
-        SceneSwitcher switcher = new SceneSwitcher();
-        switcher.sceneswitcher(event, "Login", "/com/Projeto_Tp1_2025_2/view/Login/LoginView.fxml");
-
+        SceneSwitcher.sceneswitcher(event, "Login", "/com/Projeto_Tp1_2025_2/view/Login/LoginView.fxml");
     }
 
 
