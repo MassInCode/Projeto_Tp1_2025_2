@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="699.0" prefWidth="1018.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.LoginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="699.0" prefWidth="1018.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.CadastroController">
    <children>
       <Pane layoutX="195.0" layoutY="61.0" prefHeight="562.0" prefWidth="629.0" style="-fx-background-color: grey;">
          <children>
@@ -18,6 +18,7 @@
             <Slider fx:id="slSalario" layoutX="175.0" layoutY="329.0" majorTickUnit="500.0" max="10000.0" prefHeight="38.0" prefWidth="279.0" showTickLabels="true" showTickMarks="true" value="1000.0" />
             <ChoiceBox fx:id="cbCargos" layoutX="175.0" layoutY="391.0" prefHeight="38.0" prefWidth="279.0" />
             <Button layoutX="151.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnApagarBancodeDados" prefHeight="80.0" prefWidth="328.0" style="-fx-background-color: red;" text="Apagar o Banco de Dados kkkkkkkkkkkkk calma estagiario" />
+            <Button layoutX="242.0" layoutY="113.0" mnemonicParsing="false" onAction="#btnSwitchLogar" prefHeight="38.0" prefWidth="146.0" text="Ja tenho conta" />
          </children>
       </Pane>
    </children>
