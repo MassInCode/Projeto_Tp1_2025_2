@@ -7,18 +7,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="699.0" prefWidth="1018.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.LoginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="699.0" prefWidth="1018.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.CadastroController">
    <children>
-      <Pane layoutX="195.0" layoutY="69.0" prefHeight="562.0" prefWidth="629.0" style="-fx-background-color: grey;">
+      <Pane layoutX="195.0" layoutY="61.0" prefHeight="562.0" prefWidth="629.0" style="-fx-background-color: grey;">
          <children>
-            <TextField fx:id="tfNome" layoutX="175.0" layoutY="179.0" prefHeight="38.0" prefWidth="279.0" promptText="Nome" />
+            <TextField fx:id="tfNome" layoutX="175.0" layoutY="174.0" prefHeight="38.0" prefWidth="279.0" promptText="Nome" />
             <PasswordField fx:id="tfSenha" layoutX="175.0" layoutY="229.0" prefHeight="38.0" prefWidth="279.0" promptText="Senha" />
             <Button layoutX="267.0" layoutY="464.0" mnemonicParsing="false" onAction="#btnCadastro" prefHeight="38.0" prefWidth="95.0" text="Cadastrar" />
             <TextField fx:id="tfID" layoutX="175.0" layoutY="281.0" prefHeight="38.0" prefWidth="279.0" promptText="ID" />
             <ChoiceBox fx:id="cbCargos" layoutX="175.0" layoutY="391.0" prefHeight="38.0" prefWidth="279.0" />
             <Button layoutX="151.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnApagarBancodeDados" prefHeight="80.0" prefWidth="328.0" style="-fx-background-color: red;" text="Apagar o Banco de Dados kkkkkkkkkkkkk calma estagiario" />
             <Button layoutX="242.0" layoutY="113.0" mnemonicParsing="false" onAction="#btnSwitchLogar" prefHeight="38.0" prefWidth="146.0" text="Ja tenho conta" />
-            <TextField fx:id="tfSalario" layoutX="176.0" layoutY="335.0" prefHeight="38.0" prefWidth="279.0" />
+            <TextField fx:id="tfSalario" layoutX="176.0" layoutY="336.0" prefHeight="38.0" prefWidth="279.0" />
          </children>
       </Pane>
    </children>
