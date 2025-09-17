@@ -11,7 +11,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         try {
             // Carrega o FXML do teste (onde ficará o grid 3D)
-            Parent root = FXMLLoader.load(getClass().getResource("/com/Projeto_Tp1_2025_2/view/Menu.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/com/Projeto_Tp1_2025_2/view/teste.fxml"));
 
             Scene scene = new Scene(root);
 
