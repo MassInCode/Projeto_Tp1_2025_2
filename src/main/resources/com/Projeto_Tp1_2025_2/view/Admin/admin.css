@@ -1,0 +1,94 @@
+.anchorpane {
+    -fx-background-color: #652F90;
+}
+
+.telaaction {
+    -fx-background-size: 1200 900;
+    -fx-background-radius: 15 15 15 15;
+    -fx-border-radius: 15 15 15 15;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, #000000, 40, 0, 1, 1);
+
+}
+
+Button  {
+    -fx-background-radius: 10 10 10 10;
+    -fx-border-radius: 10 10 10 10;
+    -fx-background-color: #2F2A4F;
+}
+
+Button:hover {
+    -fx-background-color: #4D4582;
+}
+
+.lineedit {
+    -fx-background-radius: 8 8 8 8;
+    -fx-border-radius: 8 8 8 8;
+}
+
+#btn_entrar:hover {
+    -fx-background-color: #72CC84;
+}
+
+#btn_sair:hover {
+    -fx-background-color: #F0504C;
+}
+
+.table-view {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #DDD;
+    -fx-border-width: 1;
+    -fx-padding: 5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 2, 2);
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #2F2A4F;
+    -fx-background-radius: 10 10 0 0;
+    -fx-border-radius: 10 10 0 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 8;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER;
+}
+
+.table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #EEE transparent;
+    -fx-padding: 5;
+}
+
+.table-row-cell:filled:hover {
+    -fx-background-color: #F4F4F9;
+}
+
+.table-row-cell:filled:selected {
+    -fx-background-color: #4D4582;
+    -fx-text-fill: white;
+}
+
+.table-cell {
+    -fx-padding: 8;
+    -fx-text-fill: #333;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.tool-bar {
+    -fx-background-color: white;
+    -fx-padding: 8;
+    -fx-spacing: 10;
+    -fx-background-insets: 0;
+    -fx-background-radius: 10 10 10 10;
+    -fx-border: none;
+}

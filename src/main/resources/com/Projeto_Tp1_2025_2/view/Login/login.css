@@ -1,6 +1,7 @@
+
+/*
 .anchorpane {
     -fx-background-color: #1C2826;
-
 
 }
 
@@ -29,6 +30,43 @@ Button:hover {
 
 .btn_entrar:hover {
     -fx-background-color: #9FE897;
+}
+
+.btn_sair:hover {
+    -fx-background-color: #F0504C;
+}
+*/
+
+.anchorpane {
+    -fx-background-color: #652F90;
+}
+
+.telaaction {
+    -fx-background-size: 1200 900;
+    -fx-background-radius: 15 15 15 15;
+    -fx-border-radius: 15 15 15 15;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, #000000, 40, 0, 1, 1);
+
+}
+
+Button  {
+    -fx-background-radius: 15 15 15 15;
+    -fx-border-radius: 15 15 15 15;
+    -fx-background-color: #2F2A4F;
+}
+
+Button:hover {
+    -fx-background-color: #4D4582;
+}
+
+.lineedit {
+    -fx-background-radius: 8 8 8 8;
+    -fx-border-radius: 8 8 8 8;
+}
+
+.btn_entrar:hover {
+    -fx-background-color: #72CC84;
 }
 
 .btn_sair:hover {

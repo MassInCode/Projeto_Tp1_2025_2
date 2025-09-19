@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class Main extends Application {
     @Override
@@ -27,8 +28,11 @@ public class Main extends Application {
             primaryStage.setScene(scene);
             primaryStage.show();
 
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
+        }
+        catch (IOException e) {
+            System.out.println(e.getCause().toString() + " : " + e.getMessage());
         }
     }
 
