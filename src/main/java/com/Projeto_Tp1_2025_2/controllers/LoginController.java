@@ -1,5 +1,7 @@
 package com.Projeto_Tp1_2025_2.controllers;
 
+import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -49,6 +51,11 @@ public class LoginController {
         }
 
         tab_telaInicial.setVisible(true);
+    }
+
+    @FXML
+    private void btn_candidatura(ActionEvent event) throws IOException {
+        SceneSwitcher.sceneswitcher(event, "candidatura", "/com/Projeto_Tp1_2025_2/view/Candidatura/candidatura.fxml");
     }
 
     @FXML
