@@ -4,6 +4,7 @@ module Projeto_Tp1_2025_2 {
     requires org.controlsfx.controls;
     requires org.kordamp.bootstrapfx.core;
     requires javafx.graphics;
+    requires javafx.base;
 
     exports com.Projeto_Tp1_2025_2.main;
     opens com.Projeto_Tp1_2025_2.controllers to javafx.fxml;
