@@ -23,11 +23,11 @@
                      <children>
                         <VBox alignment="CENTER" layoutX="48.0" layoutY="114.0" prefHeight="83.0" prefWidth="317.0">
                            <children>
-                              <TextField promptText="Nome" styleClass="lineedit" />
+                              <TextField fx:id="ld_nome_cadastro" promptText="Nome" styleClass="lineedit" />
                               <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
-                              <PasswordField promptText="Senha" styleClass="lineedit" />
+                              <PasswordField fx:id="ld_senha_cadastro" promptText="Senha" styleClass="lineedit" />
                               <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
-                              <PasswordField promptText="Confirme sua senha" styleClass="lineedit" />
+                              <PasswordField fx:id="ld_senha2_cadastro" promptText="Confirme sua senha" styleClass="lineedit" />
                            </children>
                         </VBox>
                         <Label alignment="CENTER" layoutX="64.0" layoutY="40.0" prefHeight="50.0" prefWidth="284.0" text="Cadastro" textFill="#2f2a4f">
@@ -37,7 +37,7 @@
                         </Label>
                         <HBox alignment="CENTER" layoutX="106.0" layoutY="242.0" prefHeight="66.0" prefWidth="200.0">
                            <children>
-                              <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" styleClass="btn_entrar" text="Continuar" textFill="WHITE" />
+                              <Button mnemonicParsing="false" onAction="#onClickCadastroBtn" prefHeight="40.0" prefWidth="100.0" styleClass="btn_entrar" text="Continuar" textFill="WHITE" />
                               <Separator prefWidth="40.0" visible="false" />
                               <Button mnemonicParsing="false" onAction="#onClickCancelBtn" prefHeight="40.0" prefWidth="100.0" styleClass="btn_sair" text="Cancelar" textFill="WHITE" />
                            </children>

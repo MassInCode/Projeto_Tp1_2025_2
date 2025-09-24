@@ -1,5 +1,14 @@
 package com.Projeto_Tp1_2025_2.controllers;
 
+import com.Projeto_Tp1_2025_2.models.Usuario;
+import com.Projeto_Tp1_2025_2.util.Database;
+import com.Projeto_Tp1_2025_2.models.Administrador;
+
+import java.io.*;
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,9 +18,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class LoginController {
     @FXML
@@ -26,6 +32,21 @@ public class LoginController {
     private PasswordField ld_senha;
     @FXML
     private Button btn_login_entrar;
+
+
+    @FXML
+    private TextField ld_nome_cadastro;
+    @FXML
+    private PasswordField ld_senha_cadastro;
+    @FXML
+    private PasswordField ld_senha2_cadastro;
+
+    private final Map<String, String> funcoes = Map.of(
+            "ADMIN", "/com/Projeto_Tp1_2025_2/view/Admin/admin.fxml",
+            "CANDIDATURA", "/com/Projeto_Tp1_2025_2/view/Candidatura/candidatura.fxml",
+            "RECRUTAMENTO", "/com/Projeto_Tp1_2025_2/view/Recrutamento/recrutamento.fxml",
+            "FINANCEIRO", "/com/Projeto_Tp1_2025_2/view/Financeiro/financeiro.fxml"
+    );
 
     @FXML
     protected void changeTabLogin() {
@@ -42,9 +63,15 @@ public class LoginController {
     @FXML
     protected void onClickCancelBtn() {
         if (tab_telaLogin.isVisible()) {
+            // limpando os campos
+            ld_nome.setText("");
+            ld_senha.setText("");
             tab_telaLogin.setVisible(false);
         }
         else {
+            ld_senha_cadastro.setText("");
+            ld_senha2_cadastro.setText("");
+            ld_nome_cadastro.setText("");
             tab_telaCadastro.setVisible(false);
         }
 
@@ -53,16 +80,37 @@ public class LoginController {
 
     @FXML
     protected void onClickLoginBtn() throws IOException {
-        // validação do usuario e senha
+        Database db = new Database("src/main/resources/usuarios_login.json");
 
-        entrar();
+        Map<String, Object> a = db.searchMap("usuarios", "nome", "senha", ld_nome.getText(), ld_senha.getText());
+
+        if (a == null) {
+            System.out.println("Usuário não encontrado.");
+            return;
+        }
+
+        entrar(a.get("cargo").toString());
     }
 
     @FXML
-    private void entrar() throws IOException {
+    protected void onClickCadastroBtn() {
+        Database db = new Database("src/main/resources/usuarios_login.json");
 
+        if (!ld_senha_cadastro.getText().equals(ld_senha2_cadastro.getText())) {
+            System.out.println("Senha não confere.");
+            return;
+        }
+
+        Usuario a = new Usuario(ld_nome_cadastro.getText(), ld_senha_cadastro.getText(), "11111111111", "placeholder", "ADMIN");
+        db.addObject(a, "usuarios");
+
+        onClickCancelBtn(); // temporario
+    }
+
+    @FXML
+    private void entrar(String f) throws IOException {
         try {
-            var resource = getClass().getResource("/com/Projeto_Tp1_2025_2/view/Admin/admin.fxml");
+            var resource = getClass().getResource(funcoes.get(f));
             Parent root;
 
             if (resource != null) {
