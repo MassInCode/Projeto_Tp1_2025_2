@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="anchorpane" stylesheets="@../Admin/admin.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.CandidaturaController">
+   <children>
+      <AnchorPane layoutX="26.0" layoutY="21.0" prefHeight="678.0" prefWidth="1228.0" styleClass="telaaction" stylesheets="@../Admin/admin.css" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="21.0">
+         <children>
+            <HBox layoutX="291.0" layoutY="56.0" prefHeight="678.0" prefWidth="1228.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <ToolBar nodeOrientation="LEFT_TO_RIGHT" orientation="VERTICAL" prefHeight="678.0" prefWidth="158.0">
+                     <items>
+                        <Button mnemonicParsing="false" onAction="#btn_vagas" prefHeight="35.0" prefWidth="165.0" text="Vagas" textFill="WHITE" />
+                        <Button mnemonicParsing="false" onAction="#btn_candidatos" prefHeight="35.0" prefWidth="165.0" text="Candidato" textFill="WHITE" />
+                        <Separator orientation="VERTICAL" prefHeight="520.0" visible="false" />
+                        <Button fx:id="btn_sair" mnemonicParsing="false" onAction="#onClickSair" prefHeight="35.0" prefWidth="165.0" text="Sair" textFill="WHITE" />
+                     </items>
+                  </ToolBar>
+                  <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
+                  <VBox prefHeight="678.0" prefWidth="1047.0">
+                     <children>
+                        <Separator orientation="VERTICAL" prefHeight="5.0" visible="false" />
+                        <HBox>
+                           <children>
+                              <TextField prefHeight="30.0" prefWidth="1000.0" promptText="Buscar" styleClass="lineedit" />
+                              <Separator prefWidth="40.0" visible="false" />
+                              <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="130.0" text="Procurar" textFill="WHITE" />
+                           </children>
+                        </HBox>
+                        <Separator orientation="VERTICAL" prefHeight="15.0" visible="false" />
+                        <AnchorPane prefHeight="656.0" prefWidth="1031.0">
+                           <children>
+                              <AnchorPane fx:id="tab_candidatos" prefHeight="639.0" prefWidth="1031.0" visible="false">
+                                 <children>
+                                    <TableView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="618.0" prefWidth="1031.0">
+                                       <columns>
+                                          <TableColumn editable="false" minWidth="-Infinity" prefWidth="299.0" resizable="false" text="Nome" />
+                                          <TableColumn editable="false" minWidth="-Infinity" prefWidth="223.0" resizable="false" text="CPF" />
+                                          <TableColumn editable="false" minWidth="-Infinity" prefWidth="348.0" resizable="false" text="Email" />
+                                          <TableColumn editable="false" minWidth="-Infinity" prefWidth="151.0" resizable="false" text="Status" />
+                                       </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane fx:id="tab_vagas" layoutY="-1.0" prefHeight="639.0" prefWidth="1031.0" visible="false">
+                                 <children>
+                                    <TableView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="618.0" prefWidth="1031.0">
+                                       <columns>
+                                          <TableColumn editable="false" minWidth="-Infinity" prefWidth="289.0" resizable="false" text="Vaga" />
+                                          <TableColumn editable="false" minWidth="-Infinity" prefWidth="218.0" resizable="false" text="Numero de Vagas" />
+                                          <TableColumn editable="false" minWidth="-Infinity" prefWidth="168.0" resizable="false" text="Candidatos" />
+                                          <TableColumn editable="false" minWidth="-Infinity" prefWidth="199.0" resizable="false" text="Codigo da Vaga" />
+                                          <TableColumn editable="false" minWidth="-Infinity" prefWidth="139.0" resizable="false" text="Status" />
+                                       </columns>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </VBox>
+                  <Separator prefWidth="20.0" visible="false" />
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

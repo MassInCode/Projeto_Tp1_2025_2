@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -76,6 +78,16 @@ public class LoginController {
         }
 
         tab_telaInicial.setVisible(true);
+    }
+
+    @FXML
+    private void btn_candidatura(ActionEvent event) throws IOException {
+        SceneSwitcher.sceneswitcher(event, "Candidatura", "/com/Projeto_Tp1_2025_2/view/Candidatura/candidatura.fxml");
+    }
+
+    @FXML
+    private void btn_recrutamento(ActionEvent event) throws IOException {
+        SceneSwitcher.sceneswitcher(event, "Recrutamento", "/com/Projeto_Tp1_2025_2/view/Recrutamento/MenuRecrutamento .fxml");
     }
 
     @FXML
