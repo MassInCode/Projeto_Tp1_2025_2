@@ -55,7 +55,12 @@ public class LoginController {
 
     @FXML
     private void btn_candidatura(ActionEvent event) throws IOException {
-        SceneSwitcher.sceneswitcher(event, "candidatura", "/com/Projeto_Tp1_2025_2/view/Candidatura/candidatura.fxml");
+        SceneSwitcher.sceneswitcher(event, "Candidatura", "/com/Projeto_Tp1_2025_2/view/Candidatura/candidatura.fxml");
+    }
+
+    @FXML
+    private void btn_recrutamento(ActionEvent event) throws IOException {
+        SceneSwitcher.sceneswitcher(event, "Recrutamento", "/com/Projeto_Tp1_2025_2/view/Recrutamento/MenuRecrutamento .fxml");
     }
 
     @FXML
