@@ -32,7 +32,7 @@ public class Usuario {
         this.cpf = cpf;
     }
 
-    public boolean validarCPF(String cpf) {
+    private boolean validarCPF(String cpf) {
         /*
         cpf = cpf.replaceAll("\\D", ""); // tira os . e -
 
@@ -65,7 +65,7 @@ public class Usuario {
     }
 
     // a senha vai precisar ter no mínimo 8 de tamanho, ter letras maiusculas e numeros
-    public String validarSenha(String senha) {
+    private String validarSenha(String senha) {
         /* comentado pra debug
         if (senha.length() < 8) {
             return "A senha deve ter no mínimo 8 caracteres.";

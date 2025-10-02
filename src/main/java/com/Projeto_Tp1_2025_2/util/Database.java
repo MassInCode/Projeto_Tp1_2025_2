@@ -14,8 +14,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class Database {
-    ObjectMapper mapper = new ObjectMapper();;
-    String path;
+    private ObjectMapper mapper = new ObjectMapper();;
+    private String path;
 
     public Database(String path_) {
         this.path = path_;
@@ -37,43 +37,41 @@ public class Database {
         return info;
     }
 
-    public Map<String, Object> searchMap(String data, String key, String value) throws IOException {
+    private boolean comparator(String[] kvalues, Map<String, Object> mapa) {
+        if (kvalues.length == 0) return false;
+        boolean v = true;
+
+        System.out.println(mapa);
+
+        for (int i = 0; i < kvalues.length - 1; i+=2) {
+            Object current = mapa.get(kvalues[i]);
+
+            System.out.println(kvalues[i] + " : " + current);
+
+            if (current == null){
+                return false;
+            }
+
+            System.out.println("passou");
+            v &= current.equals(kvalues[i + 1]);
+        }
+
+        return v;
+    }
+
+    public Map<String, Object> searchMap(String data, String... kvalues) throws IOException {
         /**
          * Retorna o mapa específico dado a key e o value. Por exemplo, caso key = "nome" e value = "kaio", ele vai retornar o mapa onde tem essas informações.
          * Caso não ache o mapa, irá retornar null.
          *
          * @param data Lista do json
-         * @param key Chave da procura
-         * @param value Valor da procura
+         * @param kvalues Uma lista de pares de (key, value). Exemplo: "nome", "kaio", "senha", "123".
          */
 
         List<Map<String, Object>> info = this.getData(data);
 
         for (Map<String, Object> mapa : info) {
-            if (mapa.get(key).equals(value)) {
-                return mapa;
-            }
-        }
-
-        return null;
-    }
-
-    public Map<String, Object> searchMap(String data, String key1, String key2, String value1, String value2) throws IOException {
-        /**
-         * Retorna o mapa específico dado a key1 ser igual a value1 e a key2 ser igual a value2
-         * Caso não ache o mapa, irá retornar null.
-         *
-         * @param data Lista do json
-         * @param key1 Chave da procura 1
-         * @param key2 Chave da procura 2
-         * @param value1 Valor da procura 1
-         * @param value2 Valor da procura 2
-         */
-
-        List<Map<String, Object>> info = this.getData(data);
-
-        for (Map<String, Object> mapa : info) {
-            if (mapa.get(key1).equals(value1) && mapa.get(key2).equals(value2)) {
+            if (comparator(kvalues, mapa)) {
                 return mapa;
             }
         }
