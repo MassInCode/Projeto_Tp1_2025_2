@@ -12,8 +12,9 @@ public class Candidato extends Usuario {
     private String formacao;
     private ArrayList<Vaga> vagas = new ArrayList<>();
 
-    public Candidato(String nome, String senha, String cpf, String email, String cargo) throws InvalidPassword, InvalidCPF {
+    public Candidato(String nome, String senha, String cpf, String email, String cargo, String formacao) throws InvalidPassword, InvalidCPF {
         super(nome, senha, cpf, email, cargo);
+        this.formacao = formacao;
     }
 
     boolean candidatar(Vaga vaga){
