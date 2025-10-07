@@ -3,7 +3,6 @@ package com.Projeto_Tp1_2025_2.models.recrutador;
 import com.Projeto_Tp1_2025_2.exceptions.InvalidCPF;
 import com.Projeto_Tp1_2025_2.exceptions.InvalidPassword;
 import com.Projeto_Tp1_2025_2.models.Usuario;
-import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 
 import java.time.LocalDate;
 
