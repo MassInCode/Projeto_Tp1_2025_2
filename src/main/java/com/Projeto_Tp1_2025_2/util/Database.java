@@ -14,7 +14,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class Database {
-    ObjectMapper mapper = new ObjectMapper();;
+    ObjectMapper mapper = new ObjectMapper();
     String path;
 
     public Database(String path_) {

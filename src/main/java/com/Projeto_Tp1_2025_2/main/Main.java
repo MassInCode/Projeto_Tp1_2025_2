@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 

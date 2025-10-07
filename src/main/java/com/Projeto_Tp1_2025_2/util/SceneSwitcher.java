@@ -5,6 +5,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class SceneSwitcher{
@@ -12,14 +14,46 @@ public class SceneSwitcher{
      * String fxmlPath: caminho pro arquivo fxml da tela
      * ActionEvent event: para pegar em que janela esta atualmente
      * */
-    public static void sceneswitcher(ActionEvent event, String title, String fxmlPath) throws IOException {
+    public static void sceneswitcher(ActionEvent event, String title, String fxmlPath) throws FileNotFoundException {
         try{
-            Parent root = FXMLLoader.load(SceneSwitcher.class.getResource(fxmlPath));   //constroe as coisas do fxml em java
+            var resource = SceneSwitcher.class.getResource(fxmlPath); //constroe as coisas do fxml em java
+            Parent root;
+
+            if (resource != null) {
+                root = FXMLLoader.load(resource);
+            }
+            else {
+                throw new FileNotFoundException("Erro no path do recurso fxml");
+            }
+
             Scene scene = new Scene(root);                                              //cria uma nova "cena" com as coisas que foram construidas do fxml
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();    //pega a janela que esta
             stage.setScene(scene);                                                      //coloca a nova cena na janela
             stage.setTitle(title);                                                      //coloca o nome na janbela
             stage.show();                                                               //mostra tudo
-        } catch (IOException e) {e.printStackTrace();}
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sceneswitcher(Stage stage, String title, String fxmlPath) throws FileNotFoundException {
+        try {
+            var resource = SceneSwitcher.class.getResource(fxmlPath);
+            Parent root;
+
+            if (resource != null) {
+                root = FXMLLoader.load(resource);
+            } else {
+                throw new FileNotFoundException("Erro no path do recurso fxml");
+            }
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle(title);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
