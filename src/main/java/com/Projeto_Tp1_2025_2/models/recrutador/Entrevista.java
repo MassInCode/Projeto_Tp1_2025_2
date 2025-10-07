@@ -1,6 +1,7 @@
 package com.Projeto_Tp1_2025_2.models.recrutador;
 
 import com.Projeto_Tp1_2025_2.controllers.CandidaturaController;
+import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
