@@ -10,4 +10,5 @@ module Projeto_Tp1_2025_2 {
     exports com.Projeto_Tp1_2025_2.main;
     opens com.Projeto_Tp1_2025_2.controllers to javafx.fxml;
     opens com.Projeto_Tp1_2025_2.models to javafx.base;
+    opens com.Projeto_Tp1_2025_2.models.admin to javafx.base;
 }
