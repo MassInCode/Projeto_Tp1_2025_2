@@ -12,4 +12,8 @@ public class Contratacao {
         this.dataContratacao = data;
     }
 
+    public void autorizarContratacao(Candidato candidato){
+
+    }
+
 }
