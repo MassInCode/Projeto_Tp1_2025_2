@@ -14,14 +14,13 @@ public class Entrevista {
     public Entrevista(LocalDateTime data, String avaliador, double nota) {
         this.data = data;
         this.avaliador = avaliador;
+    }
+
+    void registraNota(double nota){
         this.nota = nota;
     }
 
-    public void registrarNota(double nota){
-
-    }
-
-    public void agendarEntrevista(Candidato candidato, LocalDateTime data, String avaliador){
+    public void reagendarEntrevista(Candidato candidato, LocalDateTime data, String avaliador){
 
     }
 }
