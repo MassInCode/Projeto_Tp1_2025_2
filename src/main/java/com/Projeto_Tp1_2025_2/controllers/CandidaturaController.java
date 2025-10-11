@@ -23,9 +23,7 @@ public class CandidaturaController {
 
     @FXML
     private void onClickSair(ActionEvent event) throws IOException {
-
         SceneSwitcher.sceneswitcher(event, "Login", "/com/Projeto_Tp1_2025_2/view/Login/login.fxml");
-
     }
 
     @FXML

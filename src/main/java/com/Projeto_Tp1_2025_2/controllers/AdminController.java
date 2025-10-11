@@ -1,24 +1,28 @@
 package com.Projeto_Tp1_2025_2.controllers;
 
+import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map;
 
 public class AdminController {
-    @FXML
-    private AnchorPane janelaSobreposta;
-    private Button btn_sair;
+    public static final Map<String, String> telas = Map.of(
+            "LOGIN", "/com/Projeto_Tp1_2025_2/view/Login/login.fxml",
+            "ADMIN", "/com/Projeto_Tp1_2025_2/view/Admin/admin.fxml",
+            "CANDIDATURA", "/com/Projeto_Tp1_2025_2/view/Candidatura/candidatura.fxml",
+            "RECRUTAMENTO", "/com/Projeto_Tp1_2025_2/view/Recrutamento/recrutamento.fxml",
+            "FINANCEIRO", "/com/Projeto_Tp1_2025_2/view/Financeiro/financeiro.fxml"
+    );
+
+    @FXML private AnchorPane janelaSobreposta;
+    @FXML private Button btn_sair;
 
     @FXML
     protected void onClickSair() throws IOException {
@@ -61,22 +65,7 @@ public class AdminController {
 
     @FXML
     private void sair() throws IOException {
-        try {
-            var resource = getClass().getResource("/com/Projeto_Tp1_2025_2/view/Login/login.fxml");
-            Parent root;
-
-            if (resource != null) {
-                root = FXMLLoader.load(resource);
-            } else {
-                throw new FileNotFoundException("Erro no path do recurso fxml");
-            }
-
-            Stage stage = (Stage) btn_sair.getScene().getWindow();
-            stage.setScene(new Scene(root));
-        }
-
-        catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
+        Stage stage = (Stage) btn_sair.getScene().getWindow();
+        SceneSwitcher.sceneswitcher(stage, "Sistema de RH", telas.get("LOGIN"));
     }
 }

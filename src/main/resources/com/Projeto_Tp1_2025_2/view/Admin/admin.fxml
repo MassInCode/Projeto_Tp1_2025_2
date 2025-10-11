@@ -25,12 +25,12 @@
                     <children>
                         <ToolBar nodeOrientation="LEFT_TO_RIGHT" orientation="VERTICAL" prefHeight="678.0" prefWidth="158.0">
                             <items>
-                                <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Cadastrar" textFill="WHITE" onAction="#cadastrar"/>
+                                <Button mnemonicParsing="false" onAction="#cadastrar" prefHeight="35.0" prefWidth="165.0" text="Cadastrar" textFill="WHITE" />
                                 <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Gerar Relatório" textFill="WHITE" />
                                 <Button mnemonicParsing="false" onAction="#regras" prefHeight="35.0" prefWidth="165.0" text="Regras Salariais" textFill="WHITE" />
                                 <Button mnemonicParsing="false" onAction="#gerarf" prefHeight="35.0" prefWidth="165.0" text="Gerar Folha de Pagamento" textFill="WHITE" />
                                 <Button mnemonicParsing="false" onAction="#exporterma" prefHeight="35.0" prefWidth="165.0" text="Exportar Folha" textFill="WHITE" />
-                                <Separator orientation="VERTICAL" prefHeight="520.0" visible="false" />
+                                <Separator orientation="VERTICAL" prefHeight="390.0" visible="false" />
                                 <Button fx:id="btn_sair" mnemonicParsing="false" onAction="#onClickSair" prefHeight="35.0" prefWidth="165.0" text="Sair" textFill="WHITE" />
                             </items>
                         </ToolBar>
@@ -52,25 +52,25 @@
                                     <!-- Tabela padrão de funcionários -->
                                     <TableView fx:id="tabelaFuncionarios" prefHeight="618.0" prefWidth="930.0">
                                         <columns>
-                                            <TableColumn text="Nome" prefWidth="180.0"/>
-                                            <TableColumn text="CPF" prefWidth="150.0"/>
-                                            <TableColumn text="Email" prefWidth="200.0"/>
-                                            <TableColumn text="Perfil" prefWidth="150.0"/>
-                                            <TableColumn text="Departamento" prefWidth="190.0"/>
-                                            <TableColumn text="Status" prefWidth="150.0"/>
+                                            <TableColumn prefWidth="180.0" text="Nome" />
+                                            <TableColumn prefWidth="150.0" text="CPF" />
+                                            <TableColumn prefWidth="200.0" text="Email" />
+                                            <TableColumn prefWidth="150.0" text="Perfil" />
+                                            <TableColumn prefWidth="190.0" text="Departamento" />
+                                            <TableColumn prefWidth="150.0" text="Status" />
                                         </columns>
                                     </TableView>
 
                                     <!-- Tabela de Regras Salariais -->
-                                    <TableView fx:id="tabelaSalarios" visible="false" prefHeight="618.0" prefWidth="930.0">
+                                    <TableView fx:id="tabelaSalarios" prefHeight="618.0" prefWidth="930.0" visible="false">
                                         <columns>
-                                            <TableColumn text="Nome" prefWidth="180.0"/>
-                                            <TableColumn text="Salário" prefWidth="150.0"/>
-                                            <TableColumn text="Bônus" prefWidth="100.0"/>
-                                            <TableColumn text="Alimentação" prefWidth="100.0"/>
-                                            <TableColumn text="Transporte" prefWidth="100.0"/>
-                                            <TableColumn text="Cargo" prefWidth="150.0"/>
-                                            <TableColumn text="Tipo Contratação" prefWidth="150.0"/>
+                                            <TableColumn prefWidth="180.0" text="Nome" />
+                                            <TableColumn prefWidth="150.0" text="Salário" />
+                                            <TableColumn prefWidth="100.0" text="Bônus" />
+                                            <TableColumn prefWidth="100.0" text="Alimentação" />
+                                            <TableColumn prefWidth="100.0" text="Transporte" />
+                                            <TableColumn prefWidth="150.0" text="Cargo" />
+                                            <TableColumn prefWidth="150.0" text="Tipo Contratação" />
                                         </columns>
                                     </TableView>
                                 </StackPane>
@@ -99,7 +99,7 @@
                                             <MenuItem mnemonicParsing="false" text="Action 2" />
                                         </items>
                                     </MenuButton>
-                                    <Button layoutX="223.0" onAction="#fecharJanela" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="24.0" style="-fx-background-color: red;" text="X" />
+                                    <Button layoutX="223.0" layoutY="2.0" mnemonicParsing="false" onAction="#fecharJanela" prefHeight="25.0" prefWidth="24.0" style="-fx-background-color: red;" text="X" />
                                 </children>
                                 <effect>
                                     <Blend />

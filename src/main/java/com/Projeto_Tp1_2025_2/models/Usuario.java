@@ -2,9 +2,15 @@ package com.Projeto_Tp1_2025_2.models;
 
 import com.Projeto_Tp1_2025_2.exceptions.InvalidCPF;
 import com.Projeto_Tp1_2025_2.exceptions.InvalidPassword;
+import com.Projeto_Tp1_2025_2.util.Database;
 
 public class Usuario {
-    private static int contador = 0; // vai ser o id
+    private static int contador; // vai ser o id
+
+    static {
+        Database db = new Database("src/main/resources/usuarios_login.json");
+        contador = db.getActualId();
+    }
 
     private int id;
     private String nome;

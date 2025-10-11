@@ -9,6 +9,12 @@ import javafx.stage.Stage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+/*
+
+para melhor uso, dá para usar o hashmap `telas` em AdminController
+
+ */
+
 public class SceneSwitcher{
     /*String title: nome da janela
      * String fxmlPath: caminho pro arquivo fxml da tela
@@ -37,7 +43,7 @@ public class SceneSwitcher{
         }
     }
 
-    public static void sceneswitcher(Stage stage, String title, String fxmlPath) throws FileNotFoundException {
+    public static void sceneswitcher(Stage stage, String title, String fxmlPath) throws FileNotFoundException { // tentar modificar o title pelo fxml
         try {
             var resource = SceneSwitcher.class.getResource(fxmlPath);
             Parent root;

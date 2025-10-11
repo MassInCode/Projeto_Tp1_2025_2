@@ -4,11 +4,12 @@ import com.Projeto_Tp1_2025_2.exceptions.InvalidCPF;
 import com.Projeto_Tp1_2025_2.exceptions.InvalidPassword;
 import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.util.Database;
+import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
+import com.Projeto_Tp1_2025_2.controllers.AdminController;
 
 import java.io.*;
 import java.util.Map;
 
-import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -36,17 +37,10 @@ public class LoginController {
 
     @FXML private ChoiceBox<String> choiceBox;
     @FXML private Label mensagem_erro;
-
-    private final Map<String, String> funcoes = Map.of(
-            "ADMIN", "/com/Projeto_Tp1_2025_2/view/Admin/admin.fxml",
-            "CANDIDATURA", "/com/Projeto_Tp1_2025_2/view/Candidatura/candidatura.fxml",
-            "RECRUTAMENTO", "/com/Projeto_Tp1_2025_2/view/Recrutamento/recrutamento.fxml",
-            "FINANCEIRO", "/com/Projeto_Tp1_2025_2/view/Financeiro/financeiro.fxml"
-    );
+    @FXML private Label mensagem_erro2;
 
     @FXML
     public void initialize() {
-        System.out.println("Chamou");
         choiceBox.setItems(FXCollections.observableArrayList(
                 "ADMIN",
                 "RECRUTADOR",
@@ -81,21 +75,24 @@ public class LoginController {
             ld_senha_cadastro.setText("");
             ld_senha2_cadastro.setText("");
             ld_nome_cadastro.setText("");
+            ld_cpf_cadastro.setText("");
+            ld_email_cadastro.setText("");
             tab_telaCadastro.setVisible(false);
         }
 
         mensagem_erro.setText("");
+        mensagem_erro2.setText("");
         tab_telaInicial.setVisible(true);
     }
 
     @FXML
     private void btn_candidatura(ActionEvent event) throws IOException {
-        SceneSwitcher.sceneswitcher(event, "Candidatura", "/com/Projeto_Tp1_2025_2/view/Candidatura/candidatura.fxml");
+        SceneSwitcher.sceneswitcher(event, "Candidatura", AdminController.telas.get("CANDIDATURA"));
     }
 
     @FXML
     private void btn_recrutamento(ActionEvent event) throws IOException {
-        SceneSwitcher.sceneswitcher(event, "Recrutamento", "/com/Projeto_Tp1_2025_2/view/Recrutamento/MenuRecrutamento .fxml");
+        SceneSwitcher.sceneswitcher(event, "Recrutamento", AdminController.telas.get("RECRUTAMENTO"));
     }
 
     @FXML
@@ -117,21 +114,38 @@ public class LoginController {
     protected void onClickCadastroBtn() {
         Database db = new Database("src/main/resources/usuarios_login.json");
 
-        if (!ld_senha_cadastro.getText().equals(ld_senha2_cadastro.getText())) {
-            mensagem_erro.setText("Senhas não conferem.");
+        if (!(ld_senha_cadastro.getText().equals(ld_senha2_cadastro.getText()))) {
+            mensagem_erro2.setText("Senhas não conferem.");
             return;
         }
 
         if (ld_email_cadastro.getText().isEmpty() || ld_cpf_cadastro.getText().isEmpty() || ld_nome_cadastro.getText().isEmpty() || ld_senha_cadastro.getText().isEmpty() || ld_senha2_cadastro.getText().isEmpty()) {
-            mensagem_erro.setText("Campos obrigatórios vazios.");
+            mensagem_erro2.setText("Campos obrigatórios vazios.");
+            return;
         }
 
         try {
             Usuario a = new Usuario(ld_nome_cadastro.getText(), ld_senha_cadastro.getText(), ld_cpf_cadastro.getText(), ld_email_cadastro.getText(), choiceBox.getValue());
+
+            if (db.searchMap("usuarios", "cpf", a.getCpf()) != null) {
+                mensagem_erro2.setText("CPF já cadastrado.");
+                return;
+            }
+
             db.addObject(a, "usuarios");
+            int id = a.getId();
+            db.setActualId(++id);
+
+            ld_cpf_cadastro.setText("");
+            ld_email_cadastro.setText("");
+            ld_nome_cadastro.setText("");
         }
         catch (InvalidCPF | InvalidPassword e) {
-            mensagem_erro.setText(e.getMessage());
+            mensagem_erro2.setText(e.getMessage());
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
         }
 
 
@@ -140,22 +154,7 @@ public class LoginController {
 
     @FXML
     private void entrar(String f) throws IOException {
-        try {
-            var resource = getClass().getResource(funcoes.get(f));
-            Parent root;
-
-            if (resource != null) {
-                root = FXMLLoader.load(resource);
-            } else {
-                throw new FileNotFoundException("Erro no path do recurso fxml");
-            }
-
-            Stage stage = (Stage) btn_login_entrar.getScene().getWindow();
-            stage.setScene(new Scene(root));
-        }
-
-        catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
+        Stage stage = (Stage) btn_login_entrar.getScene().getWindow();
+        SceneSwitcher.sceneswitcher(stage, f, AdminController.telas.get(f));
     }
 }

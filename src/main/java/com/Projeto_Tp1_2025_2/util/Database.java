@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,36 @@ public class Database {
 
     public Database(String path_) {
         this.path = path_;
+    }
+
+    public int getActualId() {
+        try {
+            Map<String, Object> jsonMap = mapper.readValue(new File(path), Map.class);
+            return Integer.parseInt(jsonMap.get("id").toString());
+        }
+        catch (IOException e){
+            System.out.println("Erro ao abrir o arquivo: " + e.getCause().toString());
+            return -1;
+        }
+    }
+
+    public void setActualId(Integer id) {
+        try {
+            // pega todos os dados que já tem no json
+            Map<String, Object> jsonMap;
+            File file = new File(path);
+            if (file.exists()) {
+                jsonMap = mapper.readValue(file, Map.class);
+            } else {
+                jsonMap = new HashMap<>();
+            }
+
+            jsonMap.put("id", id.toString());
+            mapper.writerWithDefaultPrettyPrinter().writeValue(file, jsonMap);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public List<Map<String, Object>> getData(String data) throws IOException{
@@ -41,18 +72,13 @@ public class Database {
         if (kvalues.length == 0) return false;
         boolean v = true;
 
-        System.out.println(mapa);
-
         for (int i = 0; i < kvalues.length - 1; i+=2) {
             Object current = mapa.get(kvalues[i]);
-
-            System.out.println(kvalues[i] + " : " + current);
 
             if (current == null){
                 return false;
             }
 
-            System.out.println("passou");
             v &= current.equals(kvalues[i + 1]);
         }
 
