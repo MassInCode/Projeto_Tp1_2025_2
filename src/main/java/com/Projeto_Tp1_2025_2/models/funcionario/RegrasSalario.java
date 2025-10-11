@@ -2,9 +2,9 @@ package com.Projeto_Tp1_2025_2.models.funcionario;
 
 public class RegrasSalario {
     Regime regime;
-    float descontos = 500;
-    float bolsa_fixa = 1500;
-    public float calcularSalario(Funcionario funcionario)
+    double descontos = 500;
+    double bolsa_fixa = 1500;
+    public double calcularSalario(Funcionario funcionario)
     {
         if (regime == Regime.CLT)
         {

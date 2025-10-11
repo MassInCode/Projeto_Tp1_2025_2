@@ -25,7 +25,7 @@
                     <children>
                         <ToolBar nodeOrientation="LEFT_TO_RIGHT" orientation="VERTICAL" prefHeight="678.0" prefWidth="158.0">
                             <items>
-                                <Button mnemonicParsing="false" onAction="#cadastrar" prefHeight="35.0" prefWidth="165.0" text="Cadastrar" textFill="WHITE" />
+                                <Button mnemonicParsing="false" onAction="#cadastrar" prefHeight="35.0" prefWidth="165.0" text="Funcionários" textFill="WHITE" />
                                 <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Gerar Relatório" textFill="WHITE" />
                                 <Button mnemonicParsing="false" onAction="#regras" prefHeight="35.0" prefWidth="165.0" text="Regras Salariais" textFill="WHITE" />
                                 <Button mnemonicParsing="false" onAction="#gerarf" prefHeight="35.0" prefWidth="165.0" text="Gerar Folha de Pagamento" textFill="WHITE" />
@@ -52,12 +52,12 @@
                                     <!-- Tabela padrão de funcionários -->
                                     <TableView fx:id="tabelaFuncionarios" prefHeight="618.0" prefWidth="930.0">
                                         <columns>
-                                            <TableColumn prefWidth="180.0" text="Nome" />
-                                            <TableColumn prefWidth="150.0" text="CPF" />
-                                            <TableColumn prefWidth="200.0" text="Email" />
-                                            <TableColumn prefWidth="150.0" text="Perfil" />
-                                            <TableColumn prefWidth="190.0" text="Departamento" />
-                                            <TableColumn prefWidth="150.0" text="Status" />
+                                            <TableColumn fx:id="colunaNome" prefWidth="180.0" text="Nome" />
+                                            <TableColumn fx:id="colunaCPF" prefWidth="150.0" text="CPF" />
+                                            <TableColumn fx:id="colunaEmail" prefWidth="200.0" text="Email" />
+                                            <TableColumn fx:id="colunaPerfil" prefWidth="150.0" text="Perfil" />
+                                            <TableColumn fx:id="colunaDepartamento" prefWidth="190.0" text="Departamento" />
+                                            <TableColumn fx:id="colunaStatus" prefWidth="150.0" text="Status" />
                                         </columns>
                                     </TableView>
 

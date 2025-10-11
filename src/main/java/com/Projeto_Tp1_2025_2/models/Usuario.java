@@ -122,4 +122,8 @@ public class Usuario {
     public String getEmail() {
         return email;
     }
+
+    public String getCargo() {
+        return cargo;
+    }
 }

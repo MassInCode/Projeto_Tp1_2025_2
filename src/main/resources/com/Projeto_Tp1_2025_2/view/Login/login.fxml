@@ -44,22 +44,40 @@
                               <Separator prefWidth="200.0" visible="false" />
                               <VBox alignment="CENTER" maxHeight="-Infinity" prefHeight="286.0" prefWidth="357.0">
                                  <children>
+                                    <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
+                                    <HBox alignment="CENTER">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                       <children>
+                                          <Label minWidth="-Infinity" prefWidth="150.0" text="Selecione seu cargo:">
+                                             <font>
+                                                <Font name="Arial Bold" size="13.0" />
+                                             </font>
+                                             <HBox.margin>
+                                                <Insets left="20.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                          <Separator prefWidth="100.0" visible="false" />
+                                          <ChoiceBox fx:id="choiceBox" prefWidth="150.0">
+                                             <HBox.margin>
+                                                <Insets right="20.0" />
+                                             </HBox.margin>
+                                          </ChoiceBox>
+                                       </children>
+                                    </HBox>
+                                    <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                                     <TextField fx:id="ld_nome_cadastro" minHeight="-Infinity" prefHeight="30.0" promptText="Nome" styleClass="lineedit" />
                                     <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
                                     <TextField fx:id="ld_email_cadastro" minHeight="-Infinity" prefHeight="30.0" promptText="Email" styleClass="lineedit" />
                                     <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
                                     <TextField fx:id="ld_cpf_cadastro" minHeight="-Infinity" prefHeight="30.0" promptText="CPF" styleClass="lineedit" />
+                                    <Separator fx:id="separator_formacao" orientation="VERTICAL" prefHeight="200.0" visible="false" />
+                                    <TextField fx:id="ld_formacao_cadastro" minHeight="-Infinity" prefHeight="30.0" promptText="Formação" styleClass="lineedit" visible="false" />
                                     <Separator minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="20.0" visible="false" />
                                     <PasswordField fx:id="ld_senha_cadastro" minHeight="-Infinity" prefHeight="30.0" promptText="Senha" styleClass="lineedit" />
                                     <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
                                     <PasswordField fx:id="ld_senha2_cadastro" minHeight="-Infinity" prefHeight="30.0" promptText="Confirme sua senha" styleClass="lineedit" />
-                                    <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
-                                    <ChoiceBox fx:id="choiceBox" prefWidth="150.0">
-                                       <VBox.margin>
-                                          <Insets left="210.0" />
-                                       </VBox.margin>
-                                    </ChoiceBox>
-                                    <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                                     <Label fx:id="mensagem_erro2" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="355.0" textFill="#e41111">
                                        <font>
                                           <Font name="System Bold" size="12.0" />

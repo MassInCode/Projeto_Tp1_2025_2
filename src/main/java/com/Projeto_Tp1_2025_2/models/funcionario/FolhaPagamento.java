@@ -6,7 +6,7 @@ public class FolhaPagamento {
     {
 
     }
-    public void gerarRelatorioFinanceiro()7
+    public void gerarRelatorioFinanceiro()
     {
 
     }
