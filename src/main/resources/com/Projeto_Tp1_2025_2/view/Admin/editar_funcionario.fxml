@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="anchorpane" stylesheets="@../Login/login.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="anchorpane" stylesheets="@../Login/login.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.admin.EditarFuncionarioController">
    <children>
       <AnchorPane layoutX="200.0" layoutY="100.0" prefHeight="240.0" prefWidth="480.0" styleClass="telaaction" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="21.0">
          <children>
@@ -48,6 +49,14 @@
                         </TextField>
                         <Separator orientation="VERTICAL" prefHeight="10.0" />
                         <ChoiceBox fx:id="ativamento" prefWidth="150.0" />
+                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#editarFuncionario" prefHeight="35.0" prefWidth="120.0" styleClass="btn_entrar" text="Salvar" textFill="WHITE" />
+                              <Separator prefWidth="20.0" />
+                              <Button minHeight="-Infinity" mnemonicParsing="false" onAction="#fecharJanela" prefHeight="35.0" prefWidth="120.0" styleClass="btn_sair" text="Cancelar" textFill="WHITE" />
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                </children>

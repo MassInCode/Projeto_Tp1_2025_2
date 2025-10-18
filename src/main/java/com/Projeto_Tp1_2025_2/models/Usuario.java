@@ -4,12 +4,20 @@ import com.Projeto_Tp1_2025_2.exceptions.InvalidCPF;
 import com.Projeto_Tp1_2025_2.exceptions.InvalidPassword;
 import com.Projeto_Tp1_2025_2.util.Database;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public class Usuario {
     private static int contador; // vai ser o id
 
     static {
-        Database db = new Database("src/main/resources/usuarios_login.json");
-        contador = db.getActualId();
+        try {
+            Database db = new Database("src/main/resources/usuarios_login.json");
+            contador = db.getActualId();
+        }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private int id;
@@ -24,6 +32,25 @@ public class Usuario {
         this.email = email;
         this.cargo = cargo;
         this.id = contador++; // vai incrementar o contador cada vez que chamar o construtor
+
+        if (!validarCPF(cpf)) {
+            throw new InvalidCPF();
+        };
+
+        String msg = validarSenha(senha);
+        if (!msg.equals("\0")) {
+            throw new InvalidPassword(msg);
+        }
+
+        this.senha = senha;
+        this.cpf = cpf;
+    }
+
+    public Usuario(int id, String nome, String senha, String cpf, String email, String cargo) throws InvalidPassword, InvalidCPF {
+        this.nome = nome;
+        this.email = email;
+        this.cargo = cargo;
+        this.id = id;
 
         if (!validarCPF(cpf)) {
             throw new InvalidCPF();
@@ -125,5 +152,17 @@ public class Usuario {
 
     public String getCargo() {
         return cargo;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
     }
 }

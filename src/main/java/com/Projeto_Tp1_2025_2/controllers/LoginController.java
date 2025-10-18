@@ -9,7 +9,7 @@ import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
 import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
 import com.Projeto_Tp1_2025_2.util.Database;
 import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
-import com.Projeto_Tp1_2025_2.controllers.AdminController;
+import com.Projeto_Tp1_2025_2.controllers.admin.AdminController;
 
 import java.io.*;
 import java.util.Map;
@@ -18,10 +18,7 @@ import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -160,8 +157,6 @@ public class LoginController {
 
     @FXML
     protected void onClickCadastroBtn() {
-        Database db = new Database("src/main/resources/usuarios_login.json");
-
         if (!(ld_senha_cadastro.getText().equals(ld_senha2_cadastro.getText()))) {
             mensagem_erro2.setText("Senhas não conferem.");
             return;
@@ -173,6 +168,8 @@ public class LoginController {
         }
 
         try {
+            Database db = new Database("src/main/resources/usuarios_login.json");
+
             Usuario a = getCargo(choiceBox.getValue());
 
             if (db.searchMap("usuarios", "cpf", a.getCpf(), "nome", a.getNome()) != null) {
@@ -189,7 +186,7 @@ public class LoginController {
             ld_nome_cadastro.setText("");
             ld_formacao_cadastro.setText("");
         }
-        catch (InvalidCPF | InvalidPassword e) {
+        catch (InvalidCPF | InvalidPassword | FileNotFoundException e) {
             mensagem_erro2.setText(e.getMessage());
         }
 

@@ -1,12 +1,9 @@
 package com.Projeto_Tp1_2025_2.util;
 
 
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -16,39 +13,33 @@ import java.util.ArrayList;
 
 public class Database {
     ObjectMapper mapper = new ObjectMapper();
-    String path;
+    Map<String, Object> jsonMap;
+    File file;
 
-    public Database(String path_) {
-        this.path = path_;
+    public Database(String path) throws IOException{
+        file = new File(path);
+
+        if (file.exists()) {
+            jsonMap = mapper.readValue(file, Map.class);
+        }
+
+        else {
+            jsonMap = new HashMap<>(); // cria um vazio
+        }
+
     }
 
     public int getActualId() {
-        try {
-            Map<String, Object> jsonMap = mapper.readValue(new File(path), Map.class);
-            return Integer.parseInt(jsonMap.get("id").toString());
-        }
-        catch (IOException e){
-            System.out.println("Erro ao abrir o arquivo: " + e.getCause().toString());
-            return -1;
-        }
+        return Integer.parseInt(jsonMap.get("id").toString());
     }
 
     public void setActualId(Integer id) {
         try {
-            // pega todos os dados que já tem no json
-            Map<String, Object> jsonMap;
-            File file = new File(path);
-            if (file.exists()) {
-                jsonMap = mapper.readValue(file, Map.class);
-            } else {
-                jsonMap = new HashMap<>();
-            }
-
             jsonMap.put("id", id.toString());
             mapper.writerWithDefaultPrettyPrinter().writeValue(file, jsonMap);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println(e.getMessage() + " : " + e.getCause().getMessage());
         }
     }
 
@@ -58,7 +49,6 @@ public class Database {
          *
          * @param data O nome da lista que você vai pegar.
         */
-        Map<String, Object> jsonMap = mapper.readValue(new File(path), Map.class);
         List<Map<String, Object>> info = (List<Map<String, Object>>) jsonMap.get(data);
 
         if (info == null) {
@@ -138,15 +128,6 @@ public class Database {
          * @param data Nome da lista do Json
          */
         try {
-            // pega todos os dados que já tem no json
-            Map<String, Object> jsonMap;
-            File file = new File(path);
-            if (file.exists()) {
-                jsonMap = mapper.readValue(file, Map.class);
-            } else {
-                jsonMap = new HashMap<>();
-            }
-
             // recuperar lista existente (usuarios) ou criar nova
             List<Map<String, Object>> lista;
             if (jsonMap.containsKey(data)) {
@@ -165,4 +146,86 @@ public class Database {
             e.printStackTrace();
         }
     }
+
+    public <T> boolean editObject(T object, String data) {
+        try {
+            List<Map<String, Object>> lista = (List<Map<String, Object>>) jsonMap.get(data);
+
+            if (lista == null || lista.isEmpty()) return false;
+
+            Map<String, Object> novoMapa = objectToMap(object);
+
+            Object id = novoMapa.get("id");
+            if (id == null) return false;
+
+            System.out.println(novoMapa);
+
+            // procura o mapa pelo id
+            boolean encontrado = false;
+            for (int i = 0; i < lista.size(); i++) {
+                Map<String, Object> mapaAtual = lista.get(i);
+                System.out.println(mapaAtual);
+                if (mapaAtual.get("id").equals(id)) {
+                    // substitui
+                    lista.set(i, novoMapa);
+                    encontrado = true;
+                    break;
+                }
+            }
+
+            if (!encontrado) return false;
+
+            // atualiza a lista no JSON e salva
+            jsonMap.put(data, lista);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(file, jsonMap);
+
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public <T> boolean deleteObject(T object, String data) {
+        try {
+            List<Map<String, Object>> lista = (List<Map<String, Object>>) jsonMap.get(data);
+
+            if (lista == null || lista.isEmpty()) return false;
+
+            Map<String, Object> novoMapa = objectToMap(object);
+
+            Object id = novoMapa.get("id");
+            if (id == null) return false;
+
+            System.out.println(novoMapa);
+
+            // procura o mapa pelo id
+            boolean encontrado = false;
+            for (int i = 0; i < lista.size(); i++) {
+                Map<String, Object> mapaAtual = lista.get(i);
+                System.out.println(mapaAtual);
+                if (mapaAtual.get("id").equals(id)) {
+                    // remove
+                    lista.remove(i);
+                    encontrado = true;
+                    break;
+                }
+            }
+
+            if (!encontrado) return false;
+
+            // atualiza a lista no JSON e salva
+            jsonMap.put(data, lista);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(file, jsonMap);
+
+            return true;
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

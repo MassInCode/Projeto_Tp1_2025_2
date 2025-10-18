@@ -1,4 +1,4 @@
-package com.Projeto_Tp1_2025_2.controllers;
+package com.Projeto_Tp1_2025_2.controllers.admin;
 
 import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
@@ -11,10 +11,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +34,7 @@ public class AdminController {
             "FUNCIONARIO", "/com/Projeto_Tp1_2025_2/view/Financeiro/financeiro.fxml"
     );
 
-    Database db = new Database("src/main/resources/usuarios_login.json");
+    Database db;
     ArrayList<Map<String, Object>> usuarios_filtrado = new ArrayList<>();
 
     @FXML private AnchorPane janelaSobreposta;
@@ -46,6 +51,18 @@ public class AdminController {
 
     @FXML
     public void initialize() {
+        // inicializa a database
+        try {
+            db = new Database("src/main/resources/usuarios_login.json");
+        }
+        catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+        catch (IOException e) {
+            System.out.println(e.getMessage() + " : " + e.getCause().getMessage());
+        }
+
         // linka as colunas ao atributos de Funcionario
         colunaNome.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNome()));
         colunaCPF.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCpf()));
@@ -74,19 +91,32 @@ public class AdminController {
             TableRow<Funcionario> row = new TableRow<>(); // essa é a row especifica
             ContextMenu rowMenu = new ContextMenu();
 
-            MenuItem editarItem = new MenuItem("Editar usuário");
-            MenuItem excluirItem = new MenuItem("Excluir usuário");
+            MenuItem editarItem = new MenuItem("Editar funcionário");
+            MenuItem excluirItem = new MenuItem("Excluir funcionário");
+            MenuItem alterarStatus = new MenuItem("Alterar status");
 
-            rowMenu.getItems().addAll(editarItem, excluirItem);
+            rowMenu.getItems().addAll(editarItem, excluirItem, alterarStatus);
 
-            // linka as açõesrow.getIndex()
-            editarItem.setOnAction(e -> {
-                System.out.println(usuarios_filtrado.get(row.getIndex()).get("nome"));
+            // linka as ações
+            editarItem.setOnAction(e -> editarFuncionario(e, row.getItem()));
+
+            alterarStatus.setOnAction(e -> {
+                row.getItem().changeStatus();
+                db.editObject(row.getItem(), "usuarios");
+                tabelaFuncionarios.refresh();
             });
 
             excluirItem.setOnAction(e -> {
-                String user = row.getItem().getNome();
-                System.out.println("Excluir usuário: " + user);
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmação");
+                alert.setHeaderText("Tem certeza que deseja excluir este usuário?");
+
+                var resultado = alert.showAndWait();
+
+                if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+                    tabelaFuncionarios.getItems().remove(row.getItem());
+                    db.deleteObject(row.getItem(), "usuarios");
+                }
 
             });
 
@@ -101,6 +131,41 @@ public class AdminController {
         });
     }
 
+    @FXML
+    private void editarFuncionario(ActionEvent e, Funcionario funcionario) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/com/Projeto_Tp1_2025_2/view/Admin/editar_funcionario.fxml"));
+            Parent root = loader.load();
+
+            EditarFuncionarioController controller = loader.getController();
+            controller.presetData(funcionario);
+
+            Stage modal = new Stage();
+            modal.initOwner(tabelaFuncionarios.getScene().getWindow());
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.setTitle("Editar Funcionário");
+            modal.setScene(new Scene(root));
+            modal.showAndWait();
+
+            if (controller.isConfirmado()) { // ocorreu edição do objeto
+                tabelaFuncionarios.refresh();
+                if (db.editObject(funcionario, "usuarios")) {
+                    System.out.println("foi");
+                }
+                else {
+                    System.out.println("erro");
+                }
+
+            }
+        }
+
+        catch (IOException error) {
+            System.out.println(error.getMessage() + " : " + error.getCause().getMessage());
+        }
+
+    }
+
 
     @FXML
     private void carregarDados() {
@@ -111,7 +176,7 @@ public class AdminController {
             for (Map<String, Object> mapa : dados) {
                 if (mapa.get("cargo").equals("CANDIDATO")) continue;
                 usuarios_filtrado.add(mapa);
-                data.add(new Funcionario(mapa.get("nome").toString(), mapa.get("senha").toString(), mapa.get("cpf").toString(), mapa.get("email").toString(), mapa.get("cargo").toString(),
+                data.add(new Funcionario((int) mapa.get("id"), mapa.get("nome").toString(), mapa.get("senha").toString(), mapa.get("cpf").toString(), mapa.get("email").toString(), mapa.get("cargo").toString(),
                         Double.parseDouble(mapa.get("salariobruto").toString()), Boolean.parseBoolean(mapa.get("status").toString()), mapa.get("dataContratacao").toString(), mapa.get("regime").toString(), mapa.get("departamento").toString()));
             }
 

@@ -6,15 +6,15 @@
     "vale_alimentacao" : 0.0,
     "senha" : "K1",
     "dataContratacao" : "00/00/00",
-    "contador" : 3,
+    "contador" : 6,
     "vale_trasporte" : 0.0,
     "cpf" : "00000000000",
     "departamento" : "NULL",
     "id" : 2,
     "salariobruto" : 0.0,
     "cargo" : "ADMIN",
-    "email" : "kaio",
-    "status" : false
+    "email" : "kaiosantos@gmail.com",
+    "status" : true
   }, {
     "senha" : "K1",
     "vagas" : [ ],
@@ -31,15 +31,15 @@
     "vale_alimentacao" : 0.0,
     "senha" : "K1",
     "dataContratacao" : "00/00/00",
-    "contador" : 5,
+    "contador" : 6,
     "vale_trasporte" : 0.0,
     "cpf" : "00000000002",
-    "departamento" : "NULL",
+    "departamento" : "amarelo",
     "id" : 4,
     "salariobruto" : 0.0,
     "cargo" : "FUNCIONARIO",
     "email" : "ofjasfjasçlk",
-    "status" : false
+    "status" : true
   }, {
     "regime" : "NULL",
     "nome" : "aojsfoiasnfo",
@@ -54,6 +54,6 @@
     "salariobruto" : 0.0,
     "cargo" : "RECRUTADOR",
     "email" : "poasçfnasklç",
-    "status" : false
+    "status" : true
   } ]
 }

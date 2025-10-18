@@ -23,6 +23,15 @@ public class Funcionario extends Usuario{
         this.departamento = departamento;
     }
 
+    public Funcionario(int id, String nome, String senha, String cpf, String email, String cargo,double salario,boolean status,String dataContratacao,String regime, String departamento) {
+        super(id, nome, senha, cpf, email, cargo);
+        this.salariobruto = salario;
+        this.status = status;
+        this.dataContratacao = dataContratacao;
+        this.regime = regime;
+        this.departamento = departamento;
+    }
+
     public Funcionario(String nome, String senha, String cpf, String email, String cargo) {
         super(nome, senha, cpf, email, cargo);
         this.salariobruto = 0.0;
@@ -46,6 +55,14 @@ public class Funcionario extends Usuario{
         return status;
     }
 
+    public void editarDados(String nome, String email, String cargo, String departamento, boolean status) {
+        this.setNome(nome);
+        this.setEmail(email);
+        this.setCargo(cargo);
+        this.departamento = departamento;
+        this.status = status;
+    }
+
     public String getDataContratacao() {
         return dataContratacao;
     }
@@ -58,4 +75,11 @@ public class Funcionario extends Usuario{
         return departamento;
     }
 
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public void changeStatus() {
+        this.status = !this.status; // alterna de true pra false
+    }
 }
