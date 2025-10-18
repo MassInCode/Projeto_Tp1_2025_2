@@ -16,6 +16,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,11 +25,12 @@ public class AdminController {
             "LOGIN", "/com/Projeto_Tp1_2025_2/view/Login/login.fxml",
             "ADMIN", "/com/Projeto_Tp1_2025_2/view/Admin/admin.fxml",
             "CANDIDATO", "/com/Projeto_Tp1_2025_2/view/Candidatura/candidatura.fxml",
-            "RECRUTADOR", "/com/Projeto_Tp1_2025_2/view/Recrutamento/recrutamento.fxml",
+            "RECRUTADOR", "/com/Projeto_Tp1_2025_2/view/Recrutamento/MenuRecrutamento .fxml",
             "FUNCIONARIO", "/com/Projeto_Tp1_2025_2/view/Financeiro/financeiro.fxml"
     );
 
     Database db = new Database("src/main/resources/usuarios_login.json");
+    ArrayList<Map<String, Object>> usuarios_filtrado = new ArrayList<>();
 
     @FXML private AnchorPane janelaSobreposta;
     @FXML private Button btn_sair;
@@ -77,10 +79,9 @@ public class AdminController {
 
             rowMenu.getItems().addAll(editarItem, excluirItem);
 
-            // linka as ações
+            // linka as açõesrow.getIndex()
             editarItem.setOnAction(e -> {
-                String usuario = row.getItem().getNome();
-                System.out.println("Editar: " + usuario);
+                System.out.println(usuarios_filtrado.get(row.getIndex()).get("nome"));
             });
 
             excluirItem.setOnAction(e -> {
@@ -109,6 +110,7 @@ public class AdminController {
 
             for (Map<String, Object> mapa : dados) {
                 if (mapa.get("cargo").equals("CANDIDATO")) continue;
+                usuarios_filtrado.add(mapa);
                 data.add(new Funcionario(mapa.get("nome").toString(), mapa.get("senha").toString(), mapa.get("cpf").toString(), mapa.get("email").toString(), mapa.get("cargo").toString(),
                         Double.parseDouble(mapa.get("salariobruto").toString()), Boolean.parseBoolean(mapa.get("status").toString()), mapa.get("dataContratacao").toString(), mapa.get("regime").toString(), mapa.get("departamento").toString()));
             }

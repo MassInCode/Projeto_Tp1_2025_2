@@ -187,6 +187,7 @@ public class LoginController {
             ld_cpf_cadastro.setText("");
             ld_email_cadastro.setText("");
             ld_nome_cadastro.setText("");
+            ld_formacao_cadastro.setText("");
         }
         catch (InvalidCPF | InvalidPassword e) {
             mensagem_erro2.setText(e.getMessage());

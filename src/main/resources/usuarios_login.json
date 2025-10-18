@@ -1,4 +1,59 @@
 {
-  "id" : "0",
-  "usuarios" : []
+  "id" : "6",
+  "usuarios" : [ {
+    "regime" : "NULL",
+    "nome" : "kaio",
+    "vale_alimentacao" : 0.0,
+    "senha" : "K1",
+    "dataContratacao" : "00/00/00",
+    "contador" : 3,
+    "vale_trasporte" : 0.0,
+    "cpf" : "00000000000",
+    "departamento" : "NULL",
+    "id" : 2,
+    "salariobruto" : 0.0,
+    "cargo" : "ADMIN",
+    "email" : "kaio",
+    "status" : false
+  }, {
+    "senha" : "K1",
+    "vagas" : [ ],
+    "formacao" : "fodase",
+    "contador" : 4,
+    "cpf" : "00000000001",
+    "nome" : "aposjkdfaṕsjfas[ijfp",
+    "id" : 3,
+    "cargo" : "CANDIDATO",
+    "email" : "apsojfjpaosjd"
+  }, {
+    "regime" : "NULL",
+    "nome" : "aksopfkapso",
+    "vale_alimentacao" : 0.0,
+    "senha" : "K1",
+    "dataContratacao" : "00/00/00",
+    "contador" : 5,
+    "vale_trasporte" : 0.0,
+    "cpf" : "00000000002",
+    "departamento" : "NULL",
+    "id" : 4,
+    "salariobruto" : 0.0,
+    "cargo" : "FUNCIONARIO",
+    "email" : "ofjasfjasçlk",
+    "status" : false
+  }, {
+    "regime" : "NULL",
+    "nome" : "aojsfoiasnfo",
+    "vale_alimentacao" : 0.0,
+    "senha" : "K1",
+    "dataContratacao" : "00/00/00",
+    "contador" : 6,
+    "vale_trasporte" : 0.0,
+    "cpf" : "12345678911",
+    "departamento" : "NULL",
+    "id" : 5,
+    "salariobruto" : 0.0,
+    "cargo" : "RECRUTADOR",
+    "email" : "poasçfnasklç",
+    "status" : false
+  } ]
 }
