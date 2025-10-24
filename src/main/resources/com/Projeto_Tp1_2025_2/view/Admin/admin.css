@@ -30,7 +30,15 @@ Button:hover {
     -fx-background-color: #72CC84;
 }
 
+.btn_confirmar:hover {
+    -fx-background-color: #72CC84;
+}
+
 #btn_sair:hover {
+    -fx-background-color: #F0504C;
+}
+
+.btn_cancelar:hover {
     -fx-background-color: #F0504C;
 }
 

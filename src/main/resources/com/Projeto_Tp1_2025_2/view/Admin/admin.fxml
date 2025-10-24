@@ -26,11 +26,9 @@
                         <ToolBar nodeOrientation="LEFT_TO_RIGHT" orientation="VERTICAL" prefHeight="678.0" prefWidth="158.0">
                             <items>
                                 <Button mnemonicParsing="false" onAction="#cadastrar" prefHeight="35.0" prefWidth="165.0" text="Funcionários" textFill="WHITE" />
-                                <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Gerar Relatório" textFill="WHITE" />
                                 <Button mnemonicParsing="false" onAction="#regras" prefHeight="35.0" prefWidth="165.0" text="Regras Salariais" textFill="WHITE" />
-                                <Button mnemonicParsing="false" onAction="#gerarf" prefHeight="35.0" prefWidth="165.0" text="Gerar Folha de Pagamento" textFill="WHITE" />
-                                <Button mnemonicParsing="false" onAction="#exporterma" prefHeight="35.0" prefWidth="165.0" text="Exportar Folha" textFill="WHITE" />
-                                <Separator orientation="VERTICAL" prefHeight="390.0" visible="false" />
+                        <Button mnemonicParsing="false" onAction="#regras" prefHeight="35.0" prefWidth="165.0" text="Alterar Perfil" textFill="WHITE" />
+                                <Separator orientation="VERTICAL" prefHeight="480.0" visible="false" />
                                 <Button fx:id="btn_sair" mnemonicParsing="false" onAction="#onClickSair" prefHeight="35.0" prefWidth="165.0" text="Sair" textFill="WHITE" />
                             </items>
                         </ToolBar>

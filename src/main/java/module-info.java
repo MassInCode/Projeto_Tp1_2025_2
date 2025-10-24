@@ -7,6 +7,8 @@ module Projeto_Tp1_2025_2 {
     requires com.fasterxml.jackson.databind;
     requires javafx.base;
     requires java.desktop;
+    requires com.fasterxml.jackson.annotation;
+    requires com.fasterxml.jackson.datatype.jsr310;
 
     exports com.Projeto_Tp1_2025_2.main;
     opens com.Projeto_Tp1_2025_2.controllers to javafx.fxml;

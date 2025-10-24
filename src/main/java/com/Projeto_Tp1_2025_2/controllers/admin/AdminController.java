@@ -29,6 +29,7 @@ public class AdminController {
     public static final Map<String, String> telas = Map.of(
             "LOGIN", "/com/Projeto_Tp1_2025_2/view/Login/login.fxml",
             "ADMIN", "/com/Projeto_Tp1_2025_2/view/Admin/admin.fxml",
+            "GESTOR", "/com/Projeto_Tp1_2025_2/view/Admin/gestao.fxml",
             "CANDIDATO", "/com/Projeto_Tp1_2025_2/view/Candidatura/candidatura.fxml",
             "RECRUTADOR", "/com/Projeto_Tp1_2025_2/view/Recrutamento/MenuRecrutamento .fxml",
             "FUNCIONARIO", "/com/Projeto_Tp1_2025_2/view/Financeiro/financeiro.fxml"

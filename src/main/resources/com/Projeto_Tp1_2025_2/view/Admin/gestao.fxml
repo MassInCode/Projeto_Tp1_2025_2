@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="anchorpane" stylesheets="@admin.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.admin.GestaoController">
+   <children>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="telaaction" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="21.0">
+         <children>
+            <HBox layoutX="37.0" layoutY="38.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <ToolBar orientation="VERTICAL" prefHeight="678.0" prefWidth="158.0">
+                    <items>
+                      <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Vagas" textFill="WHITE" />
+                        <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Pedidos de Contrataçao" textFill="WHITE" />
+                        <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Gerar Relatorio" textFill="WHITE" />
+                        <Button mnemonicParsing="false" onAction="#gerarf" prefHeight="35.0" prefWidth="165.0" text="Gerar Folha de Pagamento" textFill="WHITE">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#exporterma" prefHeight="35.0" prefWidth="165.0" text="Exportar Folha" textFill="WHITE" />
+                        <Separator orientation="VERTICAL" prefHeight="390.0" visible="false" />
+                        <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Sair" textFill="WHITE" />
+                    </items>
+                  </ToolBar>
+                  <VBox>
+                     <children>
+                        <Separator orientation="VERTICAL" prefHeight="5.0" visible="false" />
+                        <HBox alignment="CENTER" prefHeight="26.0" prefWidth="385.0">
+                           <children>
+                              <TextField prefHeight="30.0" prefWidth="1000.0" promptText="Buscar" styleClass="lineedit" />
+                              <Separator prefWidth="40.0" visible="false" />
+                              <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="76.0" text="Procurar" textFill="WHITE" />
+                           </children>
+                        </HBox>
+                        <Separator orientation="VERTICAL" prefHeight="15.0" visible="false" />
+                        <AnchorPane>
+                           <children>
+                              <TableView fx:id="tabela_vagas" layoutX="13.0" layoutY="13.0" prefHeight="631.0" prefWidth="943.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <columns>
+                                  <TableColumn fx:id="colunaCargo" prefWidth="75.0" text="Cargo" />
+                                  <TableColumn fx:id="colunaSalario" prefWidth="109.0" text="Salario Base" />
+                                    <TableColumn fx:id="colunaRequisitos" prefWidth="123.0" text="Requisitos" />
+                                    <TableColumn fx:id="colunaDepartamento" prefWidth="123.0" text="Departamento" />
+                                    <TableColumn fx:id="colunaDataAbertura" prefWidth="141.0" text="Data de Abertura" />
+                                </columns>
+                              </TableView>
+                              <TableView fx:id="tabela_pedidos" layoutX="23.0" layoutY="23.0" prefHeight="654.0" prefWidth="966.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <columns>
+                                    <TableColumn prefWidth="75.0" text="Cargo" />
+                                    <TableColumn prefWidth="109.0" text="Salario Base" />
+                                    <TableColumn prefWidth="123.0" text="Requisitos" />
+                                    <TableColumn prefWidth="123.0" text="Departamento" />
+                                    <TableColumn prefWidth="141.0" text="Data de Abertura" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="janelaSobreposta" layoutX="10.0" layoutY="10.0" style="-fx-background-color: rgba(0,0,0,0.5);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <StackPane alignment="CENTER" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="300" prefWidth="500" style="-fx-background-color: null; -fx-padding: 20; -fx-background-radius: 10;">
+                     <children>
+                        <Pane prefHeight="200.0" prefWidth="895.0">
+                           <children>
+                              <Pane layoutX="495.0" layoutY="-69.0" prefHeight="339.0" prefWidth="250.0" style="-fx-background-color: white;" stylesheets="@admin.css">
+                                 <children>
+                                    <Label layoutX="23.0" layoutY="26.0" prefHeight="68.0" prefWidth="205.0" style="-fx-font-size: 18px;" text="Tamo exportando, tamo exportando" />
+                                    <Button layoutX="73.0" layoutY="250.0" onAction="#fecharJanela" prefHeight="55.0" prefWidth="105.0" text="EXPORTAR" />
+                                    <CheckBox layoutX="70.0" layoutY="188.0" mnemonicParsing="false" text="Eu sou um robo?" />
+                                    <MenuButton layoutX="55.0" layoutY="119.0" mnemonicParsing="false" text="Onde que eu coloco">
+                                       <items>
+                                          <MenuItem mnemonicParsing="false" text="Action 1" />
+                                          <MenuItem mnemonicParsing="false" text="Action 2" />
+                                       </items>
+                                    </MenuButton>
+                                    <Button layoutX="223.0" layoutY="2.0" mnemonicParsing="false" onAction="#fecharJanela" prefHeight="25.0" prefWidth="24.0" style="-fx-background-color: red;" text="X" />
+                                 </children>
+                                 <effect>
+                                    <Blend />
+                                 </effect>
+                              </Pane>
+                           </children>
+                        </Pane>
+                     </children>
+                  </VBox>
+               </children>
+            </StackPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="criacaoVagaJanela" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: rgba(0,0,0,0.5);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane layoutX="422.0" layoutY="105.0" prefHeight="437.0" prefWidth="414.0" styleClass="telaaction">
+               <children>
+                  <VBox alignment="CENTER" layoutX="127.0" layoutY="52.0" prefHeight="437.0" prefWidth="414.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label text="Criaçao de Vaga">
+                           <font>
+                              <Font name="System Bold" size="36.0" />
+                           </font>
+                        </Label>
+                        <Separator orientation="VERTICAL" prefHeight="50.0" />
+                        <TextField fx:id="cv_cargo" promptText="Cargo" styleClass="lineedit">
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TextField fx:id="cv_salario" promptText="Salario Base" styleClass="lineedit">
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TextField fx:id="cv_requisitos" promptText="Requisitos" styleClass="lineedit">
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TextField fx:id="cv_departamento" promptText="Departamento" styleClass="lineedit">
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Separator orientation="VERTICAL" prefHeight="10.0" />
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Button fx:id="salvar_vaga" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#criarVaga" prefHeight="35.0" prefWidth="120.0" styleClass="btn_confirmar" text="Salvar" textFill="WHITE" />
+                              <Separator prefWidth="30.0" />
+                              <Button fx:id="cancelar_vaga" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelar" prefHeight="35.0" prefWidth="120.0" styleClass="btn_cancelar" text="Cancelar" textFill="WHITE" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

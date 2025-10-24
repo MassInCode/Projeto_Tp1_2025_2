@@ -4,10 +4,9 @@ import com.Projeto_Tp1_2025_2.exceptions.InvalidCPF;
 import com.Projeto_Tp1_2025_2.exceptions.InvalidPassword;
 import com.Projeto_Tp1_2025_2.util.Database;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class Usuario {
+public abstract class Usuario {
     private static int contador; // vai ser o id
 
     static {
@@ -94,7 +93,8 @@ public class Usuario {
             return false;
         }
         */
-        return cpf.length() == 11;
+        //return cpf.length() == 11;
+        return true;
     }
 
     // a senha vai precisar ter no mínimo 8 de tamanho, ter letras maiusculas e numeros

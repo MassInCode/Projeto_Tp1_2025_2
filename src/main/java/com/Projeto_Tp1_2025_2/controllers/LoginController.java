@@ -4,6 +4,7 @@ import com.Projeto_Tp1_2025_2.exceptions.InvalidCPF;
 import com.Projeto_Tp1_2025_2.exceptions.InvalidPassword;
 import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.admin.Administrador;
+import com.Projeto_Tp1_2025_2.models.admin.Gestor;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
 import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
@@ -51,7 +52,8 @@ public class LoginController {
                 "ADMIN",
                 "RECRUTADOR",
                 "CANDIDATO",
-                "FUNCIONARIO"
+                "FUNCIONARIO",
+                "GESTOR"
         ));
 
         choiceBox.setValue("FUNCIONARIO");
@@ -142,6 +144,7 @@ public class LoginController {
         mensagem_erro.setText("");
     }
 
+    /* CAIO sera responsavel por criar as regras de salario dos cargos abaixo, de modo a todos terem assim que se cadastrarem */
     @FXML
     private Usuario getCargo(String cargo) {
         return switch (cargo) {
@@ -151,6 +154,7 @@ public class LoginController {
             ); //! ALTERAR LOGIN PARA MODIFICAR O CANDIDATO
             case "RECRUTADOR" -> new Recrutador(ld_nome_cadastro.getText(), ld_senha_cadastro.getText(), ld_cpf_cadastro.getText(), ld_email_cadastro.getText(), choiceBox.getValue());
             case "FUNCIONARIO" -> new Funcionario(ld_nome_cadastro.getText(), ld_senha_cadastro.getText(), ld_cpf_cadastro.getText(), ld_email_cadastro.getText(), choiceBox.getValue());
+            case "GESTOR" -> new Gestor(ld_nome_cadastro.getText(), ld_senha_cadastro.getText(), ld_cpf_cadastro.getText(), ld_email_cadastro.getText(), choiceBox.getValue());
             default -> null;
         };
     }

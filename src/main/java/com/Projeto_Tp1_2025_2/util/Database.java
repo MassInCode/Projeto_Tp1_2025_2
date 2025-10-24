@@ -2,9 +2,13 @@ package com.Projeto_Tp1_2025_2.util;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -17,6 +21,10 @@ public class Database {
     File file;
 
     public Database(String path) throws IOException{
+        /* SUPORTE AOS LOCALDATES */
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
         file = new File(path);
 
         if (file.exists()) {
@@ -39,7 +47,7 @@ public class Database {
             mapper.writerWithDefaultPrettyPrinter().writeValue(file, jsonMap);
 
         } catch (IOException e) {
-            System.out.println(e.getMessage() + " : " + e.getCause().getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -110,7 +118,13 @@ public class Database {
                 campo.setAccessible(true); // pega todos os atributos dela e bota no mapa
                 try {
                     Object valor = campo.get(objeto);
-                    mapa.put(campo.getName(), valor);
+
+                    if (valor instanceof LocalDate date) { // corrigir o formato das datas
+                        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                        mapa.put(campo.getName(), date.format(formato));
+                    }
+                    else
+                        mapa.put(campo.getName(), valor);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }

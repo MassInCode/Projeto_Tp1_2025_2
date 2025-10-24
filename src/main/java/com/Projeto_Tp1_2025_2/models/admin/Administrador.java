@@ -1,8 +1,5 @@
 package com.Projeto_Tp1_2025_2.models.admin;
 
-import com.Projeto_Tp1_2025_2.exceptions.InvalidCPF;
-import com.Projeto_Tp1_2025_2.exceptions.InvalidPassword;
-import com.Projeto_Tp1_2025_2.exceptions.InvalidRole;
 import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
 
 public class Administrador extends Funcionario {

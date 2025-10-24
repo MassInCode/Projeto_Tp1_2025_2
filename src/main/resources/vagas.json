@@ -1,0 +1,13 @@
+{
+  "id" : "1",
+  "vagas" : [ {
+    "requisitos" : "ser feliz",
+    "contador" : 1,
+    "salarioBase" : 200000.0,
+    "departamento" : "Banco",
+    "id" : 0,
+    "cargo" : "banqueiro",
+    "dataAbertura" : null,
+    "status" : "FECHADA"
+  } ]
+}
