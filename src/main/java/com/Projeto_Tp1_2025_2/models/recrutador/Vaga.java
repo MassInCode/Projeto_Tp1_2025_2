@@ -3,9 +3,13 @@ package com.Projeto_Tp1_2025_2.models.recrutador;
 import com.Projeto_Tp1_2025_2.util.Database;
 
 import java.io.IOException;
+import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
+import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.ArrayList;
 
 public class Vaga {
     private static int contador;
@@ -19,36 +23,44 @@ public class Vaga {
             System.out.println(e.getMessage());
         }
     }
-    
+
     private int id;
     private String cargo;
     private double salarioBase;
     private String requisitos;
+    private String regimeContratacao;
     private String departamento;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") // essa annotation serve para o localdate ser apropriadamente alocado na database
     private LocalDate dataAbertura;
     private StatusVaga status;
+    private ArrayList<Candidato> candidatos;
 
-    public Vaga(String cargo, double salarioBase, String requisitos, String departamento) {
+    public Vaga(String cargo, double salarioBase, String requisitos, String departamento, String regimeContratacao) {
         this.id = contador++;  // vai incrementar o contador cada vez que chamar o construtor
         this.cargo = cargo;
         this.salarioBase = salarioBase;
         this.requisitos = requisitos;
         this.departamento = departamento;
+        this.regimeContratacao = regimeContratacao;
 
         this.dataAbertura = null; // não está aberta ainda
         this.status = StatusVaga.FECHADA;
+
+        candidatos = new ArrayList<>();
     }
 
-    public Vaga(int id, String cargo, double salarioBase, String requisitos, String departamento, LocalDate dataAbertura, StatusVaga status) {
+    public Vaga(int id, String cargo, double salarioBase, String requisitos, String departamento, String regimeContratacao, LocalDate dataAbertura, StatusVaga status) {
         this.id = id;
         this.cargo = cargo;
         this.salarioBase = salarioBase;
         this.requisitos = requisitos;
         this.departamento = departamento;
         this.dataAbertura = dataAbertura;
+        this.regimeContratacao = regimeContratacao;
         this.status = status;
+
+        candidatos = new ArrayList<>();
     }
 
     public void abrir(){
@@ -59,7 +71,7 @@ public class Vaga {
         this.status = StatusVaga.FECHADA;
     }
 
-    public void editarVaga(String cargo, double salarioBase, String requisitos){
+    public void editarVaga(String cargo, double salarioBase, String requisitos, String regimeContratacao, String departamento){
 
     }
 
@@ -87,5 +99,10 @@ public class Vaga {
         if (this.status == StatusVaga.ATIVO)
             return dataAbertura.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         return "00/00/00";
+    }
+
+        @Override
+    public String toString() {
+        return "ID: " + id + ", Cargo: " + cargo + ", Salário: " + salarioBase + ", Requisitos: " + requisitos + ", Departamento: " + departamento + ", Regime: " + regimeContratacao + ", Data de Abertura: " + dataAbertura + " ,Status: " + status;
     }
 }

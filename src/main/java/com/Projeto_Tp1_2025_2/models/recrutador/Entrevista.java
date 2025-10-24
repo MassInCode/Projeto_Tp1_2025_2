@@ -16,11 +16,16 @@ public class Entrevista {
         this.avaliador = avaliador;
     }
 
-    void registraNota(double nota){
+    void setNota(double nota){
         this.nota = nota;
     }
 
     public void reagendarEntrevista(Candidato candidato, LocalDateTime data, String avaliador){
 
+    }
+
+    @Override
+    public String toString() {
+        return "Entrevista em " + data + " com " + avaliador + " | Nota: " + nota;
     }
 }
