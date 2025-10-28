@@ -94,7 +94,7 @@ public class GestaoController {
             List<Map<String, Object>> dados = db.getData("vagas");
 
             for (Map<String, Object> mapa : dados) {
-                data.add(new Vaga(Integer.parseInt(mapa.get("id").toString()), mapa.get("cargo").toString(), Double.parseDouble(mapa.get("salarioBase").toString()), mapa.get("requisitos").toString(), mapa.get("departamento").toString(),
+                data.add(new Vaga(Integer.parseInt(mapa.get("id").toString()), mapa.get("cargo").toString(), Double.parseDouble(mapa.get("salarioBase").toString()), mapa.get("requisitos").toString(), mapa.get("departamento").toString(), mapa.get("regimeContratacao").toString(),
                         LocalDate.parse(mapa.get("dataAbertura").toString()), StatusVaga.valueOf(mapa.get("status").toString())));
 
             }
@@ -122,7 +122,7 @@ public class GestaoController {
 
     @FXML
     private void criarVaga() {
-        Vaga vaga = new Vaga(cv_cargo.getText(), Double.parseDouble(cv_salario.getText()), cv_requisitos.getText(), cv_departamento.getText());
+        Vaga vaga = new Vaga(cv_cargo.getText(), Double.parseDouble(cv_salario.getText()), cv_requisitos.getText(), cv_departamento.getText(), "CLT");
         db.addObject(vaga, "vagas");
         int id = vaga.getId();
         db.setActualId(++id);
