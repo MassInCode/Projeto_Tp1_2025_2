@@ -65,29 +65,34 @@ public class LoginController {
             if (novo.equals("CANDIDATO")) {
                 separator_formacao.setManaged(true);
                 fadeNode(ld_formacao_cadastro, true);
-            } else {
+            }
+            else {
                 fadeNode(ld_formacao_cadastro, false);
-                fadeNode(separator_formacao, false);
+
             }
         });
     }
 
     private void fadeNode(Node node, boolean mostrar) {
-        node.setManaged(true); // garante que o layout considere o nó
-        FadeTransition ft = new FadeTransition(Duration.millis(300), node);
         if (mostrar) {
+            node.setManaged(true); // garante que o layout considere o nó
+            FadeTransition ft = new FadeTransition(Duration.millis(300), node);
             node.setVisible(true);    // precisa ser visível antes do fade-in
             ft.setFromValue(0.0);
             ft.setToValue(1.0);
-        } else {
+            ft.play();
+        }
+        else {
+            FadeTransition ft = new FadeTransition(Duration.millis(300), node);
             ft.setFromValue(1.0);
             ft.setToValue(0.0);
             ft.setOnFinished(e -> {
                 node.setVisible(false);  // ao final do fade-out, some
                 node.setManaged(false);  // remove o espaço
+                separator_formacao.setManaged(false);
             });
+            ft.play();
         }
-        ft.play();
     }
 
     @FXML

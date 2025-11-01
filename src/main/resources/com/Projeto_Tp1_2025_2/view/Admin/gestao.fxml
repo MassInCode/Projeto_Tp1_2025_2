@@ -27,8 +27,8 @@
                <children>
                   <ToolBar orientation="VERTICAL" prefHeight="678.0" prefWidth="158.0">
                     <items>
-                      <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Vagas" textFill="WHITE" />
-                        <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Pedidos de Contrataçao" textFill="WHITE" />
+                      <Button fx:id="vagas_btn" mnemonicParsing="false" onAction="#abrirVagas" prefHeight="35.0" prefWidth="165.0" text="Vagas" textFill="WHITE" />
+                        <Button fx:id="pedidos_btn" mnemonicParsing="false" onAction="#abrirContratacoes" prefHeight="35.0" prefWidth="165.0" text="Pedidos de Contrataçao" textFill="WHITE" />
                         <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Gerar Relatorio" textFill="WHITE" />
                         <Button mnemonicParsing="false" onAction="#gerarf" prefHeight="35.0" prefWidth="165.0" text="Gerar Folha de Pagamento" textFill="WHITE">
                            <font>
@@ -55,20 +55,21 @@
                            <children>
                               <TableView fx:id="tabela_vagas" layoutX="13.0" layoutY="13.0" prefHeight="631.0" prefWidth="943.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <columns>
-                                  <TableColumn fx:id="colunaCargo" prefWidth="75.0" text="Cargo" />
-                                  <TableColumn fx:id="colunaSalario" prefWidth="109.0" text="Salario Base" />
-                                    <TableColumn fx:id="colunaRequisitos" prefWidth="123.0" text="Requisitos" />
-                                    <TableColumn fx:id="colunaDepartamento" prefWidth="123.0" text="Departamento" />
-                                    <TableColumn fx:id="colunaDataAbertura" prefWidth="141.0" text="Data de Abertura" />
+                                  <TableColumn fx:id="colunaCargo" prefWidth="176.0" text="Cargo" />
+                                  <TableColumn fx:id="colunaSalario" prefWidth="114.0" text="Salario Base" />
+                                    <TableColumn fx:id="colunaRequisitos" prefWidth="203.0" text="Requisitos" />
+                                    <TableColumn fx:id="colunaDepartamento" prefWidth="172.0" text="Departamento" />
+                                    <TableColumn fx:id="colunaRegime" prefWidth="93.0" text="Regime" />
+                                    <TableColumn fx:id="colunaDataAbertura" prefWidth="202.0" text="Data de Abertura" />
                                 </columns>
                               </TableView>
                               <TableView fx:id="tabela_pedidos" layoutX="23.0" layoutY="23.0" prefHeight="654.0" prefWidth="966.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <columns>
-                                    <TableColumn prefWidth="75.0" text="Cargo" />
-                                    <TableColumn prefWidth="109.0" text="Salario Base" />
-                                    <TableColumn prefWidth="123.0" text="Requisitos" />
-                                    <TableColumn prefWidth="123.0" text="Departamento" />
-                                    <TableColumn prefWidth="141.0" text="Data de Abertura" />
+                                    <TableColumn prefWidth="231.0" text="Candidato" />
+                                    <TableColumn prefWidth="204.0" text="Vaga" />
+                                    <TableColumn prefWidth="143.0" text="Data Contratação" />
+                                    <TableColumn prefWidth="204.0" text="Regime" />
+                                    <TableColumn prefWidth="170.0" text="Autorizado" />
                                  </columns>
                               </TableView>
                            </children>
@@ -112,9 +113,9 @@
             </StackPane>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="criacaoVagaJanela" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: rgba(0,0,0,0.5);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="criacaoVagaJanela" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: rgba(0,0,0,0.5);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane layoutX="422.0" layoutY="105.0" prefHeight="437.0" prefWidth="414.0" styleClass="telaaction">
+            <AnchorPane layoutX="422.0" layoutY="105.0" prefHeight="440.0" prefWidth="415.0" styleClass="telaaction">
                <children>
                   <VBox alignment="CENTER" layoutX="127.0" layoutY="52.0" prefHeight="437.0" prefWidth="414.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
@@ -155,6 +156,36 @@
                               <Button fx:id="salvar_vaga" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#criarVaga" prefHeight="35.0" prefWidth="120.0" styleClass="btn_confirmar" text="Salvar" textFill="WHITE" />
                               <Separator prefWidth="30.0" />
                               <Button fx:id="cancelar_vaga" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelar" prefHeight="35.0" prefWidth="120.0" styleClass="btn_cancelar" text="Cancelar" textFill="WHITE" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="edicaoVagaJanela" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: rgba(0,0,0,0.5);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane layoutX="433.0" layoutY="140.0" prefHeight="440.0" prefWidth="415.0" styleClass="telaaction">
+               <children>
+                  <VBox alignment="CENTER" layoutX="66.0" layoutY="45.0" prefHeight="440.0" prefWidth="415.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="68.0" prefWidth="306.0" text="Edição de Vagas">
+                           <font>
+                              <Font name="System Bold" size="36.0" />
+                           </font>
+                        </Label>
+                        <Separator orientation="VERTICAL" prefHeight="30.0" visible="false" />
+                        <TextField fx:id="ev_cargo" maxWidth="370.0" minWidth="200.0" prefWidth="20.0" promptText="Cargo" styleClass="lineedit" />
+                        <TextField fx:id="ev_salario" maxWidth="370.0" promptText="Salário" styleClass="lineedit" />
+                        <TextField fx:id="ev_requisitos" maxWidth="370.0" promptText="Requisitos" styleClass="lineedit" />
+                        <TextField fx:id="ev_departamento" maxHeight="370.0" maxWidth="370.0" promptText="Departamento" styleClass="lineedit" />
+                        <TextField fx:id="ev_regime" maxHeight="370.0" maxWidth="370.0" promptText="Departamento" styleClass="lineedit" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button fx:id="btn_ev_salvar" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="120.0" styleClass="btn_confirmar" text="Salvar" textFill="WHITE" />
+                              <Separator prefWidth="30.0" visible="false" />
+                              <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelar" prefHeight="35.0" prefWidth="120.0" styleClass="btn_cancelar" text="Cancelar" textFill="WHITE" />
                            </children>
                         </HBox>
                      </children>

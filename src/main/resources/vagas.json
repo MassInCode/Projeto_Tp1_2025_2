@@ -1,4 +1,26 @@
 {
-  "id" : "0",
-  "vagas" : []
+  "id" : "2",
+  "vagas" : [ {
+    "requisitos" : "42",
+    "contador" : 1,
+    "regimeContratacao" : "ghfgjh",
+    "candidatos" : [ ],
+    "salarioBase" : 132.0,
+    "departamento" : "g2g",
+    "id" : 0,
+    "cargo" : "ijiooihohupi",
+    "dataAbertura" : "01/01/0001",
+    "status" : "FECHADA"
+  }, {
+    "requisitos" : "klasdmfkamsf",
+    "contador" : 2,
+    "regimeContratacao" : "askmfalkosf",
+    "candidatos" : [ ],
+    "salarioBase" : 19112.2,
+    "departamento" : "skadmfalçskmf",
+    "id" : 1,
+    "cargo" : "asidjasijd",
+    "dataAbertura" : "14/02/0036",
+    "status" : "FECHADA"
+  } ]
 }

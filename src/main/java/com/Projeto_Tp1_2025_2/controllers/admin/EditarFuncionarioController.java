@@ -1,6 +1,5 @@
 package com.Projeto_Tp1_2025_2.controllers.admin;
 
-import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -11,8 +10,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import java.security.PublicKey;
 
 public class EditarFuncionarioController {
     @FXML TextField ed_nome;

@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class RecrutamentoController {
+public class RecrutamentoController implements TelaController {
 
     @FXML
     private Button btn_sair;
@@ -21,9 +21,14 @@ public class RecrutamentoController {
     }
 
     @FXML
+    public void carregarDados() {
+        return;
+    }
+
+    @FXML
     private void sair() throws IOException {
         try {
-            var resource = getClass().getResource("/com/Projeto_Tp1_2025_2/view/Login/login.fxml");
+            var resource = getClass().getResource(telas.get("LOGIN"));
             Parent root;
 
             if (resource != null) {

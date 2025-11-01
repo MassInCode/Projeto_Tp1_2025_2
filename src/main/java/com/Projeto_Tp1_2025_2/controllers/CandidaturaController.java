@@ -3,27 +3,18 @@ package com.Projeto_Tp1_2025_2.controllers;
 import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class CandidaturaController {
+public class CandidaturaController implements TelaController {
 
     @FXML AnchorPane tab_vagas;
     @FXML AnchorPane tab_candidatos;
 
     @FXML
     private void onClickSair(ActionEvent event) throws IOException {
-        SceneSwitcher.sceneswitcher(event, "Login", "/com/Projeto_Tp1_2025_2/view/Login/login.fxml");
+        SceneSwitcher.sceneswitcher(event, "Login", telas.get("LOGIN"));
     }
 
     @FXML
@@ -32,6 +23,11 @@ public class CandidaturaController {
             tab_candidatos.setVisible(false);
         }
         tab_vagas.setVisible(true);
+    }
+
+    @FXML
+    public void carregarDados() {
+        return;
     }
 
     @FXML

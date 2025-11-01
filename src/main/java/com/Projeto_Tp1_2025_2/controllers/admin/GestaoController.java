@@ -1,6 +1,8 @@
 package com.Projeto_Tp1_2025_2.controllers.admin;
 
-import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
+import com.Projeto_Tp1_2025_2.controllers.TelaController;
+import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
+import com.Projeto_Tp1_2025_2.models.recrutador.Contratacao;
 import com.Projeto_Tp1_2025_2.models.recrutador.StatusVaga;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
 import com.Projeto_Tp1_2025_2.util.Database;
@@ -15,15 +17,19 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-public class GestaoController {
+public class GestaoController implements TelaController {
     Database db;
 
     @FXML AnchorPane janelaSobreposta;
     @FXML AnchorPane criacaoVagaJanela;
+    @FXML AnchorPane edicaoVagaJanela;
+
     @FXML TableView<Vaga> tabela_vagas;
+    @FXML TableView<Contratacao> tabela_pedidos;
 
     @FXML TextField cv_cargo;
     @FXML TextField cv_salario;
@@ -31,16 +37,24 @@ public class GestaoController {
     @FXML TextField cv_departamento;
     @FXML TextField cv_regime;
 
+    @FXML TextField ev_cargo;
+    @FXML TextField ev_salario;
+    @FXML TextField ev_requisitos;
+    @FXML TextField ev_departamento;
+    @FXML TextField ev_regime;
+    @FXML Button btn_ev_salvar;
+
     @FXML private TableColumn<Vaga, String> colunaCargo;
     @FXML private TableColumn<Vaga, String> colunaSalario;
     @FXML private TableColumn<Vaga, String> colunaRequisitos;
     @FXML private TableColumn<Vaga, String> colunaDepartamento;
+    @FXML private TableColumn<Vaga, String> colunaRegime;
     @FXML private TableColumn<Vaga, String> colunaDataAbertura;
 
     @FXML
     public void initialize() {
         try {
-            db = new Database("src/main/resources/vagas.json");
+            db = new Database(db_paths.get(DATABASES.VAGAS));
         }
         catch (IOException e) {
             System.out.println(e.getCause().toString() + " : " + e.getMessage());
@@ -52,6 +66,7 @@ public class GestaoController {
         colunaSalario.setCellValueFactory(cellData -> new SimpleStringProperty(Double.toString(cellData.getValue().getSalarioBase())));
         colunaRequisitos.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRequisitos()));
         colunaDepartamento.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDepartamento()));
+        colunaRegime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRegime()));
         colunaDataAbertura.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataAbertura()));
 
         carregarDados();
@@ -77,6 +92,23 @@ public class GestaoController {
 
             rowMenu.getItems().addAll(editarVaga, excluirVaga, atribuirRecrutador);
 
+            editarVaga.setOnAction(e -> abrirEdicao(row));
+
+            excluirVaga.setOnAction(e -> {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmação");
+                alert.setHeaderText("Tem certeza que deseja excluir este usuário?");
+
+                var resultado = alert.showAndWait();
+
+                if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+                    tabela_vagas.getItems().remove(row.getItem());
+                    db.deleteObject(row.getItem(), "usuarios");
+                }
+            });
+
+            //atribuirRecrutador.setOnAction(e -> {}); // esperar terminarem recrutador
+
             // so vai aparecer quando clicado em cima de uma linha
             row.contextMenuProperty().bind(
                     Bindings.when(row.emptyProperty())
@@ -89,18 +121,27 @@ public class GestaoController {
     }
 
     @FXML
-    private void carregarDados() {
+    public void carregarDados() {
         try {
-            ObservableList<Vaga> data = FXCollections.observableArrayList();
+            ObservableList<Vaga> data1 = FXCollections.observableArrayList();
             List<Map<String, Object>> dados = db.getData("vagas");
 
             for (Map<String, Object> mapa : dados) {
-                data.add(new Vaga(Integer.parseInt(mapa.get("id").toString()), mapa.get("cargo").toString(), Double.parseDouble(mapa.get("salarioBase").toString()), mapa.get("requisitos").toString(), mapa.get("departamento").toString(), mapa.get("regimeContratacao").toString(),
-                        LocalDate.parse(mapa.get("dataAbertura").toString()), StatusVaga.valueOf(mapa.get("status").toString())));
+                data1.add(new Vaga(Integer.parseInt(mapa.get("id").toString()), mapa.get("cargo").toString(), Double.parseDouble(mapa.get("salarioBase").toString()), mapa.get("requisitos").toString(), mapa.get("departamento").toString(), mapa.get("regimeContratacao").toString(),
+                        LocalDate.parse(mapa.get("dataAbertura").toString(), DateTimeFormatter.ofPattern("dd/MM/yyyy")), StatusVaga.valueOf(mapa.get("status").toString())));
 
             }
 
-            tabela_vagas.setItems(data);
+            tabela_vagas.setItems(data1);
+            /*
+            ObservableList<Contratacao> data2 = FXCollections.observableArrayList();
+            List<Map<String, Object>> dados2 = db.getData("pedidos");
+
+            for (Map<String, Object> mapa : dados2) {
+                data2.add(new Contratacao(
+                        new Candidato()
+                ));
+            }*/
         }
         catch (IOException e) {
             System.out.println(e.getMessage());
@@ -134,13 +175,61 @@ public class GestaoController {
     }
 
     @FXML
+    public void abrirEdicao(TableRow<Vaga> row) {
+        edicaoVagaJanela.setVisible(true);
+
+        System.out.println("chamando edicao de vagas");
+
+        // coloca as informações já presentes
+        ev_cargo.setText(row.getItem().getCargo());
+        ev_salario.setText(String.valueOf(row.getItem().getSalarioBase()));
+        ev_requisitos.setText(row.getItem().getRequisitos());
+        ev_departamento.setText(row.getItem().getDepartamento());
+        ev_regime.setText(row.getItem().getRegime());
+
+        btn_ev_salvar.setOnAction(e -> {
+            row.getItem().editarVaga(ev_cargo.getText(), Double.parseDouble(ev_salario.getText()), ev_requisitos.getText(), ev_departamento.getText(), ev_regime.getText());
+            tabela_vagas.refresh();
+
+            if (db.editObject(row.getItem(), "vagas")) {
+                System.out.println("foi");
+            }
+            else {
+                System.out.println("erro");
+            }
+            this.cancelar();
+        });
+
+    }
+
+    @FXML
     private void cancelar() {
         cv_cargo.setText("");
         cv_salario.setText("");
         cv_requisitos.setText("");
         cv_departamento.setText("");
+        cv_regime.setText("");
+
+        ev_cargo.setText("");
+        ev_salario.setText("");
+        ev_requisitos.setText("");
+        ev_departamento.setText("");
+        ev_regime.setText("");
 
         criacaoVagaJanela.setVisible(false);
+        edicaoVagaJanela.setVisible(false);
+    }
+
+    @FXML
+    private void abrirVagas() {
+        tabela_pedidos.setVisible(false);
+        tabela_vagas.setVisible(true);
+    }
+
+    @FXML
+    private void abrirContratacoes() {
+        tabela_vagas.setVisible(false);
+        tabela_pedidos.setVisible(true);
     }
 
 }

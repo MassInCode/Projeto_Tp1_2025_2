@@ -44,7 +44,7 @@ public class Vaga {
         this.departamento = departamento;
         this.regimeContratacao = regimeContratacao;
 
-        this.dataAbertura = null; // não está aberta ainda
+        this.dataAbertura = LocalDate.of(0, 1, 1); // não está aberta ainda
         this.status = StatusVaga.FECHADA;
 
         candidatos = new ArrayList<>();
@@ -72,7 +72,11 @@ public class Vaga {
     }
 
     public void editarVaga(String cargo, double salarioBase, String requisitos, String regimeContratacao, String departamento){
-
+        this.cargo = cargo;
+        this.salarioBase = salarioBase;
+        this.requisitos = requisitos;
+        this.regimeContratacao = regimeContratacao;
+        this.departamento = departamento;
     }
 
     public int getId() {
@@ -95,10 +99,18 @@ public class Vaga {
         return departamento;
     }
 
+    public String getRegime() {return regimeContratacao;}
+
+    public StatusVaga getStatus() {return status;}
+
     public String getDataAbertura() {
         if (this.status == StatusVaga.ATIVO)
             return dataAbertura.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         return "00/00/00";
+    }
+
+    public LocalDate getDataAberturaLD() {
+        return dataAbertura;
     }
 
         @Override

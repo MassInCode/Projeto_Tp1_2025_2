@@ -1,6 +1,6 @@
 package com.Projeto_Tp1_2025_2.controllers.admin;
 
-import com.Projeto_Tp1_2025_2.models.Usuario;
+import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
 import com.Projeto_Tp1_2025_2.util.Database;
 import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
@@ -25,16 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class AdminController {
-    public static final Map<String, String> telas = Map.of(
-            "LOGIN", "/com/Projeto_Tp1_2025_2/view/Login/login.fxml",
-            "ADMIN", "/com/Projeto_Tp1_2025_2/view/Admin/admin.fxml",
-            "GESTOR", "/com/Projeto_Tp1_2025_2/view/Admin/gestao.fxml",
-            "CANDIDATO", "/com/Projeto_Tp1_2025_2/view/Candidatura/candidatura.fxml",
-            "RECRUTADOR", "/com/Projeto_Tp1_2025_2/view/Recrutamento/MenuRecrutamento .fxml",
-            "FUNCIONARIO", "/com/Projeto_Tp1_2025_2/view/Financeiro/financeiro.fxml"
-    );
-
+public class AdminController implements TelaController {
     Database db;
     ArrayList<Map<String, Object>> usuarios_filtrado = new ArrayList<>();
 
@@ -54,7 +45,7 @@ public class AdminController {
     public void initialize() {
         // inicializa a database
         try {
-            db = new Database("src/main/resources/usuarios_login.json");
+            db = new Database(db_paths.get(DATABASES.USUARIOS));
         }
         catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
@@ -169,7 +160,7 @@ public class AdminController {
 
 
     @FXML
-    private void carregarDados() {
+    public void carregarDados() {
         try {
             ObservableList<Funcionario> data = FXCollections.observableArrayList();
             List<Map<String, Object>> dados = db.getData("usuarios");
