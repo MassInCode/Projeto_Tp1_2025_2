@@ -9,6 +9,9 @@ module Projeto_Tp1_2025_2 {
     requires java.desktop;
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.datatype.jsr310;
+    //requires Projeto_Tp1_2025_2;
+    requires java.security.sasl;
+    //requires Projeto_Tp1_2025_2;
 
     exports com.Projeto_Tp1_2025_2.main;
     opens com.Projeto_Tp1_2025_2.controllers to javafx.fxml;

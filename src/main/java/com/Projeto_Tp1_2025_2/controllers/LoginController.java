@@ -2,6 +2,7 @@ package com.Projeto_Tp1_2025_2.controllers;
 
 import com.Projeto_Tp1_2025_2.exceptions.InvalidCPF;
 import com.Projeto_Tp1_2025_2.exceptions.InvalidPassword;
+import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
 import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.admin.Administrador;
 import com.Projeto_Tp1_2025_2.models.admin.Gestor;
@@ -15,6 +16,7 @@ import com.Projeto_Tp1_2025_2.controllers.admin.AdminController;
 import java.io.*;
 import java.util.Map;
 
+import com.Projeto_Tp1_2025_2.util.UsuarioService;
 import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -47,8 +49,8 @@ public class LoginController {
     @FXML private Label mensagem_erro2;
 
     @FXML
-    public void initialize() {
-        choiceBox.setItems(FXCollections.observableArrayList(
+    public void initialize() {  //inicializa tudo
+        choiceBox.setItems(FXCollections.observableArrayList(       //inicializa a caixa de seleção com as opções
                 "ADMIN",
                 "RECRUTADOR",
                 "CANDIDATO",
@@ -56,22 +58,24 @@ public class LoginController {
                 "GESTOR"
         ));
 
-        choiceBox.setValue("FUNCIONARIO");
+        choiceBox.setValue("FUNCIONARIO");                          //define a opção inicial como funcionario
 
-        separator_formacao.setManaged(false);
-        ld_formacao_cadastro.setManaged(false);
+        separator_formacao.setManaged(false);                       //esconde a parte de formação
+        ld_formacao_cadastro.setManaged(false);                     //msm coisa
 
         choiceBox.getSelectionModel().selectedItemProperty().addListener((obs, antigo, novo) -> {
+            //se for candidato mostra o formação. se n some
             if (novo.equals("CANDIDATO")) {
                 separator_formacao.setManaged(true);
                 fadeNode(ld_formacao_cadastro, true);
             }
             else {
                 fadeNode(ld_formacao_cadastro, false);
-
             }
         });
     }
+
+
 
     private void fadeNode(Node node, boolean mostrar) {
         if (mostrar) {
@@ -95,20 +99,22 @@ public class LoginController {
         }
     }
 
+
+
     @FXML
-    protected void changeTabLogin() {
+    protected void changeTabLogin() {       //mostra a tela de login
         tab_telaInicial.setVisible(false);
         tab_telaLogin.setVisible(true);
     }
 
     @FXML
-    protected void changeTabCadastro() {
+    protected void changeTabCadastro() {    //mostra a tela de cadastro
         tab_telaInicial.setVisible(false);
         tab_telaCadastro.setVisible(true);
     }
 
     @FXML
-    protected void onClickCancelBtn() {
+    protected void onClickCancelBtn() {     //ve qual tela que é, apaga tudo e volta pra tela inicial
         if (tab_telaLogin.isVisible()) {
             // limpando os campos
             ld_nome.setText("");
@@ -129,6 +135,8 @@ public class LoginController {
         tab_telaInicial.setVisible(true);
     }
 
+
+
     @FXML
     private void btn_recrutamento(ActionEvent event) throws IOException {
         SceneSwitcher.sceneswitcher(event, "Recrutamento", AdminController.telas.get("RECRUTADOR"));
@@ -137,6 +145,11 @@ public class LoginController {
     @FXML
     protected void onClickLoginBtn() throws IOException {
         Database db = new Database("src/main/resources/usuarios_login.json");
+
+        /*
+        * UsuarioService us = new UsuarioService();
+        * us.autenticar(ld_nome.getText(), ld_senha.getText());
+        * */
 
         Map<String, Object> a = db.searchMap("usuarios", "nome", ld_nome.getText(), "senha", ld_senha.getText());
 
@@ -149,62 +162,33 @@ public class LoginController {
         mensagem_erro.setText("");
     }
 
-    /* CAIO sera responsavel por criar as regras de salario dos cargos abaixo, de modo a todos terem assim que se cadastrarem */
     @FXML
-    private Usuario getCargo(String cargo) {
-        return switch (cargo) {
-            case "ADMIN" -> new Administrador(ld_nome_cadastro.getText(), ld_senha_cadastro.getText(), ld_cpf_cadastro.getText(), ld_email_cadastro.getText(), choiceBox.getValue());
-            case "CANDIDATO" -> new Candidato(ld_nome_cadastro.getText(), ld_senha_cadastro.getText(), ld_cpf_cadastro.getText(), ld_email_cadastro.getText(), choiceBox.getValue(), (
-                    (ld_formacao_cadastro.getText().isEmpty()) ? "Null" : ld_formacao_cadastro.getText())
-            ); //! ALTERAR LOGIN PARA MODIFICAR O CANDIDATO
-            case "RECRUTADOR" -> new Recrutador(ld_nome_cadastro.getText(), ld_senha_cadastro.getText(), ld_cpf_cadastro.getText(), ld_email_cadastro.getText(), choiceBox.getValue());
-            case "FUNCIONARIO" -> new Funcionario(ld_nome_cadastro.getText(), ld_senha_cadastro.getText(), ld_cpf_cadastro.getText(), ld_email_cadastro.getText(), choiceBox.getValue());
-            case "GESTOR" -> new Gestor(ld_nome_cadastro.getText(), ld_senha_cadastro.getText(), ld_cpf_cadastro.getText(), ld_email_cadastro.getText(), choiceBox.getValue());
-            default -> null;
-        };
+    protected void limparCampos() {
+        ld_cpf_cadastro.setText("");
+        ld_email_cadastro.setText("");
+        ld_nome_cadastro.setText("");
+        ld_senha_cadastro.setText("");
+        ld_senha2_cadastro.setText("");
+        ld_formacao_cadastro.setText("");
+        choiceBox.setValue("FUNCIONARIO");
+        mensagem_erro.setText("");
+        mensagem_erro2.setText("");
     }
 
+
+    //botao que cadastra
     @FXML
     protected void onClickCadastroBtn() {
-        if (!(ld_senha_cadastro.getText().equals(ld_senha2_cadastro.getText()))) {
-            mensagem_erro2.setText("Senhas não conferem.");
-            return;
-        }
 
-        if (ld_email_cadastro.getText().isEmpty() || ld_cpf_cadastro.getText().isEmpty() || ld_nome_cadastro.getText().isEmpty() || ld_senha_cadastro.getText().isEmpty() || ld_senha2_cadastro.getText().isEmpty()) {
-            mensagem_erro2.setText("Campos obrigatórios vazios.");
-            return;
-        }
-
-        try {
-            Database db = new Database("src/main/resources/usuarios_login.json");
-
-            Usuario a = getCargo(choiceBox.getValue());
-
-            if (db.searchMap("usuarios", "cpf", a.getCpf(), "nome", a.getNome()) != null) {
-                mensagem_erro2.setText("CPF ou nome já cadastrados.");
-                return;
-            }
-
-            db.addObject(a, "usuarios");
-            int id = a.getId();
-            db.setActualId(++id);
-
-            ld_cpf_cadastro.setText("");
-            ld_email_cadastro.setText("");
-            ld_nome_cadastro.setText("");
-            ld_formacao_cadastro.setText("");
-        }
-        catch (InvalidCPF | InvalidPassword | FileNotFoundException e) {
+        UsuarioService us = new UsuarioService();
+        try{
+            us.registrar(ld_nome_cadastro.getText(), ld_email_cadastro.getText(), ld_cpf_cadastro.getText(), ld_senha_cadastro.getText(), ld_senha2_cadastro.getText(), choiceBox.getValue(), ld_formacao_cadastro.getText());
+            limparCampos();
+            onClickCancelBtn();
+        } catch(ValidationException | IOException e){
             mensagem_erro2.setText(e.getMessage());
         }
 
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        onClickCancelBtn(); // temporario
     }
 
     @FXML
