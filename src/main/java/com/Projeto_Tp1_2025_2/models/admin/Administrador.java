@@ -10,4 +10,9 @@ public class Administrador extends Funcionario {
     public Administrador(String nome, String senha, String cpf, String email, String cargo) {
         super(nome, senha, cpf, email, cargo);
     }
+
+    //nao apagar
+    public Administrador(){super();}
+    //nao apagar
+
 }

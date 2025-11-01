@@ -27,6 +27,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import javax.security.sasl.AuthenticationException;
+
 public class LoginController {
     @FXML private AnchorPane tab_telaInicial;
     @FXML private AnchorPane tab_telaLogin;
@@ -144,22 +146,13 @@ public class LoginController {
 
     @FXML
     protected void onClickLoginBtn() throws IOException {
-        Database db = new Database("src/main/resources/usuarios_login.json");
-
-        /*
-        * UsuarioService us = new UsuarioService();
-        * us.autenticar(ld_nome.getText(), ld_senha.getText());
-        * */
-
-        Map<String, Object> a = db.searchMap("usuarios", "nome", ld_nome.getText(), "senha", ld_senha.getText());
-
-        if (a == null) {
-            mensagem_erro.setText("Usuário não encontrado.");
-            return;
+        try{
+            UsuarioService us = new UsuarioService();
+            Usuario usuario = us.autenticar(ld_nome.getText(), ld_senha.getText());
+            entrar(usuario.getCargo());
+        } catch (AuthenticationException e){
+            mensagem_erro.setText(e.getMessage());
         }
-
-        entrar(a.get("cargo").toString());
-        mensagem_erro.setText("");
     }
 
     @FXML
@@ -194,6 +187,11 @@ public class LoginController {
     @FXML
     private void entrar(String f) throws IOException {
         Stage stage = (Stage) btn_login_entrar.getScene().getWindow();
+
+        String caminhoDoFxml = AdminController.telas.get(f);
+        System.out.println("Cargo para entrar: " + f);
+        System.out.println("Caminho do FXML encontrado: " + caminhoDoFxml);
+
         SceneSwitcher.sceneswitcher(stage, f, AdminController.telas.get(f));
     }
 }

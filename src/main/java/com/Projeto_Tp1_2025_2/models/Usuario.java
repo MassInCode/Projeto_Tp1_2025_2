@@ -26,6 +26,12 @@ public abstract class Usuario {
     private String email;
     private String cargo;
 
+
+    //nao apagar
+    public Usuario() {}
+    //nao apagar
+
+
     public Usuario(String nome, String senha, String cpf, String email, String cargo) throws InvalidPassword, InvalidCPF {
         this.nome = nome;
         this.email = email;
@@ -165,4 +171,10 @@ public abstract class Usuario {
     public void setCargo(String cargo) {
         this.cargo = cargo;
     }
+
+    public String getSenha() {return senha;}
+
+    public void setSenha(String senha) {this.senha = senha;}
+
+    public void setId(int id) {this.id = id;}
 }

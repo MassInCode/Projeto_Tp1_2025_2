@@ -1,6 +1,13 @@
 package com.Projeto_Tp1_2025_2.util;
 
 
+import com.Projeto_Tp1_2025_2.models.Usuario;
+import com.Projeto_Tp1_2025_2.models.admin.Administrador;
+import com.Projeto_Tp1_2025_2.models.admin.Gestor;
+import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
+import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
+import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -24,6 +31,8 @@ public class Database {
         /* SUPORTE AOS LOCALDATES */
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         file = new File(path);
 
@@ -115,6 +124,7 @@ public class Database {
         while (clazz != null) {
             Field[] campos = clazz.getDeclaredFields();
             for (Field campo : campos) {
+
                 campo.setAccessible(true); // pega todos os atributos dela e bota no mapa
                 try {
                     Object valor = campo.get(objeto);
@@ -241,5 +251,63 @@ public class Database {
             return false;
         }
     }
+
+
+
+    //procura o registro e ao inves de retornar apenas o map, converte o map em objeto e retorna o objeto Usuario
+    public Usuario searchUsuario(String data, String... kvalues) throws IOException {
+
+        Map<String, Object> userData = this.searchMap(data, kvalues);
+
+        if(userData == null) return null;
+
+        try{
+            return convertMaptoUsuario(userData);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    //auxiliar do metodo de cima
+    private Usuario convertMaptoUsuario(Map<String, Object> userData) throws IOException {
+
+        String cargo = (String) userData.get("cargo");
+
+        if(cargo == null) return null;
+
+        Class<? extends Usuario> clazz;
+        switch (cargo){
+
+            case "ADMIN":
+                clazz = Administrador.class;
+                break;
+
+            case "CANDIDATO":
+                clazz = Candidato.class;
+                break;
+
+            case "RECRUTADOR":
+                clazz = Recrutador.class;
+                break;
+
+            case "FUNCIONARIO":
+                clazz = Funcionario.class;
+                break;
+
+            case "GESTOR":
+                clazz = Gestor.class;
+                break;
+
+            default:
+                clazz = Usuario.class;
+                break;
+
+        }
+        return mapper.convertValue(userData, clazz);
+    }
+
+
 
 }

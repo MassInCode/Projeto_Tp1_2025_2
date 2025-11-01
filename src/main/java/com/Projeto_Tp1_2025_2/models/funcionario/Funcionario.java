@@ -29,6 +29,11 @@
             this.departamento = departamento;
         }
 
+        //nao apagar
+        public Funcionario(){super();}
+        //nao apagar
+
+
         public Funcionario(int id, String nome, String senha, String cpf, String email, String cargo,double salario,boolean status,String dataContratacao,String regime, String departamento) {
             super(id, nome, senha, cpf, email, cargo);
             this.salariobruto = salario;

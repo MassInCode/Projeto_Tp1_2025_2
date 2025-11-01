@@ -28,16 +28,17 @@ public class UsuarioService {
     }
 
 
-    /*public Usuario autenticar(String nome, String senha) throws IOException {
-        Map<String, Object> userData = db.searchMap("usuarios", "nome", nome, "senha", senha);
+    public Usuario autenticar(String nome, String senha) throws IOException {
 
-        if(userData == null){
+        Usuario usuario = db.searchUsuario("usuarios", "nome", nome, "senha", senha);
+
+        if(usuario == null){
             throw new AuthenticationException("Usuario ou senha invalidos.");
         }
 
-        Usuario usuario = db.getUserObjectFromMap(userData); // Um método hipotético
         return usuario;
-    }*/
+    }
+
 
     public void registrar(String nome, String email, String cpf, String senha, String senhaConfirm, String cargo, String formacao) throws IOException, ValidationException {
         if(!(senha.equals(senhaConfirm))){

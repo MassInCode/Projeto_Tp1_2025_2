@@ -20,4 +20,9 @@ public class Recrutador extends Funcionario {
         super(nome, senha, cpf, email, cargo);
     }
 
+
+    //nao apagar
+    public Recrutador(){super();}
+    //nao apagar
+
 }
