@@ -8,11 +8,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Button;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,7 +50,69 @@ public class CandidaturaController implements TelaController {
         colFormacao.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFormacao()));
 
         carregarCandidatos();
+        criarContextMenu();
     }
+
+
+    private void criarContextMenu() throws IOException {
+
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem editarItem =  new MenuItem("Editar Candidato");
+        MenuItem excluirItem =  new MenuItem("Excluir Candidato");
+
+        editarItem.setOnAction(event -> {
+
+            Candidato candidatoSelecionado = tabCandidatos.getSelectionModel().getSelectedItem();
+            if(candidatoSelecionado != null){
+                try {
+                    abrirModalDeEdicao(candidatoSelecionado);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+        });
+
+        excluirItem.setOnAction(event -> {
+            Candidato candidatoSelecionado = tabCandidatos.getSelectionModel().getSelectedItem();
+            if(candidatoSelecionado != null){
+                //excluirCandidato(candidatoSelecionado);
+            }
+        });
+
+        contextMenu.getItems().addAll(editarItem, excluirItem);
+
+        tabCandidatos.setRowFactory(tv -> {
+            TableRow<Candidato> row = new TableRow<>();
+
+            row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+                if(isNowEmpty){
+                    row.setContextMenu(null);
+                } else{
+                    row.setContextMenu(contextMenu);
+                }
+            });
+            return row;
+        });
+    }
+
+
+    private void abrirModalDeEdicao(Candidato candidatoSelecionado) throws IOException {
+        try{
+            var resource = getClass().getResource("/com/Projeto_Tp1_2025_2/view/Recrutamento/TelaEditarCandidato.fxml");
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent root = loader.load();
+            EditarController controller = loader.getController();
+            controller.initData(candidatoSelecionado);
+            Window ownerStage = (Window) tab_vagas.getScene().getWindow();
+            SceneSwitcher.newfloatingscene(root, "Editar Candidato: " + candidatoSelecionado.getNome(), ownerStage);
+            tabCandidatos.refresh();
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+
 
     private void carregarCandidatos() throws IOException {
 

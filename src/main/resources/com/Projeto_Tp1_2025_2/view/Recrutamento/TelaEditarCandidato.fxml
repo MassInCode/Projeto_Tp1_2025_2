@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="anchorpane" stylesheets="@../Admin/admin.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.EditarController">
+    <children>
+        <AnchorPane layoutX="26.0" layoutY="21.0" prefHeight="678.0" prefWidth="1228.0" styleClass="telaaction" stylesheets="@../Admin/admin.css" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="21.0">
+         <children>
+            <Label fx:id="lblNome" layoutX="353.0" layoutY="138.0" text="Nome" />
+            <Label fx:id="lblCpf" layoutX="353.0" layoutY="166.0" text="Cpf" />
+            <Label fx:id="lblEmail" layoutX="353.0" layoutY="198.0" text="Email" />
+            <Label fx:id="lblForm" layoutX="353.0" layoutY="229.0" text="Formação" />
+            <Label fx:id="lblNomeCad" layoutX="433.0" layoutY="138.0" text="Label" />
+            <Label fx:id="lblCpfCad" layoutX="433.0" layoutY="166.0" text="Label" />
+            <Label fx:id="lblEmailCad" layoutX="433.0" layoutY="198.0" text="Label" />
+            <Label fx:id="lblFormCad" layoutX="433.0" layoutY="229.0" text="Label" />
+         </children>
+        </AnchorPane>
+    </children>
+</AnchorPane>

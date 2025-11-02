@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import javafx.stage.Modality;
+import javafx.stage.Window;
 
 /*
 
@@ -62,4 +64,20 @@ public class SceneSwitcher{
             e.printStackTrace();
         }
     }
+
+
+    public static void newfloatingscene(Parent root, String title, Window ownerStage) throws FileNotFoundException {
+
+        Stage modalStage = new Stage();
+        modalStage.setTitle(title);
+        modalStage.setScene(new Scene(root));
+        modalStage.setResizable(false);
+
+        modalStage.initModality(Modality.APPLICATION_MODAL);
+        modalStage.initOwner(ownerStage);
+        modalStage.showAndWait();
+
+    }
+
+
 }
