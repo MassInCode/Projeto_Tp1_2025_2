@@ -1,5 +1,4 @@
 package com.Projeto_Tp1_2025_2.controllers;
-
 import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
 import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
@@ -18,75 +17,68 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
 public class CandidaturaController implements TelaController {
 
-    @FXML Button btn_sair;
-    @FXML AnchorPane tab_vagas;
-    @FXML AnchorPane tab_candidatos;
-    @FXML AnchorPane tab_RegistrarVaga;
-    @FXML TableView<Candidato> tabCandidatos;
-    @FXML TableColumn<Candidato, String> colNome;
-    @FXML TableColumn<Candidato, String> colCpf;
-    @FXML TableColumn<Candidato, String> colEmail;
-    @FXML TableColumn<Candidato, String> colFormacao;
-    @FXML Label error_message;
-    @FXML TextField txtCargo;
-    @FXML TextField txtSalario;
-    @FXML TextField txtDepartamento;
-    @FXML TextField txtRequisitos;
+    @FXML private Button btn_sair;
+    @FXML private AnchorPane tab_vagas;
+    @FXML private AnchorPane tab_candidatos;
+    @FXML private AnchorPane tab_RegistrarVaga;
+    @FXML private AnchorPane tab_RegistrarCandidato;
+    @FXML private TableView<Candidato> tabCandidatos;
+    @FXML private TableColumn<Candidato, String> colNome;
+    @FXML private TableColumn<Candidato, String> colCpf;
+    @FXML private TableColumn<Candidato, String> colEmail;
+    @FXML private TableColumn<Candidato, String> colFormacao;
+    @FXML private Label error_message;
+    @FXML private TextField txtCargo;
+    @FXML private TextField txtSalario;
+    @FXML private TextField txtDepartamento;
+    @FXML private TextField txtRequisitos;
     @FXML private ChoiceBox<String> choiceRegime;
-    @FXML TableView<Vaga> tabVagas;
-    @FXML TableColumn<Vaga, String> colVaga;
-    @FXML TableColumn<Vaga, String> colDepartamento;
-    @FXML TableColumn<Vaga, String> colNumCandidatos;
-    @FXML TableColumn<Vaga, String> colCodigo;
-    @FXML TableColumn<Vaga, String> colStatus;
+    @FXML private TableView<Vaga> tabVagas;
+    @FXML private TableColumn<Vaga, String> colVaga;
+    @FXML private TableColumn<Vaga, String> colDepartamento;
+    @FXML private TableColumn<Vaga, String> colNumCandidatos;
+    @FXML private TableColumn<Vaga, String> colCodigo;
+    @FXML private TableColumn<Vaga, String> colStatus;
+    @FXML private TextField ld_nome_cadastro;
+    @FXML private TextField ld_email_cadastro;
+    @FXML private TextField ld_cpf_cadastro;
+    @FXML private PasswordField ld_senha_cadastro;
+    @FXML private TextField ld_formacao_cadastro;
+    @FXML private Label mensagem_erro2;
 
-
-
-    AnchorPane nowVisible;
+    private AnchorPane nowVisible;
     private Database db;
-    private Database vdb;
+    UsuarioService usuarioService;
+    VagaService vagaService;
 
 
 
     @FXML
     public void initialize() throws IOException {
 
-        choiceRegime.setItems(FXCollections.observableArrayList(
-                "CLT",
-                "PJ",
-                "ESTAGIO"
-        ));
+        choiceRegime.setItems(FXCollections.observableArrayList("CLT", "PJ", "ESTAGIO"));
         choiceRegime.setValue("CLT");
 
-        try{
-            db = new Database("src/main/resources/usuarios_login.json");
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
+        usuarioService = new UsuarioService();
+        vagaService = new VagaService();
 
-        try{
-            vdb = new Database("src/main/resources/vagas.json");
-        }  catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-
+        //==============CARREGA A TABELA DE VAGAS==============
         colVaga.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCargo()));
         colDepartamento.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDepartamento()));
-        colNumCandidatos.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNumCandidatos().toString()));
-        colCodigo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId().toString()));
+        colNumCandidatos.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getNumCandidatos())));
+        colCodigo.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getId())));
         colStatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus().toString()));
 
 
+        //  ==============CARREGA A TABELA DE CANDIDATOS==============
         colNome.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNome()));
         colCpf.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCpf()));
         colEmail.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
@@ -101,6 +93,8 @@ public class CandidaturaController implements TelaController {
     }
 
 
+
+    //==============CONTEXT MENU DE CANDIDATOS(EDITAR E EXCLUIR)==============
     private void criarContextMenuCandidato() throws IOException {
 
         ContextMenu contextMenu = new ContextMenu();
@@ -147,7 +141,6 @@ public class CandidaturaController implements TelaController {
         });
     }
 
-
     private void abrirModalDeEdicao(Candidato candidatoSelecionado) throws IOException {
         try{
             var resource = getClass().getResource("/com/Projeto_Tp1_2025_2/view/Recrutamento/TelaEditarCandidato.fxml");
@@ -163,44 +156,7 @@ public class CandidaturaController implements TelaController {
         }
     }
 
-
-
-    private void carregarCandidatos() throws IOException {
-
-        try{
-            List<Usuario> allUsuarios = db.getAllUsuarios("usuarios");
-            List<Candidato> candidatos = new ArrayList<>();
-
-            for(Usuario u : allUsuarios){
-                if(u instanceof Candidato){
-                    candidatos.add((Candidato) u);
-                }
-            }
-
-            tabCandidatos.setItems(FXCollections.observableArrayList(candidatos));
-
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-
-    }
-
-
-    private void carregarVagas() throws IOException {
-
-        try{
-            List<Vaga> vagas = vdb.getAllVagas("vagas");
-            tabVagas.setItems(FXCollections.observableArrayList(vagas));
-
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-
-    }
-
-
-    @FXML
-    private void excluirCandidato(Candidato candidatoSelecionado) throws IOException {
+    @FXML private void excluirCandidato(Candidato candidatoSelecionado) throws IOException {
         if(candidatoSelecionado == null){
             System.out.println("Nenhum candidato selecionado para excluir.");
             return;
@@ -224,15 +180,45 @@ public class CandidaturaController implements TelaController {
             }
         }
     }
+    //==============CONTEXT MENU DE CANDIDATOS(EDITAR E EXCLUIR)==============
 
 
-    @FXML
-    private void onClickSair(ActionEvent event) throws IOException {
-        SceneSwitcher.sceneswitcher(event, "Login", telas.get("LOGIN"));
+
+    //==============CARREGA DADOS DAS TABELAS==============
+    private void carregarCandidatos() throws IOException {
+        try{
+            //List<Usuario> allUsuarios = db.getAllUsuarios("usuarios");
+            List<Usuario> allUsuarios = usuarioService.getAllUsuarios();
+            List<Candidato> candidatos = new ArrayList<>();
+            for(Usuario u : allUsuarios){
+                if(u instanceof Candidato){
+                    candidatos.add((Candidato) u);
+                }
+            }
+
+            tabCandidatos.setItems(FXCollections.observableArrayList(candidatos));
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
-    @FXML
-    private void btn_vagas(ActionEvent event) throws IOException {
+    private void carregarVagas() throws IOException {
+
+        try{
+            List<Vaga> vagas = vagaService.getAllVagas();
+            tabVagas.setItems(FXCollections.observableArrayList(vagas));
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+    //==============CARREGA DADOS DAS TABELAS==============
+
+
+
+    //=====================BOTOES=======================
+    @FXML private void btn_vagas(ActionEvent event) throws IOException {
+        //carregarVagas();
         if(nowVisible != tab_vagas && nowVisible != null){
             nowVisible.setVisible(false);
         }
@@ -240,28 +226,16 @@ public class CandidaturaController implements TelaController {
         nowVisible = tab_vagas;
     }
 
-    @FXML
-    public void carregarDados() {
-        return;
-    }
-
-    @FXML
-    private void btn_candidatos(ActionEvent event) throws IOException {
+    @FXML private void btn_candidatos(ActionEvent event) throws IOException {
         if(nowVisible != tab_candidatos && nowVisible != null){
             nowVisible.setVisible(false);
         }
+        carregarCandidatos();
         tab_candidatos.setVisible(true);
         nowVisible = tab_candidatos;
     }
 
-    @FXML
-    public void sair() throws IOException {
-        Stage stage = (Stage) btn_sair.getScene().getWindow();
-        SceneSwitcher.sceneswitcher(stage, "Sistema de RH", telas.get("LOGIN"));
-    }
-
-    @FXML
-    private void btn_RegistrarVaga(ActionEvent event) throws IOException {
+    @FXML private void btn_RegistrarVaga(ActionEvent event) throws IOException {
         if(nowVisible != tab_RegistrarVaga){
             nowVisible.setVisible(false);
         }
@@ -269,21 +243,45 @@ public class CandidaturaController implements TelaController {
         nowVisible = tab_RegistrarVaga;
     }
 
+    @FXML private void btn_RegistrarCandidato(ActionEvent event) throws IOException {
+        if(nowVisible != tab_RegistrarCandidato){
+            nowVisible.setVisible(false);
+        }
+        tab_RegistrarCandidato.setVisible(true);
+        nowVisible = tab_RegistrarCandidato;
+    }
+    //=====================BOTOES=======================
 
-    @FXML
-    protected void onClickRegistrarVaga(ActionEvent event) throws IOException {
 
-        VagaService vs = new VagaService();
+
+    //==============ON CLICKS==============
+    @FXML protected void onClickRegistrarVaga(ActionEvent event) throws IOException {
         try{
-            vs.registrar(txtCargo.getText(), txtSalario.getText(), txtRequisitos.getText(), choiceRegime.getValue(), txtDepartamento.getText());
+            vagaService.registrar(txtCargo.getText(), txtSalario.getText(), txtRequisitos.getText(), choiceRegime.getValue(), txtDepartamento.getText());
             limparCampos();
+            carregarVagas();
         } catch(ValidationException | IOException e){
             error_message.setText(e.getMessage());
         }
-
     }
 
+    @FXML private void onClickSair(ActionEvent event) throws IOException {
+        SceneSwitcher.sceneswitcher(event, "Login", telas.get("LOGIN"));
+    }
 
+    @FXML protected void onClickCadastroBtn() {
+        try{
+            usuarioService.registrar(ld_nome_cadastro.getText(), ld_email_cadastro.getText(), ld_cpf_cadastro.getText(), ld_senha_cadastro.getText(), "CANDIDATO", ld_formacao_cadastro.getText());
+            limparCampos();
+        } catch(ValidationException | IOException e){
+            mensagem_erro2.setText(e.getMessage());
+        }
+    }
+    //==============ON CLICKS==============
+
+
+
+    //==============HELPERS==============
     void limparCampos(){
 
         txtCargo.setText("");
@@ -291,8 +289,17 @@ public class CandidaturaController implements TelaController {
         txtRequisitos.setText("");
         txtDepartamento.setText("");
         choiceRegime.setValue("CLT");
-
     }
+    //==============HELPERS==============
 
+
+
+    @FXML public void carregarDados() {
+        return;
+    }
+    @FXML public void sair() throws IOException {
+        Stage stage = (Stage) btn_sair.getScene().getWindow();
+        SceneSwitcher.sceneswitcher(stage, "Sistema de RH", telas.get("LOGIN"));
+    }
 
 }

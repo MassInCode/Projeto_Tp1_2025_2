@@ -15,6 +15,7 @@ import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.Projeto_Tp1_2025_2.models.recrutador.StatusVaga.ATIVO;
 
@@ -40,6 +41,12 @@ public class VagaService {
         db.addObject(vaga, "vagas");
         int id = vaga.getId();
         db.setActualId(++id);
+    }
+
+
+    public List<Vaga> getAllVagas() throws IOException {
+        this.db = new Database("src/main/resources/vagas.json");
+        return db.getAllVagas("vagas");
     }
 
 

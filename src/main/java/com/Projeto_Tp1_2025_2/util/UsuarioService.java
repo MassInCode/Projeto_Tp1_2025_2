@@ -13,6 +13,7 @@ import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
 import javax.security.sasl.AuthenticationException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public class UsuarioService {
@@ -58,6 +59,23 @@ public class UsuarioService {
     }
 
 
+    //==============SOBRECARGA DE REGISTRAR==============
+    public void registrar(String nome, String email, String cpf, String senha, String cargo, String formacao) throws IOException, ValidationException {
+
+        if(email.isEmpty() || nome.isEmpty() || cpf.isEmpty() || senha.isEmpty()){
+            throw new ValidationException("Campos Obrigatorios Vazios.");
+        }
+        if(db.searchMap("usuarios", "cpf", cpf, "nome", nome) != null){
+            throw new ValidationException("Cpf ou nome ja cadastrados.");
+        }
+
+        Usuario user = criarUsuarioPorCargo(nome, email, cpf, senha, cargo, formacao);
+        db.addObject(user, "usuarios");
+        int id = user.getId();
+        db.setActualId(++id);
+    }
+
+
     private Usuario criarUsuarioPorCargo(String nome, String email, String cpf, String senha, String cargo, String formacao) throws IOException, ValidationException, FileNotFoundException {
         try{
             return switch (cargo) {
@@ -75,6 +93,11 @@ public class UsuarioService {
         }
     }
 
+
+    public List<Usuario> getAllUsuarios() throws IOException {
+        this.db = new Database("src/main/resources/usuarios_login.json");
+        return db.getAllUsuarios("usuarios");
+    }
 
 
 }

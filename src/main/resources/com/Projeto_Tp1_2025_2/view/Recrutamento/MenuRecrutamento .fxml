@@ -19,7 +19,8 @@
                                 <Button mnemonicParsing="false" onAction="#btn_vagas" prefHeight="35.0" prefWidth="165.0" text="Listar Vagas" textFill="WHITE" />
                         <Button mnemonicParsing="false" onAction="#btn_RegistrarVaga" prefHeight="35.0" prefWidth="165.0" text="Registrar Vagas" textFill="WHITE" />
                                 <Button mnemonicParsing="false" onAction="#btn_candidatos" prefHeight="35.0" prefWidth="165.0" text="Listar Candidatos" textFill="WHITE" />
-                                <Separator orientation="VERTICAL" prefHeight="397.0" prefWidth="0.0" visible="false" />
+                        <Button mnemonicParsing="false" onAction="#btn_RegistrarCandidato" prefHeight="35.0" prefWidth="165.0" text="Registrar Candidato" textFill="WHITE" />
+                                <Separator orientation="VERTICAL" prefHeight="337.0" prefWidth="3.0" visible="false" />
                                 <Button fx:id="btn_sair" mnemonicParsing="false" onAction="#onClickSair" prefHeight="35.0" prefWidth="165.0" text="Sair" textFill="WHITE" />
                             </items>
                         </ToolBar>
@@ -133,6 +134,59 @@
                                           <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="66.0" prefWidth="200.0">
                                              <children>
                                                 <Button mnemonicParsing="false" onAction="#onClickRegistrarVaga" prefHeight="40.0" prefWidth="120.0" styleClass="btn_entrar" text="Registrar" textFill="WHITE" />
+                                                <Separator prefWidth="40.0" visible="false" />
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane fx:id="tab_RegistrarCandidato" prefHeight="639.0" prefWidth="1037.0" visible="false">
+                                 <children>
+                                    <VBox alignment="CENTER" layoutX="6.0" layoutY="150.0" prefHeight="268.0" prefWidth="433.0">
+                                       <children>
+                                          <Label alignment="CENTER" prefHeight="71.0" prefWidth="354.0" text="Candidato" textFill="#2f2a4f">
+                                             <font>
+                                                <Font name="Arial Black" size="48.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="TOP_CENTER" prefHeight="32.0" prefWidth="246.0" text="Insira as informações">
+                                             <font>
+                                                <Font name="Arial" size="20.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" layoutX="481.0" layoutY="76.0" maxHeight="-Infinity" prefHeight="487.0" prefWidth="490.0">
+                                       <children>
+                                          <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
+                                          <HBox alignment="CENTER">
+                                             <children>
+                                                <Separator prefWidth="100.0" visible="false" />
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                                          <TextField fx:id="ld_nome_cadastro" minHeight="-Infinity" prefHeight="30.0" promptText="Nome" styleClass="lineedit" />
+                                          <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
+                                          <TextField fx:id="ld_email_cadastro" minHeight="-Infinity" prefHeight="30.0" promptText="Email" styleClass="lineedit" />
+                                          <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
+                                          <TextField fx:id="ld_cpf_cadastro" minHeight="-Infinity" prefHeight="30.0" promptText="CPF" styleClass="lineedit" />
+                                          <Separator fx:id="separator_formacao1" orientation="VERTICAL" prefHeight="200.0" visible="false" />
+                                          <TextField fx:id="ld_formacao_cadastro" minHeight="-Infinity" prefHeight="30.0" promptText="Formação" styleClass="lineedit" />
+                                          <Separator minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="20.0" visible="false" />
+                                          <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
+                                          <PasswordField fx:id="ld_senha_cadastro" minHeight="-Infinity" prefHeight="30.0" promptText="Senha" styleClass="lineedit" />
+                                          <Label fx:id="mensagem_erro2" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="355.0" textFill="#e41111">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="66.0" prefWidth="200.0">
+                                             <children>
+                                                <Button mnemonicParsing="false" onAction="#onClickCadastroBtn" prefHeight="40.0" prefWidth="120.0" styleClass="btn_entrar" text="Cadastrar-se" textFill="WHITE" />
                                                 <Separator prefWidth="40.0" visible="false" />
                                              </children>
                                           </HBox>

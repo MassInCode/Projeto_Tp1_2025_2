@@ -25,7 +25,7 @@ public class Vaga {
         }
     }
 
-    private Integer id;
+    private int id;
     private String cargo;
     private double salarioBase;
     private String requisitos;
@@ -52,7 +52,7 @@ public class Vaga {
         this.dataAbertura = LocalDate.of(0, 1, 1); // não está aberta ainda
         this.status = StatusVaga.FECHADA;
 
-        candidaturas = new ArrayList<>();
+        this.candidaturas = new ArrayList<>();
     }
 
     public Vaga(int id, String cargo, double salarioBase, String requisitos, String departamento, String regimeContratacao, LocalDate dataAbertura, StatusVaga status) {
@@ -65,7 +65,7 @@ public class Vaga {
         this.regimeContratacao = regimeContratacao;
         this.status = status;
 
-        candidaturas = new ArrayList<>();
+        this.candidaturas = new ArrayList<>();
     }
 
     public Vaga(String cargo, double salarioBase, String requisitos, String departamento, String regimeContratacao, LocalDate dataAbertura, StatusVaga status) {
@@ -77,7 +77,7 @@ public class Vaga {
         this.regimeContratacao = regimeContratacao;
         this.status = status;
 
-        candidaturas = new ArrayList<>();
+        this.candidaturas = new ArrayList<>();
     }
 
     public void abrir(){
@@ -96,10 +96,10 @@ public class Vaga {
         this.departamento = departamento;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
-    public void setId(Integer id) {this.id = id;}
+    public void setId(int id) {this.id = id;}
 
     public String getCargo() {
         return cargo;
