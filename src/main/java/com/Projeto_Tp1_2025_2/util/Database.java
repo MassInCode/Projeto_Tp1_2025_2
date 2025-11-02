@@ -7,6 +7,7 @@ import com.Projeto_Tp1_2025_2.models.admin.Gestor;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
 import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
+import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -326,6 +327,39 @@ public class Database {
         }
 
         return usuarios;
+    }
+
+
+    public List<Vaga> getAllVagas(String Datakey) throws IOException {
+
+        List<Map<String, Object>> lista = this.getData(Datakey);
+        List<Vaga> vagas = new ArrayList<>();
+
+        if(lista == null || lista.isEmpty()) return vagas;
+
+        for(Map<String, Object> mapa : lista){
+            try{
+                Vaga vaga = convertMaptoVaga(mapa);
+                if(vaga != null) vagas.add(vaga);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return vagas;
+    }
+
+
+    private Vaga convertMaptoVaga(Map<String, Object> vagaData) {
+        if (vagaData == null) {
+            return null;
+        }
+        try {
+            return mapper.convertValue(vagaData, Vaga.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 

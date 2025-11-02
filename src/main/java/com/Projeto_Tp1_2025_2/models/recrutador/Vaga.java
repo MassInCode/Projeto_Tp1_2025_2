@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Vaga {
     private static int contador;
@@ -24,20 +25,24 @@ public class Vaga {
         }
     }
 
-    private int id;
+    private Integer id;
     private String cargo;
     private double salarioBase;
     private String requisitos;
     private String regimeContratacao;
     private String departamento;
-
+    private List<Candidato> candidaturas;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") // essa annotation serve para o localdate ser apropriadamente alocado na database
     private LocalDate dataAbertura;
     private StatusVaga status;
-    private ArrayList<Candidato> candidatos;
+
+    //NAO APAGAR
+    public Vaga() {
+        this.candidaturas = new ArrayList<>();
+    }
 
     public Vaga(String cargo, double salarioBase, String requisitos, String departamento, String regimeContratacao) {
-        this.id = contador++;  // vai incrementar o contador cada vez que chamar o construtor
+        this.id = ++contador;  // vai incrementar o contador cada vez que chamar o construtor
         this.cargo = cargo;
         this.salarioBase = salarioBase;
         this.requisitos = requisitos;
@@ -47,7 +52,7 @@ public class Vaga {
         this.dataAbertura = LocalDate.of(0, 1, 1); // não está aberta ainda
         this.status = StatusVaga.FECHADA;
 
-        candidatos = new ArrayList<>();
+        candidaturas = new ArrayList<>();
     }
 
     public Vaga(int id, String cargo, double salarioBase, String requisitos, String departamento, String regimeContratacao, LocalDate dataAbertura, StatusVaga status) {
@@ -60,7 +65,19 @@ public class Vaga {
         this.regimeContratacao = regimeContratacao;
         this.status = status;
 
-        candidatos = new ArrayList<>();
+        candidaturas = new ArrayList<>();
+    }
+
+    public Vaga(String cargo, double salarioBase, String requisitos, String departamento, String regimeContratacao, LocalDate dataAbertura, StatusVaga status) {
+        this.cargo = cargo;
+        this.salarioBase = salarioBase;
+        this.requisitos = requisitos;
+        this.departamento = departamento;
+        this.dataAbertura = dataAbertura;
+        this.regimeContratacao = regimeContratacao;
+        this.status = status;
+
+        candidaturas = new ArrayList<>();
     }
 
     public void abrir(){
@@ -79,34 +96,47 @@ public class Vaga {
         this.departamento = departamento;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
+    public void setId(Integer id) {this.id = id;}
 
     public String getCargo() {
         return cargo;
     }
+    public void setCargo(String cargo) {this.cargo = cargo;}
 
     public double getSalarioBase() {
         return salarioBase;
     }
+    public void setSalarioBase(double salarioBase) {this.salarioBase = salarioBase;}
 
     public String getRequisitos() {
         return requisitos;
     }
+    public void setRequisitos(String requisitos) {this.requisitos = requisitos;}
 
     public String getDepartamento() {
         return departamento;
     }
+    public void setDepartamento(String departamento) {this.departamento = departamento;}
 
     public String getRegime() {return regimeContratacao;}
+    public void setRegimeContratacao(String regimeContratacao) {this.regimeContratacao = regimeContratacao;}
 
     public StatusVaga getStatus() {return status;}
+    public void setStatus(StatusVaga status) {this.status = status;}
+
+    public Integer getNumCandidatos() {return this.candidaturas.size();}
 
     public String getDataAbertura() {
         if (this.status == StatusVaga.ATIVO)
             return dataAbertura.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         return "00/00/00";
+    }
+    public void setDataAbertura(String dataAbertura) {
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        this.dataAbertura = LocalDate.parse(dataAbertura, formato);
     }
 
     public LocalDate getDataAberturaLD() {

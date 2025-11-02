@@ -6,11 +6,12 @@ import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Candidato extends Usuario {
 
     private String formacao;
-    private ArrayList<Vaga> vagas = new ArrayList<>();
+    private List<Vaga> vagas;
 
     //nao apagar
     public Candidato() {super();}
@@ -19,6 +20,7 @@ public class Candidato extends Usuario {
     public Candidato(String nome, String senha, String cpf, String email, String cargo, String formacao) throws InvalidPassword, InvalidCPF {
         super(nome, senha, cpf, email, cargo);
         this.formacao = formacao;
+        this.vagas = new ArrayList<>();
     }
 
     boolean candidatar(Vaga vaga){
@@ -34,5 +36,9 @@ public class Candidato extends Usuario {
 
     public String getFormacao() {return formacao;}
     public void setFormacao(String formacao) {this.formacao = formacao;}
+    public List<Vaga> getVagas() {return vagas;}
+    public void addVaga(Vaga vaga){
+        vagas.add(vaga);
+    }
 
 }
