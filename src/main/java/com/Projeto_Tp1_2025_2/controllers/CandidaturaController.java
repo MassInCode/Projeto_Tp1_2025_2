@@ -100,13 +100,14 @@ public class CandidaturaController implements TelaController {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem editarItem =  new MenuItem("Editar Candidato");
         MenuItem excluirItem =  new MenuItem("Excluir Candidato");
+        MenuItem registrarCandidatura = new MenuItem("Registrar Candidatura");
 
         editarItem.setOnAction(event -> {
 
             Candidato candidatoSelecionado = tabCandidatos.getSelectionModel().getSelectedItem();
             if(candidatoSelecionado != null){
                 try {
-                    abrirModalDeEdicao(candidatoSelecionado);
+                    abrirModalDeEdicao(candidatoSelecionado, "Editar Candidato: ");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -125,7 +126,19 @@ public class CandidaturaController implements TelaController {
             }
         });
 
-        contextMenu.getItems().addAll(editarItem, excluirItem);
+        registrarCandidatura.setOnAction(event -> {
+            Candidato candidatoSelecionado = tabCandidatos.getSelectionModel().getSelectedItem();
+            if(candidatoSelecionado != null){
+                try {
+                    abrirModalDeEdicao(candidatoSelecionado, "Registrar Candidatura: ");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+
+        contextMenu.getItems().addAll(editarItem, excluirItem,  registrarCandidatura);
 
         tabCandidatos.setRowFactory(tv -> {
             TableRow<Candidato> row = new TableRow<>();
@@ -141,15 +154,15 @@ public class CandidaturaController implements TelaController {
         });
     }
 
-    private void abrirModalDeEdicao(Candidato candidatoSelecionado) throws IOException {
+    private void abrirModalDeEdicao(Candidato candidatoSelecionado, String tela) throws IOException {
         try{
             var resource = getClass().getResource("/com/Projeto_Tp1_2025_2/view/Recrutamento/TelaEditarCandidato.fxml");
             FXMLLoader loader = new FXMLLoader(resource);
             Parent root = loader.load();
             EditarController controller = loader.getController();
-            controller.initData(candidatoSelecionado);
+            controller.initData(candidatoSelecionado, tela, vagaService);
             Window ownerStage = (Window) tab_vagas.getScene().getWindow();
-            SceneSwitcher.newfloatingscene(root, "Editar Candidato: " + candidatoSelecionado.getNome(), ownerStage);
+            SceneSwitcher.newfloatingscene(root, tela + candidatoSelecionado.getNome(), ownerStage);
             tabCandidatos.refresh();
         } catch(IOException e){
             e.printStackTrace();
@@ -249,6 +262,7 @@ public class CandidaturaController implements TelaController {
         }
         tab_RegistrarCandidato.setVisible(true);
         nowVisible = tab_RegistrarCandidato;
+        limparCampos();
     }
     //=====================BOTOES=======================
 
@@ -270,10 +284,17 @@ public class CandidaturaController implements TelaController {
     }
 
     @FXML protected void onClickCadastroBtn() {
+
+        mensagem_erro2.setText("");
+        mensagem_erro2.getStyleClass().removeAll("label-sucesso", "label-erro");
+
         try{
             usuarioService.registrar(ld_nome_cadastro.getText(), ld_email_cadastro.getText(), ld_cpf_cadastro.getText(), ld_senha_cadastro.getText(), "CANDIDATO", ld_formacao_cadastro.getText());
             limparCampos();
+            mensagem_erro2.setStyle("-fx-text-fill: green;");
+            mensagem_erro2.setText("Cadastro registrado com sucesso.");
         } catch(ValidationException | IOException e){
+            mensagem_erro2.setStyle("-fx-text-fill: red;");
             mensagem_erro2.setText(e.getMessage());
         }
     }
@@ -283,12 +304,16 @@ public class CandidaturaController implements TelaController {
 
     //==============HELPERS==============
     void limparCampos(){
-
         txtCargo.setText("");
         txtSalario.setText("");
         txtRequisitos.setText("");
         txtDepartamento.setText("");
         choiceRegime.setValue("CLT");
+        ld_formacao_cadastro.setText("");
+        ld_senha_cadastro.setText("");
+        ld_cpf_cadastro.setText("");
+        ld_nome_cadastro.setText("");
+        ld_email_cadastro.setText("");
     }
     //==============HELPERS==============
 

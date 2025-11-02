@@ -11,7 +11,7 @@ public class Candidatura {
     Candidatura(Candidato candidato, Vaga vaga, StatusCandidatura statusCandidatura){
         this.candidato = candidato;
         this.vaga = vaga;
-        this.statusCandidatura = statusCandidatura;
+        this.statusCandidatura = StatusCandidatura.ANALISE;
     }
 
     public void atualizarStatus(StatusCandidatura statusCandidatura){
