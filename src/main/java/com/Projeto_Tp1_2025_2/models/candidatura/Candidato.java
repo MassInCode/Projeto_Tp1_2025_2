@@ -32,4 +32,6 @@ public class Candidato extends Usuario {
         }
     }
 
+    public String getFormacao() {return formacao;}
+
 }

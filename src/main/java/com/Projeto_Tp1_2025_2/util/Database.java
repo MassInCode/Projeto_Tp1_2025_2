@@ -309,5 +309,25 @@ public class Database {
     }
 
 
+    public List<Usuario> getAllUsuarios(String Datakey) throws IOException {
+
+        List<Map<String, Object>> lista = this.getData(Datakey);
+        List<Usuario> usuarios = new ArrayList<>();
+
+        if(lista == null || lista.isEmpty()) return usuarios;
+
+        for(Map<String, Object> mapa : lista){
+            try{
+                Usuario usuario = convertMaptoUsuario(mapa);
+                if(usuario != null) usuarios.add(usuario);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return usuarios;
+    }
+
+
 
 }
