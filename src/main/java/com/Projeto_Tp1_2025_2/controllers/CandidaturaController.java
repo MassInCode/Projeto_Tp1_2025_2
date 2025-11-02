@@ -67,15 +67,9 @@ public class CandidaturaController implements TelaController {
         choiceRegime.setValue("CLT");
 
         try{
-            db = new Database("src/main/resources/usuarios_login.json");
+            db = new Database(db_paths.get(DATABASES.USUARIOS));
+            vdb = new Database(db_paths.get(DATABASES.VAGAS));
         } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        try{
-            vdb = new Database("src/main/resources/vagas.json");
-        }  catch (IOException e) {
             e.printStackTrace();
             return;
         }

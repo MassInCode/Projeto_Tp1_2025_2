@@ -12,7 +12,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.LoginController">
    <children>
       <AnchorPane fx:id="tab_telaCadastro" prefHeight="678.0" prefWidth="1228.0" styleClass="anchorpane" stylesheets="@login.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -170,13 +169,13 @@
                         <Separator prefWidth="200.0" visible="false" />
                         <VBox alignment="CENTER" prefHeight="217.0" prefWidth="253.0">
                            <children>
-                              <TextField fx:id="ld_nome" minWidth="-Infinity" prefHeight="30.0" promptText="Nome" styleClass="lineedit">
+                              <TextField fx:id="ld_nome" minWidth="-Infinity" onKeyReleased="#onClickEnter" prefHeight="30.0" promptText="Nome" styleClass="lineedit">
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
                               </TextField>
                               <Separator orientation="VERTICAL" prefHeight="30.0" visible="false" />
-                              <PasswordField fx:id="ld_senha" minWidth="-Infinity" prefHeight="30.0" promptText="Senha" styleClass="lineedit" />
+                              <PasswordField fx:id="ld_senha" minWidth="-Infinity" onKeyReleased="#onClickEnter" prefHeight="30.0" promptText="Senha" styleClass="lineedit" />
                               <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                               <Label fx:id="mensagem_erro" alignment="CENTER" prefHeight="30.0" prefWidth="250.0" textFill="#e41111">
                                  <font>

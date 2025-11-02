@@ -3,6 +3,7 @@ package com.Projeto_Tp1_2025_2.controllers.admin;
 import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.recrutador.Contratacao;
+import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
 import com.Projeto_Tp1_2025_2.models.recrutador.StatusVaga;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
 import com.Projeto_Tp1_2025_2.util.Database;
@@ -25,6 +26,8 @@ import java.util.Map;
 
 public class GestaoController implements TelaController {
     Database db;
+    Database udb;
+    List<Map<String, Object>> recrutadores;
 
     @FXML Button btn_sair;
 
@@ -34,6 +37,7 @@ public class GestaoController implements TelaController {
 
     @FXML TableView<Vaga> tabela_vagas;
     @FXML TableView<Contratacao> tabela_pedidos;
+    @FXML TableView<Recrutador> tabela_recrutadores;
 
     @FXML TextField cv_cargo;
     @FXML TextField cv_salario;
@@ -55,10 +59,15 @@ public class GestaoController implements TelaController {
     @FXML private TableColumn<Vaga, String> colunaRegime;
     @FXML private TableColumn<Vaga, String> colunaDataAbertura;
 
+    @FXML private TableColumn<Recrutador, String> colunaRNome;
+    @FXML private TableColumn<Recrutador, String> colunaREmail;
+    @FXML private TableColumn<Recrutador, String> colunaRVagas;
+
     @FXML
     public void initialize() {
         try {
             db = new Database(db_paths.get(DATABASES.VAGAS));
+            udb = new Database(db_paths.get(DATABASES.USUARIOS));
         }
         catch (IOException e) {
             System.out.println(e.getCause().toString() + " : " + e.getMessage());
@@ -74,6 +83,7 @@ public class GestaoController implements TelaController {
         colunaDataAbertura.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataAbertura()));
 
         carregarDados();
+        loadRecrutadores();
 
         ContextMenu tabela_menu = new ContextMenu();
         MenuItem cadastrar_usuario = new MenuItem("Criar vaga."); // cria o item de ação
@@ -122,6 +132,22 @@ public class GestaoController implements TelaController {
 
             return row;
         });
+    }
+
+    @FXML
+    public void loadRecrutadores() {
+        try {
+            List<Map<String, Object>> dados = udb.getData("usuarios");
+
+            for (Map<String, Object> mapa : dados) {
+                if (mapa.get("cargo") != null && mapa.get("cargp").equals("RECRUTADOR")) {
+                    recrutadores.add(mapa);
+                }
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
