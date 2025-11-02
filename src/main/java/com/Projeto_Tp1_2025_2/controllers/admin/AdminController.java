@@ -181,19 +181,6 @@ public class AdminController implements TelaController {
     }
 
     @FXML
-    protected void onClickSair() throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmação");
-        alert.setHeaderText("Você realmente deseja sair?");
-
-        var resultado = alert.showAndWait();
-
-        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            sair();
-        }
-    }
-
-    @FXML
     private void fecharJanela(ActionEvent event) {
         janelaSobreposta.setVisible(false);
     }
@@ -221,8 +208,17 @@ public class AdminController implements TelaController {
 
 
     @FXML
-    private void sair() throws IOException {
-        Stage stage = (Stage) btn_sair.getScene().getWindow();
-        SceneSwitcher.sceneswitcher(stage, "Sistema de RH", telas.get("LOGIN"));
+    public void sair() throws IOException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmação");
+        alert.setHeaderText("Você realmente deseja sair?");
+
+        var resultado = alert.showAndWait();
+
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            Stage stage = (Stage) btn_sair.getScene().getWindow();
+            SceneSwitcher.sceneswitcher(stage, "Sistema de RH", telas.get("LOGIN"));
+        }
+
     }
 }

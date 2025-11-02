@@ -6,6 +6,7 @@ import com.Projeto_Tp1_2025_2.models.recrutador.Contratacao;
 import com.Projeto_Tp1_2025_2.models.recrutador.StatusVaga;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
 import com.Projeto_Tp1_2025_2.util.Database;
+import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -14,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -23,6 +25,8 @@ import java.util.Map;
 
 public class GestaoController implements TelaController {
     Database db;
+
+    @FXML Button btn_sair;
 
     @FXML AnchorPane janelaSobreposta;
     @FXML AnchorPane criacaoVagaJanela;
@@ -232,4 +236,18 @@ public class GestaoController implements TelaController {
         tabela_pedidos.setVisible(true);
     }
 
+    @FXML
+    public void sair() throws IOException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmação");
+        alert.setHeaderText("Você realmente deseja sair?");
+
+        var resultado = alert.showAndWait();
+
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            Stage stage = (Stage) btn_sair.getScene().getWindow();
+            SceneSwitcher.sceneswitcher(stage, "Sistema de RH", telas.get("LOGIN"));
+        }
+
+    }
 }

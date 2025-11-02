@@ -1,5 +1,5 @@
 {
-  "id" : "1",
+  "id" : "2",
   "usuarios" : [ {
     "regime" : "NULL",
     "nome" : "kaio",
@@ -14,6 +14,21 @@
     "salariobruto" : 0.0,
     "cargo" : "GESTOR",
     "email" : "kasodkas",
+    "status" : false
+  }, {
+    "regime" : "NULL",
+    "nome" : "kasopdkas",
+    "vale_alimentacao" : 0.0,
+    "senha" : "K1",
+    "dataContratacao" : "01/11/2025",
+    "contador" : 2,
+    "vale_trasporte" : 0.0,
+    "cpf" : "00",
+    "departamento" : "NULL",
+    "id" : 1,
+    "salariobruto" : 0.0,
+    "cargo" : "ADMIN",
+    "email" : "dasdplaks",
     "status" : false
   } ]
 }

@@ -9,7 +9,6 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -23,27 +22,27 @@
             <children>
                 <HBox layoutX="291.0" layoutY="56.0" prefHeight="678.0" prefWidth="1228.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <children>
-                        <ToolBar nodeOrientation="LEFT_TO_RIGHT" orientation="VERTICAL" prefHeight="678.0" prefWidth="158.0">
-                            <items>
-                                <Button mnemonicParsing="false" onAction="#cadastrar" prefHeight="35.0" prefWidth="165.0" text="Funcionários" textFill="WHITE" />
-                                <Button mnemonicParsing="false" onAction="#regras" prefHeight="35.0" prefWidth="165.0" text="Regras Salariais" textFill="WHITE" />
-                        <Button mnemonicParsing="false" onAction="#regras" prefHeight="35.0" prefWidth="165.0" text="Alterar Perfil" textFill="WHITE" />
-                                <Separator orientation="VERTICAL" prefHeight="480.0" visible="false" />
-                                <Button fx:id="btn_sair" mnemonicParsing="false" onAction="#onClickSair" prefHeight="35.0" prefWidth="165.0" text="Sair" textFill="WHITE" />
-                            </items>
-                        </ToolBar>
-                        <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
-                        <VBox prefHeight="678.0" prefWidth="1047.0">
+                        <VBox prefWidth="158.0" spacing="5" styleClass="tool-bar">
+                            <Button minHeight="-Infinity" minWidth="-Infinity" onAction="#cadastrar" prefHeight="35.0" prefWidth="165.0" text="Funcionários" textFill="WHITE" />
+                            <Button minHeight="-Infinity" minWidth="-Infinity" onAction="#regras" prefHeight="35.0" prefWidth="165.0" text="Regras Salariais" textFill="WHITE" />
+                            <Button minHeight="-Infinity" minWidth="-Infinity" onAction="#regras" prefHeight="35.0" prefWidth="165.0" text="Alterar Perfil" textFill="WHITE" />
+
+                            <!-- Espaço flexível que cresce dinamicamente -->
+                            <Pane prefHeight="482.0" prefWidth="134.0" VBox.vgrow="ALWAYS" />
+
+                            <Button fx:id="btn_sair" minHeight="-Infinity" minWidth="-Infinity" onAction="#sair" prefHeight="35.0" prefWidth="165.0" text="Sair" textFill="WHITE" />
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="678.0" prefWidth="1047.0">
                             <children>
                                 <Separator orientation="VERTICAL" prefHeight="5.0" visible="false" />
                                 <HBox>
                                     <children>
                                         <TextField prefHeight="30.0" prefWidth="1000.0" promptText="Buscar" styleClass="lineedit" />
                                         <Separator prefWidth="40.0" visible="false" />
-                                        <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="130.0" text="Procurar" textFill="WHITE" />
+                                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="75.0" text="Procurar" textFill="WHITE" />
                                     </children>
                                 </HBox>
-                                <Separator orientation="VERTICAL" prefHeight="15.0" visible="false" />
+                                <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
 
                                 <!-- StackPane para alternar tabelas na mesma posição -->
                                 <StackPane prefHeight="618.0" prefWidth="930.0">
