@@ -10,13 +10,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CandidaturaController implements TelaController {
+
+    @FXML Button btn_sair;
 
     @FXML AnchorPane tab_vagas;
     @FXML AnchorPane tab_candidatos;
@@ -92,6 +96,12 @@ public class CandidaturaController implements TelaController {
             tab_vagas.setVisible(false);
         }
         tab_candidatos.setVisible(true);
+    }
+
+    @FXML
+    public void sair() throws IOException {
+        Stage stage = (Stage) btn_sair.getScene().getWindow();
+        SceneSwitcher.sceneswitcher(stage, "Sistema de RH", telas.get("LOGIN"));
     }
 
 }

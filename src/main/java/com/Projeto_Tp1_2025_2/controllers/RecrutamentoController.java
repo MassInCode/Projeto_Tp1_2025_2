@@ -1,5 +1,6 @@
 package com.Projeto_Tp1_2025_2.controllers;
 
+import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,23 +27,8 @@ public class RecrutamentoController implements TelaController {
     }
 
     @FXML
-    private void sair() throws IOException {
-        try {
-            var resource = getClass().getResource(telas.get("LOGIN"));
-            Parent root;
-
-            if (resource != null) {
-                root = FXMLLoader.load(resource);
-            } else {
-                throw new FileNotFoundException("Erro no path do recurso fxml");
-            }
-
-            Stage stage = (Stage) btn_sair.getScene().getWindow();
-            stage.setScene(new Scene(root));
-        }
-
-        catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
+    public void sair() throws IOException {
+        Stage stage = (Stage) btn_sair.getScene().getWindow();
+        SceneSwitcher.sceneswitcher(stage, "Sistema de RH", telas.get("LOGIN"));
     }
 }

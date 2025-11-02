@@ -1,20 +1,12 @@
 package com.Projeto_Tp1_2025_2.controllers;
 
-import com.Projeto_Tp1_2025_2.exceptions.InvalidCPF;
-import com.Projeto_Tp1_2025_2.exceptions.InvalidPassword;
 import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
 import com.Projeto_Tp1_2025_2.models.Usuario;
-import com.Projeto_Tp1_2025_2.models.admin.Administrador;
-import com.Projeto_Tp1_2025_2.models.admin.Gestor;
-import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
-import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
-import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
-import com.Projeto_Tp1_2025_2.util.Database;
 import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
 import com.Projeto_Tp1_2025_2.controllers.admin.AdminController;
+import com.Projeto_Tp1_2025_2.controllers.TelaController;
 
 import java.io.*;
-import java.util.Map;
 
 import com.Projeto_Tp1_2025_2.util.UsuarioService;
 import javafx.animation.FadeTransition;
@@ -56,11 +48,10 @@ public class LoginController {
                 "ADMIN",
                 "RECRUTADOR",
                 "CANDIDATO",
-                "FUNCIONARIO",
                 "GESTOR"
         ));
 
-        choiceBox.setValue("FUNCIONARIO");                          //define a opção inicial como funcionario
+        choiceBox.setValue("RECRUTADOR");                          //define a opção inicial como funcionario
 
         separator_formacao.setManaged(false);                       //esconde a parte de formação
         ld_formacao_cadastro.setManaged(false);                     //msm coisa
@@ -192,6 +183,6 @@ public class LoginController {
         System.out.println("Cargo para entrar: " + f);
         System.out.println("Caminho do FXML encontrado: " + caminhoDoFxml);
 
-        SceneSwitcher.sceneswitcher(stage, f, AdminController.telas.get(f));
+        SceneSwitcher.sceneswitcher(stage, f, TelaController.telas.get(f));
     }
 }
