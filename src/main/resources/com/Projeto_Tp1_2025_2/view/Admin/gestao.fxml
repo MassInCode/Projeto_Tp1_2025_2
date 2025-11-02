@@ -194,5 +194,39 @@
             </AnchorPane>
          </children>
       </AnchorPane>
+      <AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: rgba(0,0,0,0.5);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane layoutX="239.0" layoutY="105.0" prefHeight="480.0" prefWidth="802.0" styleClass="telaaction">
+               <children>
+                  <VBox alignment="CENTER" layoutX="73.0" layoutY="47.0" prefHeight="480.0" prefWidth="802.0" spacing="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="641.0" text="Recrutadores">
+                           <font>
+                              <Font name="System Bold" size="36.0" />
+                           </font>
+                        </Label>
+                        <TableView fx:id="tabela_recrutadores" prefHeight="286.0" prefWidth="641.0">
+                          <columns>
+                            <TableColumn fx:id="colunaRNome" prefWidth="177.0" text="Nome" />
+                            <TableColumn fx:id="colunaREmail" prefWidth="197.0" text="Email" />
+                              <TableColumn fx:id="colunaRVagas" prefWidth="410.0" text="Vagas atribuídas" />
+                          </columns>
+                           <VBox.margin>
+                              <Insets left="20.0" right="20.0" />
+                           </VBox.margin>
+                        </TableView>
+                        <HBox alignment="CENTER" prefHeight="25.0" prefWidth="262.0">
+                           <children>
+                              <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="135.0" text="Atribuir seleção atual" textFill="WHITE" />
+                              <Separator prefWidth="30.0" visible="false" />
+                              <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="120.0" text="Cancelar" textFill="WHITE" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

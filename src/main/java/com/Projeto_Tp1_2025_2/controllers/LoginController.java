@@ -15,6 +15,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -136,6 +138,13 @@ public class LoginController {
     }
 
     @FXML
+    protected void onClickEnter(KeyEvent event) throws IOException{
+        if (event.getCode() == KeyCode.ENTER) {
+            this.onClickLoginBtn();
+        }
+    }
+
+    @FXML
     protected void onClickLoginBtn() throws IOException {
         try{
             UsuarioService us = new UsuarioService();
@@ -154,7 +163,7 @@ public class LoginController {
         ld_senha_cadastro.setText("");
         ld_senha2_cadastro.setText("");
         ld_formacao_cadastro.setText("");
-        choiceBox.setValue("FUNCIONARIO");
+        choiceBox.setValue("CANDIDATO");
         mensagem_erro.setText("");
         mensagem_erro2.setText("");
     }
@@ -179,7 +188,14 @@ public class LoginController {
     private void entrar(String f) throws IOException {
         Stage stage = (Stage) btn_login_entrar.getScene().getWindow();
 
-        String caminhoDoFxml = AdminController.telas.get(f);
+        if (f.equals("CANDIDATO")) {
+            f = "RECRUTADOR";
+        }
+        else if (f.equals("RECRUTADOR")) {
+            f = "CANDIDATO";
+        }
+
+        String caminhoDoFxml = TelaController.telas.get(f);
         System.out.println("Cargo para entrar: " + f);
         System.out.println("Caminho do FXML encontrado: " + caminhoDoFxml);
 
