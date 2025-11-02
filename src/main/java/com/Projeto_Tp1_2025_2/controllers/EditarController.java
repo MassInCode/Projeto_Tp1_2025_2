@@ -11,8 +11,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,28 +20,66 @@ import java.util.List;
 public class EditarController implements TelaController {
 
 
-    @FXML Label lblNome;
-    @FXML Label lblCpf;
-    @FXML Label lblEmail;
-    @FXML Label lblForm;
-    @FXML Label lblNomeCad;
-    @FXML Label lblCpfCad;
-    @FXML Label lblEmailCad;
-    @FXML Label lblFormCad;
+    @FXML TextField txtNome;
+    @FXML TextField txtEmail;
+    @FXML TextField txtCpf;
+    @FXML TextField txtForm;
+
     private Candidato candidato;
+    private Database db;
 
 
     @FXML
     public void initData(Candidato candidatoSelecionado) {
-
         this.candidato = candidatoSelecionado;
 
-        lblNomeCad.setText(candidato.getNome());
-        lblCpfCad.setText(candidato.getCpf());
-        lblEmailCad.setText(candidato.getEmail());
-        lblFormCad.setText(candidato.getFormacao());
+        txtNome.setText(candidato.getNome());
+        txtCpf.setText(candidato.getCpf());
+        txtEmail.setText(candidato.getEmail());
+        txtForm.setText(candidato.getFormacao());
+
+        try{
+            this.db = new Database("src/main/resources/usuarios_login.json");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
+
+    @FXML
+    protected void onClickSaveEdits(ActionEvent event) throws IOException {
+        try{
+            candidato.setNome(txtNome.getText());
+            candidato.setEmail(txtEmail.getText());
+            candidato.setCpf(txtCpf.getText());
+            candidato.setFormacao(txtForm.getText());
+
+            boolean veri = db.editObject(candidato, "usuarios");
+
+            if(veri){
+                System.out.println("Editado com sucesso");
+            } else {
+                System.out.println("Erro ao editar");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    protected void onClickResetEdits(ActionEvent event) throws IOException {
+        txtNome.setText(candidato.getNome());
+        txtCpf.setText(candidato.getCpf());
+        txtEmail.setText(candidato.getEmail());
+        txtForm.setText(candidato.getFormacao());
+    }
+
+
+    @FXML
+    protected void onClickReturn(ActionEvent event) throws IOException {
+        Stage stage = (Stage) txtNome.getScene().getWindow();
+        stage.close();
+    }
 
 
     @Override
