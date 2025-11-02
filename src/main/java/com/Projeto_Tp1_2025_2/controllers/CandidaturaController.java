@@ -18,6 +18,7 @@ import javafx.stage.Window;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CandidaturaController implements TelaController {
 
@@ -76,7 +77,11 @@ public class CandidaturaController implements TelaController {
         excluirItem.setOnAction(event -> {
             Candidato candidatoSelecionado = tabCandidatos.getSelectionModel().getSelectedItem();
             if(candidatoSelecionado != null){
-                //excluirCandidato(candidatoSelecionado);
+                try {
+                    excluirCandidato(candidatoSelecionado);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -132,6 +137,32 @@ public class CandidaturaController implements TelaController {
             e.printStackTrace();
         }
 
+    }
+
+    @FXML
+    private void excluirCandidato(Candidato candidatoSelecionado) throws IOException {
+        if(candidatoSelecionado == null){
+            System.out.println("Nenhum candidato selecionado para excluir.");
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Excluir Candidato");
+        alert.setHeaderText("Excluir Candidato");
+        alert.setContentText("Nome: " + candidatoSelecionado.getNome() + "\nCPF: " + candidatoSelecionado.getCpf());
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if(result.get() == ButtonType.OK && result.isPresent()){
+            boolean veri = db.deleteObject(candidatoSelecionado,  "usuarios");
+            if(veri){
+                tabCandidatos.getItems().remove(candidatoSelecionado);
+                tabCandidatos.refresh();
+                System.out.println("Candidato excluido com sucesso.");
+            } else{
+                System.out.println("Erro ao excluir Candidato");
+            }
+        }
     }
 
 
