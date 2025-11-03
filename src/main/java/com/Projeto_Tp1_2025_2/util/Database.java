@@ -1,6 +1,7 @@
 package com.Projeto_Tp1_2025_2.util;
 
 
+import com.Projeto_Tp1_2025_2.exceptions.NullMapData;
 import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.admin.Administrador;
 import com.Projeto_Tp1_2025_2.models.admin.Gestor;
@@ -19,7 +20,6 @@ import java.time.format.DateTimeFormatter;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -280,40 +280,21 @@ public class Database {
     }
 
     //auxiliar do metodo de cima
-    private Usuario convertMaptoUsuario(Map<String, Object> userData) throws IOException {
+    private Usuario convertMaptoUsuario(Map<String, Object> userData) throws IOException, NullMapData {
 
         String cargo = (String) userData.get("cargo");
 
-        if(cargo == null) return null;
+        if(cargo == null) throw new NullMapData(file.getPath());
 
-        Class<? extends Usuario> clazz;
-        switch (cargo){
+        Class<? extends Usuario> clazz = switch (cargo) {
+            case "ADMIN" -> Administrador.class;
+            case "CANDIDATO" -> Candidato.class;
+            case "RECRUTADOR" -> Recrutador.class;
+            case "FUNCIONARIO" -> Funcionario.class;
+            case "GESTOR" -> Gestor.class;
+            default -> Usuario.class;
+        };
 
-            case "ADMIN":
-                clazz = Administrador.class;
-                break;
-
-            case "CANDIDATO":
-                clazz = Candidato.class;
-                break;
-
-            case "RECRUTADOR":
-                clazz = Recrutador.class;
-                break;
-
-            case "FUNCIONARIO":
-                clazz = Funcionario.class;
-                break;
-
-            case "GESTOR":
-                clazz = Gestor.class;
-                break;
-
-            default:
-                clazz = Usuario.class;
-                break;
-
-        }
         return mapper.convertValue(userData, clazz);
     }
 
@@ -347,7 +328,7 @@ public class Database {
 
         for(Map<String, Object> mapa : lista){
             try{
-                Vaga vaga = convertMaptoVaga(mapa);
+                Vaga vaga = convertMaptoObject(mapa, Vaga.class);
                 if(vaga != null) vagas.add(vaga);
             } catch (Exception e){
                 e.printStackTrace();
@@ -357,27 +338,13 @@ public class Database {
         return vagas;
     }
 
+    public <U> U convertMaptoObject(Map<String, Object> data, Class<U> clazz) throws NullMapData{
+        if (data == null) throw new NullMapData(file.getPath());
 
-    private Vaga convertMaptoVaga(Map<String, Object> vagaData) {
-        if (vagaData == null) {
-            return null;
-        }
         try {
-            return mapper.convertValue(vagaData, Vaga.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            return mapper.convertValue(data, clazz);
         }
-    }
-
-
-    private Candidatura convertMaptoCandidatura(Map<String, Object> candData) {
-        if (candData == null) {
-            return null;
-        }
-        try {
-            return mapper.convertValue(candData, Candidatura.class);
-        } catch (Exception e) {
+        catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -394,7 +361,7 @@ public class Database {
         }
 
         for (Map<String, Object> mapa : listaDeMapas) {
-            Candidatura cand = convertMaptoCandidatura(mapa);
+            Candidatura cand = this.convertMaptoObject(mapa, Candidatura.class);
             if (cand != null) {
                 listaDeCandidaturas.add(cand);
             }

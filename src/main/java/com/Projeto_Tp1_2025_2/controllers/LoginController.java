@@ -188,13 +188,6 @@ public class LoginController {
     private void entrar(String f) throws IOException {
         Stage stage = (Stage) btn_login_entrar.getScene().getWindow();
 
-        if (f.equals("CANDIDATO")) {
-            f = "RECRUTADOR";
-        }
-        else if (f.equals("RECRUTADOR")) {
-            f = "CANDIDATO";
-        }
-
         String caminhoDoFxml = TelaController.telas.get(f);
         System.out.println("Cargo para entrar: " + f);
         System.out.println("Caminho do FXML encontrado: " + caminhoDoFxml);

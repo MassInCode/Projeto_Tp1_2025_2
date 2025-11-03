@@ -1,7 +1,6 @@
 package com.Projeto_Tp1_2025_2.controllers.admin;
 
 import com.Projeto_Tp1_2025_2.controllers.TelaController;
-import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.recrutador.Contratacao;
 import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
 import com.Projeto_Tp1_2025_2.models.recrutador.StatusVaga;
@@ -21,19 +20,21 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class GestaoController implements TelaController {
     Database db;
     Database udb;
-    List<Map<String, Object>> recrutadores;
+    ArrayList<Recrutador> recrutadores;
 
     @FXML Button btn_sair;
 
     @FXML AnchorPane janelaSobreposta;
     @FXML AnchorPane criacaoVagaJanela;
     @FXML AnchorPane edicaoVagaJanela;
+    @FXML AnchorPane atrirecrutadorJanela;
 
     @FXML TableView<Vaga> tabela_vagas;
     @FXML TableView<Contratacao> tabela_pedidos;
@@ -82,6 +83,10 @@ public class GestaoController implements TelaController {
         colunaRegime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRegime()));
         colunaDataAbertura.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataAbertura()));
 
+        colunaRNome.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNome()));
+        colunaREmail.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
+        colunaRVagas.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getVagas().toString()));
+
         carregarDados();
         loadRecrutadores();
 
@@ -121,7 +126,7 @@ public class GestaoController implements TelaController {
                 }
             });
 
-            //atribuirRecrutador.setOnAction(e -> {}); // esperar terminarem recrutador
+            atribuirRecrutador.setOnAction(e -> abrirRecrutador()); // esperar terminarem recrutador
 
             // so vai aparecer quando clicado em cima de uma linha
             row.contextMenuProperty().bind(
@@ -137,13 +142,16 @@ public class GestaoController implements TelaController {
     @FXML
     public void loadRecrutadores() {
         try {
+            recrutadores = new ArrayList<>();
             List<Map<String, Object>> dados = udb.getData("usuarios");
-
             for (Map<String, Object> mapa : dados) {
-                if (mapa.get("cargo") != null && mapa.get("cargp").equals("RECRUTADOR")) {
-                    recrutadores.add(mapa);
+                if (mapa.get("cargo") != null && mapa.get("cargo").equals("RECRUTADOR")) {
+                    System.out.println(udb.convertMaptoObject(mapa, Recrutador.class));
+                    recrutadores.add(udb.convertMaptoObject(mapa, Recrutador.class));
                 }
             }
+
+            System.out.println(recrutadores);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -230,6 +238,14 @@ public class GestaoController implements TelaController {
             this.cancelar();
         });
 
+    }
+
+    @FXML
+    private void abrirRecrutador() {
+        atrirecrutadorJanela.setVisible(true);
+        ObservableList<Recrutador> r = FXCollections.observableArrayList(recrutadores);
+
+        tabela_recrutadores.setItems(r);
     }
 
     @FXML

@@ -25,6 +25,9 @@ public class Recrutador extends Funcionario {
         this.vagas = new ArrayList<>();
     }
 
+    public ArrayList<Vaga> getVagas() {
+        return vagas;
+    }
 
     //nao apagar
     public Recrutador(){super();}
