@@ -55,7 +55,8 @@ public class CandidaturaController implements TelaController {
     private AnchorPane nowVisible;
     UsuarioService usuarioService;
     VagaService vagaService;
-    CandidaturaService  candidaturaService;
+    CandidaturaService candidaturaService;
+    List<Candidatura> allCandidaturas;
 
 
 
@@ -69,7 +70,7 @@ public class CandidaturaController implements TelaController {
         vagaService = new VagaService();
         candidaturaService = new CandidaturaService();
 
-        List<Candidatura> allCandidaturas = candidaturaService.getAllCandidaturas();
+        this.allCandidaturas = candidaturaService.getAllCandidaturas();
 
         //==============CARREGA A TABELA DE VAGAS==============
         colVaga.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCargo()));
@@ -165,10 +166,14 @@ public class CandidaturaController implements TelaController {
             FXMLLoader loader = new FXMLLoader(resource);
             Parent root = loader.load();
             EditarController controller = loader.getController();
-            controller.initData(candidatoSelecionado, tela, vagaService);
+            controller.initData(candidatoSelecionado, tela, vagaService, candidaturaService);
             Window ownerStage = (Window) tab_vagas.getScene().getWindow();
             SceneSwitcher.newfloatingscene(root, tela + candidatoSelecionado.getNome(), ownerStage);
+            carregarVagas();
+            carregarCandidatos();
+            this.allCandidaturas = candidaturaService.getAllCandidaturas();
             tabCandidatos.refresh();
+            tabVagas.refresh();
         } catch(IOException e){
             e.printStackTrace();
         }
@@ -236,7 +241,6 @@ public class CandidaturaController implements TelaController {
 
     //=====================BOTOES=======================
     @FXML private void btn_vagas(ActionEvent event) throws IOException {
-        //carregarVagas();
         if(nowVisible != tab_vagas && nowVisible != null){
             nowVisible.setVisible(false);
         }

@@ -46,11 +46,11 @@ public class EditarController implements TelaController {
 
 
     @FXML
-    public void initData(Candidato candidatoSelecionado, String tela, VagaService vs) throws IOException {
+    public void initData(Candidato candidatoSelecionado, String tela, VagaService vs, CandidaturaService cs) throws IOException {
 
         this.candidato = candidatoSelecionado;
         vagaService = vs;
-        candidaturaService = new CandidaturaService();
+        candidaturaService = cs;
 
         if(tela.equals("Registrar Candidatura: ")){
             carregarNomesVagas();
