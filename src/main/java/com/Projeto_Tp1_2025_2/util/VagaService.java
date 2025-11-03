@@ -37,7 +37,8 @@ public class VagaService {
             throw new ValidationException("Campos Obrigatorios Vazios.");
         }
         LocalDate dataAbertura = LocalDate.now();
-        Vaga vaga = new Vaga(cargo, Double.parseDouble(salario), requisitos, departamento, regime, dataAbertura, ATIVO);
+        Vaga vaga = new Vaga(cargo, Double.parseDouble(salario), requisitos, departamento, regime);
+        vaga.abrir();
         db.addObject(vaga, "vagas");
         int id = vaga.getId();
         db.setActualId(++id);

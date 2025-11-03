@@ -23,7 +23,7 @@
                   <TextField fx:id="txtNome" layoutX="434.0" layoutY="176.0" minHeight="-Infinity" prefHeight="30.0" prefWidth="360.0" styleClass="lineedit" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="tabRegistrarCandidatura" prefHeight="678.0" prefWidth="1228.0">
+            <AnchorPane fx:id="tabRegistrarCandidatura" prefHeight="678.0" prefWidth="1228.0" visible="false">
                <children>
                   <TextField fx:id="txtNomeCad" editable="false" layoutX="14.0" layoutY="73.0" minHeight="-Infinity" prefHeight="30.0" prefWidth="280.0" styleClass="lineedit" />
                   <TextField fx:id="txtEmailCad" editable="false" layoutX="324.0" layoutY="73.0" minHeight="-Infinity" prefHeight="30.0" prefWidth="280.0" styleClass="lineedit" />
@@ -34,6 +34,13 @@
                   <TextField fx:id="txtSalario" editable="false" layoutX="324.0" layoutY="297.0" minHeight="-Infinity" prefHeight="30.0" prefWidth="280.0" styleClass="lineedit" />
                   <TextField fx:id="txtDepart" editable="false" layoutX="626.0" layoutY="297.0" minHeight="-Infinity" prefHeight="30.0" prefWidth="280.0" styleClass="lineedit" />
                   <TextField fx:id="txtRegime" editable="false" layoutX="934.0" layoutY="297.0" minHeight="-Infinity" prefHeight="30.0" prefWidth="280.0" styleClass="lineedit" />
+                  <Button layoutX="436.0" layoutY="430.0" mnemonicParsing="false" onAction="#onClickRegister" prefHeight="40.0" prefWidth="120.0" styleClass="btn_entrar" text="Registrar" textFill="WHITE" />
+                  <Button layoutX="646.0" layoutY="430.0" mnemonicParsing="false" onAction="#onClickReturn" prefHeight="40.0" prefWidth="120.0" styleClass="btn_entrar" text="Cancelar" textFill="WHITE" />
+                  <Label fx:id="mensagem_erro" alignment="CENTER" layoutX="427.0" layoutY="367.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="355.0" textFill="#e41111">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
          </children>

@@ -100,4 +100,12 @@ public class UsuarioService {
     }
 
 
+    public boolean excluirUsuario(Usuario usuario) throws IOException {
+        if (usuario == null) {
+            return false;
+        }
+        return db.deleteObject(usuario, "usuarios");
+    }
+
+
 }

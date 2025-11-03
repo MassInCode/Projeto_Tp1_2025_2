@@ -2,11 +2,9 @@ package com.Projeto_Tp1_2025_2.controllers;
 import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
 import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
+import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
-import com.Projeto_Tp1_2025_2.util.Database;
-import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
-import com.Projeto_Tp1_2025_2.util.UsuarioService;
-import com.Projeto_Tp1_2025_2.util.VagaService;
+import com.Projeto_Tp1_2025_2.util.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -55,9 +53,9 @@ public class CandidaturaController implements TelaController {
     @FXML private Label mensagem_erro2;
 
     private AnchorPane nowVisible;
-    private Database db;
     UsuarioService usuarioService;
     VagaService vagaService;
+    CandidaturaService  candidaturaService;
 
 
 
@@ -69,11 +67,18 @@ public class CandidaturaController implements TelaController {
 
         usuarioService = new UsuarioService();
         vagaService = new VagaService();
+        candidaturaService = new CandidaturaService();
+
+        List<Candidatura> allCandidaturas = candidaturaService.getAllCandidaturas();
 
         //==============CARREGA A TABELA DE VAGAS==============
         colVaga.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCargo()));
         colDepartamento.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDepartamento()));
-        colNumCandidatos.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getNumCandidatos())));
+        colNumCandidatos.setCellValueFactory(cellData -> {
+            Vaga vagaAtual = cellData.getValue();
+            long contagem = allCandidaturas.stream().filter(c->c.getVagaId() == vagaAtual.getId()).count();
+            return new SimpleStringProperty(String.valueOf(contagem));
+        });
         colCodigo.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getId())));
         colStatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus().toString()));
 
@@ -183,7 +188,7 @@ public class CandidaturaController implements TelaController {
         Optional<ButtonType> result = alert.showAndWait();
 
         if(result.get() == ButtonType.OK && result.isPresent()){
-            boolean veri = db.deleteObject(candidatoSelecionado,  "usuarios");
+            boolean veri = usuarioService.excluirUsuario(candidatoSelecionado);
             if(veri){
                 tabCandidatos.getItems().remove(candidatoSelecionado);
                 tabCandidatos.refresh();

@@ -2,8 +2,10 @@ package com.Projeto_Tp1_2025_2.controllers;
 
 import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
+import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
 import com.Projeto_Tp1_2025_2.models.recrutador.StatusVaga;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
+import com.Projeto_Tp1_2025_2.util.CandidaturaService;
 import com.Projeto_Tp1_2025_2.util.Database;
 import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
 import com.Projeto_Tp1_2025_2.util.VagaService;
@@ -34,10 +36,12 @@ public class EditarController implements TelaController {
     @FXML TextField txtForm;
     @FXML AnchorPane tabRegistrarCandidatura;
     @FXML AnchorPane tabEditarCandidato;
+    @FXML Label mensagem_erro;
 
     private Candidato candidato;
     private Database db;
     VagaService vagaService;
+    CandidaturaService candidaturaService;
     List<Vaga> vagasAtivas = new ArrayList<>();
 
 
@@ -46,6 +50,7 @@ public class EditarController implements TelaController {
 
         this.candidato = candidatoSelecionado;
         vagaService = vs;
+        candidaturaService = new CandidaturaService();
 
         if(tela.equals("Registrar Candidatura: ")){
             carregarNomesVagas();
@@ -139,6 +144,22 @@ public class EditarController implements TelaController {
             e.printStackTrace();
         }
     }
+
+
+    @FXML protected void onClickRegister(){
+        try {
+
+            if(cbNomesVagas.getValue() == null){return;}
+            candidaturaService.registrarCandidatura(this.candidato.getId(), cbNomesVagas.getValue().getId());
+
+            mensagem_erro.setStyle("-fx-text-fill: green;");
+            mensagem_erro.setText("Cadastro registrado com sucesso.");
+        } catch (Exception e) {
+            mensagem_erro.setStyle("-fx-text-fill: red;");
+            mensagem_erro.setText(e.getMessage());
+        }
+    }
+
 
     @FXML
     protected void onClickResetEdits(ActionEvent event) throws IOException {

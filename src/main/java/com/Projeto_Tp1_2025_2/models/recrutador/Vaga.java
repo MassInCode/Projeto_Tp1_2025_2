@@ -31,14 +31,14 @@ public class Vaga {
     private String requisitos;
     private String regimeContratacao;
     private String departamento;
-    private List<Candidatura> candidaturas;
+    //private List<Candidatura> candidaturas;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") // essa annotation serve para o localdate ser apropriadamente alocado na database
     private LocalDate dataAbertura;
     private StatusVaga status;
 
     //NAO APAGAR
     public Vaga() {
-        this.candidaturas = new ArrayList<>();
+        //this.candidaturas = new ArrayList<>();
     }
 
     public Vaga(String cargo, double salarioBase, String requisitos, String departamento, String regimeContratacao) {
@@ -52,7 +52,6 @@ public class Vaga {
         this.dataAbertura = LocalDate.of(0, 1, 1); // não está aberta ainda
         this.status = StatusVaga.FECHADA;
 
-        this.candidaturas = new ArrayList<>();
     }
 
     public Vaga(int id, String cargo, double salarioBase, String requisitos, String departamento, String regimeContratacao, LocalDate dataAbertura, StatusVaga status) {
@@ -65,10 +64,10 @@ public class Vaga {
         this.regimeContratacao = regimeContratacao;
         this.status = status;
 
-        this.candidaturas = new ArrayList<>();
     }
 
     public Vaga(String cargo, double salarioBase, String requisitos, String departamento, String regimeContratacao, LocalDate dataAbertura, StatusVaga status) {
+        this.id = ++contador;
         this.cargo = cargo;
         this.salarioBase = salarioBase;
         this.requisitos = requisitos;
@@ -77,11 +76,11 @@ public class Vaga {
         this.regimeContratacao = regimeContratacao;
         this.status = status;
 
-        this.candidaturas = new ArrayList<>();
     }
 
     public void abrir(){
         this.status = StatusVaga.ATIVO;
+        this.dataAbertura = LocalDate.now();
     }
 
     public void fechar(){
@@ -127,8 +126,6 @@ public class Vaga {
     public StatusVaga getStatus() {return status;}
     public void setStatus(StatusVaga status) {this.status = status;}
 
-    public Integer getNumCandidatos() {return this.candidaturas.size();}
-
     public String getDataAbertura() {
         if (this.status == StatusVaga.ATIVO)
             return dataAbertura.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -138,6 +135,7 @@ public class Vaga {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         this.dataAbertura = LocalDate.parse(dataAbertura, formato);
     }
+
 
     public LocalDate getDataAberturaLD() {
         return dataAbertura;

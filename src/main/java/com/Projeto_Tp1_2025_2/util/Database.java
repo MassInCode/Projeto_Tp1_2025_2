@@ -5,6 +5,7 @@ import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.admin.Administrador;
 import com.Projeto_Tp1_2025_2.models.admin.Gestor;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
+import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
 import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
 import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
@@ -12,7 +13,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import java.time.format.DateTimeFormatter;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -30,7 +33,12 @@ public class Database {
 
     public Database(String path) throws IOException{
         /* SUPORTE AOS LOCALDATES */
-        mapper.registerModule(new JavaTimeModule());
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(dtf));
+        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(dtf));
+
+        mapper.registerModule(javaTimeModule);
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -130,12 +138,12 @@ public class Database {
                 try {
                     Object valor = campo.get(objeto);
 
-                    if (valor instanceof LocalDate date) { // corrigir o formato das datas
+                    /*if (valor instanceof LocalDate date) { // corrigir o formato das datas
                         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                         mapa.put(campo.getName(), date.format(formato));
                     }
-                    else
-                        mapa.put(campo.getName(), valor);
+                    else*/
+                    mapa.put(campo.getName(), valor);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -360,6 +368,39 @@ public class Database {
             e.printStackTrace();
             return null;
         }
+    }
+
+
+    private Candidatura convertMaptoCandidatura(Map<String, Object> candData) {
+        if (candData == null) {
+            return null;
+        }
+        try {
+            return mapper.convertValue(candData, Candidatura.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public List<Candidatura> getAllCandidaturas(String dataKey) throws IOException {
+
+        List<Map<String, Object>> listaDeMapas = this.getData(dataKey);
+        List<Candidatura> listaDeCandidaturas = new ArrayList<>();
+
+        if (listaDeMapas == null || listaDeMapas.isEmpty() || listaDeMapas.get(0).isEmpty()) {
+            return listaDeCandidaturas;
+        }
+
+        for (Map<String, Object> mapa : listaDeMapas) {
+            Candidatura cand = convertMaptoCandidatura(mapa);
+            if (cand != null) {
+                listaDeCandidaturas.add(cand);
+            }
+        }
+
+        return listaDeCandidaturas;
     }
 
 
