@@ -3,14 +3,12 @@ package com.Projeto_Tp1_2025_2.models.recrutador;
 import com.Projeto_Tp1_2025_2.util.Database;
 
 import java.io.IOException;
-import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
-import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Vaga {
     private static int contador;
@@ -36,22 +34,25 @@ public class Vaga {
     private LocalDate dataAbertura;
     private StatusVaga status;
 
+    private int id_recrutador_atribuido;
+
+
     //NAO APAGAR
     public Vaga() {
         //this.candidaturas = new ArrayList<>();
     }
 
-    public Vaga(String cargo, double salarioBase, String requisitos, String departamento, String regimeContratacao) {
+    public Vaga(String cargo, double salarioBase, String requisitos, String departamento, String regimeContratacao, int id_recrutador_atribuido) {
         this.id = ++contador;  // vai incrementar o contador cada vez que chamar o construtor
         this.cargo = cargo;
         this.salarioBase = salarioBase;
         this.requisitos = requisitos;
         this.departamento = departamento;
         this.regimeContratacao = regimeContratacao;
+        this.id_recrutador_atribuido = id_recrutador_atribuido;
 
         this.dataAbertura = LocalDate.of(0, 1, 1); // não está aberta ainda
         this.status = StatusVaga.FECHADA;
-
     }
 
     public Vaga(int id, String cargo, double salarioBase, String requisitos, String departamento, String regimeContratacao, LocalDate dataAbertura, StatusVaga status) {
@@ -64,6 +65,7 @@ public class Vaga {
         this.regimeContratacao = regimeContratacao;
         this.status = status;
 
+        this.id_recrutador_atribuido = -1;
     }
 
     public Vaga(String cargo, double salarioBase, String requisitos, String departamento, String regimeContratacao, LocalDate dataAbertura, StatusVaga status) {
@@ -75,6 +77,8 @@ public class Vaga {
         this.dataAbertura = dataAbertura;
         this.regimeContratacao = regimeContratacao;
         this.status = status;
+
+        this.id_recrutador_atribuido = -1;
 
     }
 
@@ -126,14 +130,23 @@ public class Vaga {
     public StatusVaga getStatus() {return status;}
     public void setStatus(StatusVaga status) {this.status = status;}
 
-    public String getDataAbertura() {
-        if (this.status == StatusVaga.ATIVO)
-            return dataAbertura.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        return "00/00/00";
+    public LocalDate getDataAbertura() {
+        return dataAbertura;
     }
     public void setDataAbertura(String dataAbertura) {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         this.dataAbertura = LocalDate.parse(dataAbertura, formato);
+    }
+
+    public int getRecrutadorId() {
+        return this.id_recrutador_atribuido;
+    }
+
+    public boolean atribuir(int recrutador_id) {
+        boolean retorno = id_recrutador_atribuido == -1;
+        this.id_recrutador_atribuido = recrutador_id;
+
+        return retorno; // se nao tem um recrutador, simplesmente o atribui. se ja tem, tem que tirar a vaga do outro
     }
 
 

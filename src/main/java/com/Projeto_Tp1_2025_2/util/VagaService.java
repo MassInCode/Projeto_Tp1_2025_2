@@ -1,5 +1,6 @@
 package com.Projeto_Tp1_2025_2.util;
 
+import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.exceptions.InvalidCPF;
 import com.Projeto_Tp1_2025_2.exceptions.InvalidPassword;
 import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
@@ -25,7 +26,7 @@ public class VagaService {
 
     public VagaService() {
         try{
-            this.db = new Database("src/main/resources/vagas.json");
+            this.db = new Database(TelaController.db_paths.get(TelaController.DATABASES.VAGAS));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -37,7 +38,7 @@ public class VagaService {
             throw new ValidationException("Campos Obrigatorios Vazios.");
         }
         LocalDate dataAbertura = LocalDate.now();
-        Vaga vaga = new Vaga(cargo, Double.parseDouble(salario), requisitos, departamento, regime);
+        Vaga vaga = new Vaga(cargo, Double.parseDouble(salario), requisitos, departamento, regime, -1); // o recrutador sera atribuido pelo gestor
         vaga.abrir();
         db.addObject(vaga, "vagas");
         int id = vaga.getId();

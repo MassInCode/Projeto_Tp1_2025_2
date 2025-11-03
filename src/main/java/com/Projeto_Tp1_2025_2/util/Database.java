@@ -20,11 +20,8 @@ import java.time.format.DateTimeFormatter;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 
 public class Database {
     ObjectMapper mapper = new ObjectMapper();
@@ -94,14 +91,13 @@ public class Database {
             if (current == null){
                 return false;
             }
-
-            v &= current.equals(kvalues[i + 1]);
+            v &= current.toString().equals(kvalues[i + 1]);
         }
 
         return v;
     }
 
-    public Map<String, Object> searchMap(String data, String... kvalues) throws IOException {
+    public Map<String, Object> searchMap(String data, String... kvalues) {
         /**
          * Retorna o mapa específico dado a key e o value. Por exemplo, caso key = "nome" e value = "kaio", ele vai retornar o mapa onde tem essas informações.
          * Caso não ache o mapa, irá retornar null.
@@ -110,15 +106,23 @@ public class Database {
          * @param kvalues Uma lista de pares de (key, value). Exemplo: "nome", "kaio", "senha", "123".
          */
 
-        List<Map<String, Object>> info = this.getData(data);
+        try {
+            List<Map<String, Object>> info = this.getData(data);
 
-        for (Map<String, Object> mapa : info) {
-            if (comparator(kvalues, mapa)) {
-                return mapa;
+            for (Map<String, Object> mapa : info) {
+                if (comparator(kvalues, mapa)) {
+                    return mapa;
+                }
             }
+
+            return null;
         }
 
-        return null;
+        catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     public static <T> Map<String, Object> objectToMap(T objeto) {
@@ -191,13 +195,11 @@ public class Database {
             Object id = novoMapa.get("id");
             if (id == null) return false;
 
-            System.out.println(novoMapa);
-
             // procura o mapa pelo id
             boolean encontrado = false;
             for (int i = 0; i < lista.size(); i++) {
                 Map<String, Object> mapaAtual = lista.get(i);
-                System.out.println(mapaAtual);
+
                 if (mapaAtual.get("id").equals(id)) {
                     // substitui
                     lista.set(i, novoMapa);
@@ -231,13 +233,11 @@ public class Database {
             Object id = novoMapa.get("id");
             if (id == null) return false;
 
-            System.out.println(novoMapa);
-
             // procura o mapa pelo id
             boolean encontrado = false;
             for (int i = 0; i < lista.size(); i++) {
                 Map<String, Object> mapaAtual = lista.get(i);
-                System.out.println(mapaAtual);
+
                 if (mapaAtual.get("id").equals(id)) {
                     // remove
                     lista.remove(i);

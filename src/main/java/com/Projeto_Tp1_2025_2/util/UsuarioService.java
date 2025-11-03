@@ -1,5 +1,6 @@
 package com.Projeto_Tp1_2025_2.util;
 
+import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.exceptions.InvalidCPF;
 import com.Projeto_Tp1_2025_2.exceptions.InvalidPassword;
 import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
@@ -22,16 +23,16 @@ public class UsuarioService {
 
     public UsuarioService() {
         try{
-            this.db = new Database("src/main/resources/usuarios_login.json");
+            this.db = new Database(TelaController.db_paths.get(TelaController.DATABASES.USUARIOS));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
-    public Usuario autenticar(String nome, String senha) throws IOException {
+    public Usuario autenticar(String cpf, String senha) throws IOException { // mudar pra cpf pra manter a pk certa
 
-        Usuario usuario = db.searchUsuario("usuarios", "nome", nome, "senha", senha);
+        Usuario usuario = db.searchUsuario("usuarios", "cpf", cpf, "senha", senha);
 
         if(usuario == null){
             throw new AuthenticationException("Usuario ou senha invalidos.");
@@ -95,7 +96,6 @@ public class UsuarioService {
 
 
     public List<Usuario> getAllUsuarios() throws IOException {
-        this.db = new Database("src/main/resources/usuarios_login.json");
         return db.getAllUsuarios("usuarios");
     }
 

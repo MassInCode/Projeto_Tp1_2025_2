@@ -53,7 +53,7 @@ public class LoginController {
                 "GESTOR"
         ));
 
-        choiceBox.setValue("RECRUTADOR");                          //define a opção inicial como funcionario
+        choiceBox.setValue("CANDIDATO");                          //define a opção inicial como funcionario
 
         separator_formacao.setManaged(false);                       //esconde a parte de formação
         ld_formacao_cadastro.setManaged(false);                     //msm coisa
@@ -140,7 +140,12 @@ public class LoginController {
     @FXML
     protected void onClickEnter(KeyEvent event) throws IOException{
         if (event.getCode() == KeyCode.ENTER) {
-            this.onClickLoginBtn();
+            if (tab_telaLogin.isVisible()) {
+                this.onClickLoginBtn();
+            }
+            else if (tab_telaCadastro.isVisible()) {
+                this.onClickCadastroBtn();
+            }
         }
     }
 

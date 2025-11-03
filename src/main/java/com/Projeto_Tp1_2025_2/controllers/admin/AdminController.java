@@ -168,8 +168,7 @@ public class AdminController implements TelaController {
             for (Map<String, Object> mapa : dados) {
                 if (mapa.get("cargo").equals("CANDIDATO")) continue;
                 usuarios_filtrado.add(mapa);
-                data.add(new Funcionario((int) mapa.get("id"), mapa.get("nome").toString(), mapa.get("senha").toString(), mapa.get("cpf").toString(), mapa.get("email").toString(), mapa.get("cargo").toString(),
-                        Double.parseDouble(mapa.get("salariobruto").toString()), Boolean.parseBoolean(mapa.get("status").toString()), mapa.get("dataContratacao").toString(), mapa.get("regime").toString(), mapa.get("departamento").toString()));
+                data.add(db.convertMaptoObject(mapa, Funcionario.class));
             }
 
             tabelaFuncionarios.setItems(data);
