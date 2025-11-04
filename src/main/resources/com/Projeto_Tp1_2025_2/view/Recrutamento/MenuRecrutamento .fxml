@@ -45,7 +45,7 @@
                                     </children>
                                 </HBox>
                                 <Separator orientation="VERTICAL" prefHeight="15.0" visible="false" />
-                                <AnchorPane prefHeight="656.0" prefWidth="1031.0">
+                                <AnchorPane prefHeight="656.0" prefWidth="1031.0" visible="false">
                                     <children>
                                         <AnchorPane fx:id="tab_candidatos" prefHeight="639.0" prefWidth="1031.0" visible="false">
                                             <children>
@@ -69,7 +69,7 @@
                                         </AnchorPane>
                                         <AnchorPane fx:id="tab_vagas" layoutY="-1.0" prefHeight="639.0" prefWidth="1031.0" visible="false">
                                             <children>
-                                                <TableView fx:id="tabVagas" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="618.0" prefWidth="1031.0">
+                                                <TableView fx:id="tabelaRegistrarVagas" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="618.0" prefWidth="1031.0">
                                                     <columns>
                                                         <TableColumn fx:id="colVaga" editable="false" minWidth="-Infinity" prefWidth="289.0" resizable="false" text="Vaga" />
                                                         <TableColumn fx:id="colDepartamento" editable="false" minWidth="-Infinity" prefWidth="218.0" resizable="false" text="Departamento" />
@@ -83,7 +83,7 @@
                                                 </TableView>
                                             </children>
                                         </AnchorPane>
-                              <AnchorPane fx:id="tab_RegistrarVaga" prefHeight="639.0" prefWidth="1031.0" visible="false">
+                              <AnchorPane fx:id="tab_RegistrarVagas" prefHeight="639.0" prefWidth="1031.0" visible="false">
                                  <children>
                                     <VBox alignment="CENTER" layoutX="29.0" layoutY="95.0" prefHeight="450.0" prefWidth="316.0">
                                        <children>
@@ -212,5 +212,72 @@
                 </HBox>
             </children>
         </AnchorPane>
+      <AnchorPane fx:id="tab_editarVagas" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: rgba(0,0,0, 0.5);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane layoutX="443.0" layoutY="150.0" prefHeight="440.0" prefWidth="415.0" styleClass="telaaction">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="440.0" prefWidth="415.0" spacing="10.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="68.0" prefWidth="306.0" text="Edição de Vagas">
+                           <font>
+                              <Font name="System Bold" size="36.0" />
+                           </font>
+                        </Label>
+                        <Separator orientation="VERTICAL" prefHeight="30.0" visible="false" />
+                        <TextField fx:id="ev_cargo" maxWidth="370.0" minWidth="200.0" prefWidth="20.0" promptText="Cargo" styleClass="lineedit" />
+                        <TextField fx:id="ev_salario" maxWidth="370.0" promptText="Salário" styleClass="lineedit" />
+                        <TextField fx:id="ev_requisitos" maxWidth="370.0" promptText="Requisitos" styleClass="lineedit" />
+                        <TextField fx:id="ev_regime" maxHeight="370.0" maxWidth="370.0" promptText="Regime" styleClass="lineedit" />
+                        <TextField fx:id="ev_regime" maxHeight="370.0" maxWidth="370.0" promptText="Departamento" styleClass="lineedit" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button fx:id="btn_ev_salvar" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="120.0" styleClass="btn_confirmar" text="Salvar" textFill="WHITE" />
+                              <Separator prefWidth="30.0" visible="false" />
+                              <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="120.0" styleClass="btn_cancelar" text="Cancelar" textFill="WHITE" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="tab_candidatura" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: rgba(0,0,0,0.5);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane layoutX="410.0" layoutY="120.0" prefHeight="500.0" prefWidth="500.0" styleClass="telaaction">
+               <children>
+                  <VBox prefHeight="500.0" prefWidth="490.0">
+                     <children>
+                        <Label alignment="TOP_LEFT" text="Selecionar Candidatura">
+                           <font>
+                              <Font name="System Bold" size="36.0" />
+                           </font>
+                           <padding>
+                              <Insets left="60.0" top="20.0" />
+                           </padding>
+                        </Label>
+                        <Separator orientation="VERTICAL" prefHeight="350.0" />
+                        <HBox prefHeight="56.0" prefWidth="490.0">
+                           <children>
+                              <Separator prefWidth="50.0" visible="false" />
+                              <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Enviar Solicitação" textFill="WHITE">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Button>
+                              <Separator prefWidth="80.0" visible="false" />
+                              <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Cancelar" textFill="WHITE">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
     </children>
 </AnchorPane>

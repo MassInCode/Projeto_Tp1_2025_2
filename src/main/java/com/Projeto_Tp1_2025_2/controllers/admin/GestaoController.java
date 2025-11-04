@@ -85,7 +85,7 @@ public class GestaoController extends ApplicationController implements TelaContr
         colunaSalario.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("R$ %.2f", cellData.getValue().getSalarioBase())));
         colunaRequisitos.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRequisitos()));
         colunaDepartamento.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDepartamento()));
-        colunaRegime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRegime()));
+        colunaRegime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRegimeContratacao()));
         colunaDataAbertura.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataAbertura().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
         colunaRecrutador.setCellValueFactory(cellData -> {
                     int a = cellData.getValue().getRecrutadorId();
@@ -242,7 +242,7 @@ public class GestaoController extends ApplicationController implements TelaContr
         ev_salario.setText(String.valueOf(row.getItem().getSalarioBase()));
         ev_requisitos.setText(row.getItem().getRequisitos());
         ev_departamento.setText(row.getItem().getDepartamento());
-        ev_regime.setText(row.getItem().getRegime());
+        ev_regime.setText(row.getItem().getRegimeContratacao());
 
         btn_ev_salvar.setOnAction(e -> {
             row.getItem().editarVaga(ev_cargo.getText(), Double.parseDouble(ev_salario.getText()), ev_requisitos.getText(), ev_departamento.getText(), ev_regime.getText());

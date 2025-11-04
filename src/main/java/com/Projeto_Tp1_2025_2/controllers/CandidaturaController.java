@@ -28,7 +28,7 @@ public class CandidaturaController extends ApplicationController implements Tela
     @FXML private Button btn_sair;
     @FXML private AnchorPane tab_vagas;
     @FXML private AnchorPane tab_candidatos;
-    @FXML private AnchorPane tab_RegistrarVaga;
+    @FXML private AnchorPane tab_RegistrarVagas;
     @FXML private AnchorPane tab_RegistrarCandidato;
     @FXML private TableView<Candidato> tabCandidatos;
     @FXML private TableColumn<Candidato, String> colNome;
@@ -41,7 +41,7 @@ public class CandidaturaController extends ApplicationController implements Tela
     @FXML private TextField txtDepartamento;
     @FXML private TextField txtRequisitos;
     @FXML private ChoiceBox<String> choiceRegime;
-    @FXML private TableView<Vaga> tabVagas;
+    @FXML private TableView<Vaga> tabelaRegistrarVagas;
     @FXML private TableColumn<Vaga, String> colVaga;
     @FXML private TableColumn<Vaga, String> colDepartamento;
     @FXML private TableColumn<Vaga, String> colNumCandidatos;
@@ -93,7 +93,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         colFormacao.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFormacao()));
 
 
-        nowVisible = tab_RegistrarVaga;
+        nowVisible = tab_RegistrarVagas;
         nowVisible.setVisible(false);
         carregarCandidatos();
         carregarVagas();
@@ -181,7 +181,7 @@ public class CandidaturaController extends ApplicationController implements Tela
             carregarCandidatos();
             this.allCandidaturas = candidaturaService.getAllCandidaturas();
             tabCandidatos.refresh();
-            tabVagas.refresh();
+            tabelaRegistrarVagas.refresh();
         } catch(IOException e){
             e.printStackTrace();
         }
@@ -237,7 +237,7 @@ public class CandidaturaController extends ApplicationController implements Tela
 
         try{
             List<Vaga> vagas = vagaService.getAllVagas();
-            tabVagas.setItems(FXCollections.observableArrayList(vagas));
+            tabelaRegistrarVagas.setItems(FXCollections.observableArrayList(vagas));
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -266,11 +266,11 @@ public class CandidaturaController extends ApplicationController implements Tela
     }
 
     @FXML private void btn_RegistrarVaga(ActionEvent event) throws IOException {
-        if(nowVisible != tab_RegistrarVaga){
+        if(nowVisible != tab_RegistrarVagas){
             nowVisible.setVisible(false);
         }
-        tab_RegistrarVaga.setVisible(true);
-        nowVisible = tab_RegistrarVaga;
+        tab_RegistrarVagas.setVisible(true);
+        nowVisible = tab_RegistrarVagas;
     }
 
     @FXML private void btn_RegistrarCandidato(ActionEvent event) throws IOException {
