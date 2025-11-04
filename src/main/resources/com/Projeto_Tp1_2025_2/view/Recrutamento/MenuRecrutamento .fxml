@@ -50,7 +50,7 @@
                                     </children>
                                 </HBox>
                                 <Separator orientation="VERTICAL" prefHeight="15.0" visible="false" />
-                                <AnchorPane prefHeight="656.0" prefWidth="1031.0" visible="false">
+                                <AnchorPane prefHeight="656.0" prefWidth="1031.0">
                                     <children>
                                         <AnchorPane fx:id="tab_candidatos" prefHeight="639.0" prefWidth="1031.0" visible="false">
                                             <children>

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EditarController implements TelaController {
+public class EditarController {
 
     @FXML TextField txtNomeCad, txtEmailCad, txtCpfCad, txtFormCad;
     @FXML TextField txtCargo, txtSalario, txtDepart, txtRegime;
@@ -175,13 +175,4 @@ public class EditarController implements TelaController {
     }
     //==============ON CLICKS==============
 
-    @Override
-    public void carregarDados() {
-
-    }
-
-    //@Override
-    public void sair() throws IOException {
-
-    }
 }

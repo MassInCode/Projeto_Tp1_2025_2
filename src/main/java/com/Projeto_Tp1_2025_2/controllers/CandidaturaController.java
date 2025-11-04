@@ -210,7 +210,7 @@ public class CandidaturaController extends ApplicationController implements Tela
             carregarCandidatos();
             this.allCandidaturas = candidaturaService.getAllCandidaturas();
             tabCandidatos.refresh();
-            tabVagas.refresh();
+            tabelaRegistrarVagas.refresh();
         } catch(IOException e){
             e.printStackTrace();
         }
@@ -286,7 +286,7 @@ public class CandidaturaController extends ApplicationController implements Tela
     //=====================BOTOES=======================
     @FXML private void btn_vagas(ActionEvent event) throws IOException {
         carregarVagas();
-        tabVagas.refresh();
+        tabelaRegistrarVagas.refresh();
         if(nowVisible != tab_vagas && nowVisible != null){
             nowVisible.setVisible(false);
         }

@@ -1,4 +1,5 @@
 package com.Projeto_Tp1_2025_2.controllers;
+import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
 import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
 import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
@@ -85,13 +86,84 @@ public class InfoCandidaturaController implements TelaController {
     }
 
 
+    /*
+    private void criarContextMenuCandidato() throws IOException {
+
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem editarStatusDeCandidatura =  new MenuItem("Editar Status de Candidatura");
+        MenuItem agendarEntrevista =  new MenuItem("Agendar Entrevista");
+
+        //==============ITENS==============
+        editarStatusDeCandidatura.setOnAction(event -> {
+
+            InfoCandidaturaViewModel candidaturaSelecionada = tabVagas.getSelectionModel().getSelectedItem();
+
+            if(candidaturaSelecionada != null){
+                try {
+                    abrirModalDeEdicao(candidaturaSelecionada, "Editar Candidato: ", "/com/Projeto_Tp1_2025_2/view/Recrutamento/TelaEditarCandidato.fxml");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+        });
+        /*agendarEntrevista.setOnAction(event -> {
+            Candidato candidatoSelecionado = tabCandidatos.getSelectionModel().getSelectedItem();
+            if(candidatoSelecionado != null){
+                try {
+                    excluirCandidato(candidatoSelecionado);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        //==============ITENS==============
+
+        contextMenu.getItems().addAll(editarStatusDeCandidatura, agendarEntrevista);
+
+        tabVagas.setRowFactory(tv -> {
+            TableRow<InfoCandidaturaViewModel> row = new TableRow<>();
+
+            row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+                if(isNowEmpty){
+                    row.setContextMenu(null);
+                } else{
+                    row.setContextMenu(contextMenu);
+                }
+            });
+            return row;
+        });
+    }
+
+
+    private void abrirModalDeEdicao(Candidatura candidaturaSelecionada, String tela, String name) throws IOException {
+        try{
+            var resource = getClass().getResource(name);
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent root = loader.load();
+            EditarController controller = loader.getController();
+            controller.initData(candidaturaSelecionada, tela, vagaService, candidaturaService, usuarioService);
+            Window ownerStage = (Window) tab_vagas.getScene().getWindow();
+            SceneSwitcher.newfloatingscene(root, tela + candidatoSelecionado.getNome(), ownerStage);
+            carregarVagas();
+            carregarCandidatos();
+            this.allCandidaturas = candidaturaService.getAllCandidaturas();
+            tabCandidatos.refresh();
+            tabelaRegistrarVagas.refresh();
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+    */
+
     @Override
     public void carregarDados() {
 
     }
 
     @Override
-    public void sair() throws IOException {
-
+    public <T> String filtro(String campo, T classe) throws BadFilter {
+        return "";
     }
+
 }
