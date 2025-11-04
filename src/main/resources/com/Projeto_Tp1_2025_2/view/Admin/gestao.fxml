@@ -25,7 +25,7 @@
          <children>
             <HBox layoutX="37.0" layoutY="38.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <VBox spacing="5.0" styleClass="tool-bar">
+                  <VBox fx:id="tool_box" spacing="5.0" styleClass="tool-bar">
                      <children>
                       <Button fx:id="vagas_btn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#abrirVagas" prefHeight="35.0" prefWidth="165.0" text="Vagas" textFill="WHITE" />
                         <Button fx:id="pedidos_btn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#abrirContratacoes" prefHeight="35.0" prefWidth="165.0" text="Pedidos de Contrataçao" textFill="WHITE" />
@@ -55,12 +55,13 @@
                            <children>
                               <TableView fx:id="tabela_vagas" layoutX="13.0" layoutY="13.0" prefHeight="631.0" prefWidth="943.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <columns>
-                                  <TableColumn fx:id="colunaCargo" prefWidth="176.0" text="Cargo" />
-                                  <TableColumn fx:id="colunaSalario" prefWidth="114.0" text="Salario Base" />
-                                    <TableColumn fx:id="colunaRequisitos" prefWidth="203.0" text="Requisitos" />
-                                    <TableColumn fx:id="colunaDepartamento" prefWidth="172.0" text="Departamento" />
-                                    <TableColumn fx:id="colunaRegime" prefWidth="93.0" text="Regime" />
-                                    <TableColumn fx:id="colunaDataAbertura" prefWidth="202.0" text="Data de Abertura" />
+                                  <TableColumn fx:id="colunaCargo" prefWidth="173.0" text="Cargo" />
+                                  <TableColumn fx:id="colunaSalario" prefWidth="100.0" text="Salario Base" />
+                                    <TableColumn fx:id="colunaRequisitos" prefWidth="169.0" text="Requisitos" />
+                                    <TableColumn fx:id="colunaDepartamento" prefWidth="158.0" text="Departamento" />
+                                    <TableColumn fx:id="colunaRegime" prefWidth="104.0" text="Regime" />
+                                    <TableColumn fx:id="colunaDataAbertura" prefWidth="135.0" text="Data de Abertura" />
+                                    <TableColumn fx:id="colunaRecrutador" maxWidth="280.0" prefWidth="183.0" text="Recrutador Responsavel" />
                                 </columns>
                               </TableView>
                               <TableView fx:id="tabela_pedidos" layoutX="23.0" layoutY="23.0" prefHeight="654.0" prefWidth="966.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -217,9 +218,9 @@
                         </TableView>
                         <HBox alignment="CENTER" prefHeight="25.0" prefWidth="262.0">
                            <children>
-                              <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="135.0" text="Atribuir seleção atual" textFill="WHITE" />
+                              <Button fx:id="atribuirSelecao" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="135.0" text="Atribuir seleção atual" textFill="WHITE" />
                               <Separator prefWidth="30.0" visible="false" />
-                              <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="120.0" text="Cancelar" textFill="WHITE" />
+                              <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelar" prefHeight="35.0" prefWidth="120.0" text="Cancelar" textFill="WHITE" />
                            </children>
                         </HBox>
                      </children>

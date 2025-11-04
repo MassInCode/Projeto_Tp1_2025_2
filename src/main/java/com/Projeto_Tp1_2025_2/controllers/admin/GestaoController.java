@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -30,6 +31,7 @@ public class GestaoController implements TelaController {
     ArrayList<Recrutador> recrutadores;
 
     @FXML Button btn_sair;
+    @FXML Button atribuirSelecao;
 
     @FXML AnchorPane janelaSobreposta;
     @FXML AnchorPane criacaoVagaJanela;
@@ -59,6 +61,7 @@ public class GestaoController implements TelaController {
     @FXML private TableColumn<Vaga, String> colunaDepartamento;
     @FXML private TableColumn<Vaga, String> colunaRegime;
     @FXML private TableColumn<Vaga, String> colunaDataAbertura;
+    @FXML private TableColumn<Vaga, String> colunaRecrutador;
 
     @FXML private TableColumn<Recrutador, String> colunaRNome;
     @FXML private TableColumn<Recrutador, String> colunaREmail;
@@ -75,23 +78,34 @@ public class GestaoController implements TelaController {
             return;
         }
 
-        // linka as colunas ao atributos de Funcionario
+        // linka as colunas ao atributos de Vaga
         colunaCargo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCargo()));
-        colunaSalario.setCellValueFactory(cellData -> new SimpleStringProperty(Double.toString(cellData.getValue().getSalarioBase())));
+        colunaSalario.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("R$ %.2f", cellData.getValue().getSalarioBase())));
         colunaRequisitos.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRequisitos()));
         colunaDepartamento.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDepartamento()));
         colunaRegime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRegimeContratacao()));
-        colunaDataAbertura.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataAbertura()));
+        colunaDataAbertura.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataAbertura().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+        colunaRecrutador.setCellValueFactory(cellData -> {
+                    int a = cellData.getValue().getRecrutadorId();
+                    return new SimpleStringProperty((a == -1) ? "Nenhum" : udb.searchMap("usuarios", "id", String.valueOf(a)).get("nome").toString());
+        });
 
         colunaRNome.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNome()));
         colunaREmail.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
-        colunaRVagas.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getVagas().toString()));
+        colunaRVagas.setCellValueFactory(cellData -> {
+            StringBuilder builder = new StringBuilder();
 
+            for (Vaga v : cellData.getValue().getVagas()) {
+                builder.append(v.getCargo()).append(",");
+            }
+
+            return new SimpleStringProperty(builder.toString());
+        });
         carregarDados();
         loadRecrutadores();
 
         ContextMenu tabela_menu = new ContextMenu();
-        MenuItem cadastrar_usuario = new MenuItem("Criar vaga."); // cria o item de ação
+        MenuItem cadastrar_usuario = new MenuItem("Criar vaga"); // cria o item de ação
         tabela_menu.getItems().add(cadastrar_usuario);
 
         // linka o item à sua função
@@ -116,17 +130,23 @@ public class GestaoController implements TelaController {
             excluirVaga.setOnAction(e -> {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Confirmação");
-                alert.setHeaderText("Tem certeza que deseja excluir este usuário?");
+                alert.setHeaderText("Tem certeza que deseja excluir esta vaga?");
 
                 var resultado = alert.showAndWait();
 
                 if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                    tabela_vagas.getItems().remove(row.getItem());
-                    db.deleteObject(row.getItem(), "usuarios");
+                    Vaga vaga = row.getItem();
+                    if (vaga.getRecrutadorId() != -1) {
+                        removerRecrutadoresVagas(vaga.getId());
+                        tabela_recrutadores.refresh();
+                    }
+
+                    tabela_vagas.getItems().remove(vaga);
+                    db.deleteObject(vaga, "vagas");
                 }
             });
 
-            atribuirRecrutador.setOnAction(e -> abrirRecrutador()); // esperar terminarem recrutador
+            atribuirRecrutador.setOnAction(e -> abrirRecrutador(row)); // esperar terminarem recrutador
 
             // so vai aparecer quando clicado em cima de uma linha
             row.contextMenuProperty().bind(
@@ -144,15 +164,13 @@ public class GestaoController implements TelaController {
         try {
             recrutadores = new ArrayList<>();
             List<Map<String, Object>> dados = udb.getData("usuarios");
+
             for (Map<String, Object> mapa : dados) {
                 if (mapa.get("cargo") != null && mapa.get("cargo").equals("RECRUTADOR")) {
-                    System.out.println(udb.convertMaptoObject(mapa, Recrutador.class));
                     recrutadores.add(udb.convertMaptoObject(mapa, Recrutador.class));
                 }
             }
-
             System.out.println(recrutadores);
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -165,8 +183,7 @@ public class GestaoController implements TelaController {
             List<Map<String, Object>> dados = db.getData("vagas");
 
             for (Map<String, Object> mapa : dados) {
-                data1.add(new Vaga(Integer.parseInt(mapa.get("id").toString()), mapa.get("cargo").toString(), Double.parseDouble(mapa.get("salarioBase").toString()), mapa.get("requisitos").toString(), mapa.get("departamento").toString(), mapa.get("regimeContratacao").toString(),
-                        LocalDate.parse(mapa.get("dataAbertura").toString(), DateTimeFormatter.ofPattern("dd/MM/yyyy")), StatusVaga.valueOf(mapa.get("status").toString())));
+                data1.add(db.convertMaptoObject(mapa, Vaga.class));
 
             }
 
@@ -202,7 +219,7 @@ public class GestaoController implements TelaController {
 
     @FXML
     private void criarVaga() {
-        Vaga vaga = new Vaga(cv_cargo.getText(), Double.parseDouble(cv_salario.getText()), cv_requisitos.getText(), cv_departamento.getText(), cv_regime.getText());
+        Vaga vaga = new Vaga(cv_cargo.getText(), Double.parseDouble(cv_salario.getText()), cv_requisitos.getText(), cv_departamento.getText(), cv_regime.getText(), -1);
         db.addObject(vaga, "vagas");
         int id = vaga.getId();
         db.setActualId(++id);
@@ -241,11 +258,56 @@ public class GestaoController implements TelaController {
     }
 
     @FXML
-    private void abrirRecrutador() {
+    private void abrirRecrutador(TableRow<Vaga> row) {
         atrirecrutadorJanela.setVisible(true);
         ObservableList<Recrutador> r = FXCollections.observableArrayList(recrutadores);
 
         tabela_recrutadores.setItems(r);
+
+        atribuirSelecao.setOnAction(e -> {
+            Recrutador recrutador_selecionado = tabela_recrutadores.getSelectionModel().getSelectedItem();
+
+            if (!row.getItem().atribuir(recrutador_selecionado.getId())) {
+                System.out.println("passou pela reatribuicao");
+                reatribuicao(row.getItem().getId()); // se a vaga ja tiver um recrutador, remove o outro que a tinha
+            }
+
+            if (recrutador_selecionado.addVaga(row.getItem())) { // conseguiu adicionar / não existe essa vaga ja existente no banco
+                udb.editObject(recrutador_selecionado, "usuarios"); // recrutador vai ser responsavel por mais uma vaga
+            }
+
+            db.editObject(row.getItem(), "vagas");              // vaga vai ter um responsável
+
+            tabela_vagas.refresh();
+            tabela_recrutadores.refresh();
+            this.cancelar();
+        });
+
+        atribuirSelecao.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                atribuirSelecao.fire();
+            }
+        });
+    }
+
+    private void reatribuicao(int id) {
+        for (Recrutador r : recrutadores) {
+            for (int i = 0; i < r.getVagas().size(); i++) {
+                if (r.getVagas().get(i).getId() == id) {
+                    r.removeVaga(i);
+                    return;         // pois a lista é distinta
+                }
+            }
+        }
+    }
+
+    private void removerRecrutadoresVagas(int vagaId) {
+        for (Recrutador r : recrutadores) {
+            boolean apagou = r.getVagas().removeIf(v -> v.getId() == vagaId);
+            if (apagou) {
+                udb.editObject(r, "usuarios");
+            }
+        }
     }
 
     @FXML
@@ -264,6 +326,7 @@ public class GestaoController implements TelaController {
 
         criacaoVagaJanela.setVisible(false);
         edicaoVagaJanela.setVisible(false);
+        atrirecrutadorJanela.setVisible(false);
     }
 
     @FXML

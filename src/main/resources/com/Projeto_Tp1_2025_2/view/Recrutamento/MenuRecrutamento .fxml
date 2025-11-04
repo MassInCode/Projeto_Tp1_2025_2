@@ -11,29 +11,28 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="anchorpane" stylesheets="@../Admin/admin.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.RecrutamentoController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="anchorpane" stylesheets="@../Admin/admin.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.CandidaturaController">
     <children>
         <AnchorPane layoutX="26.0" layoutY="21.0" prefHeight="678.0" prefWidth="1228.0" styleClass="telaaction" stylesheets="@../Admin/admin.css" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="21.0">
             <children>
                 <HBox layoutX="291.0" layoutY="56.0" prefHeight="678.0" prefWidth="1228.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <children>
-                        <ToolBar nodeOrientation="LEFT_TO_RIGHT" orientation="VERTICAL" prefHeight="678.0" prefWidth="158.0">
-                            <items>
-                                <Button mnemonicParsing="false" onAction="#editarVagas" prefHeight="35.0" prefWidth="165.0" text="Listar Vagas" textFill="WHITE" />
-                        <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Registrar Vagas" textFill="WHITE" />
-                                <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Listar Candidatos" textFill="WHITE" />
-                        <Button layoutX="10.0" layoutY="145.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Registrar Candidato" textFill="WHITE" />
-                        <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Solicitar Contratação" textFill="WHITE" />
-                                <Separator orientation="VERTICAL" prefHeight="337.0" prefWidth="3.0" visible="false" />
+                  <VBox fx:id="tool_box" styleClass="tool-bar">
+                     <children>
+                                <Button mnemonicParsing="false" onAction="#btn_vagas" prefHeight="35.0" prefWidth="165.0" text="Listar Vagas" textFill="WHITE" />
+                        <Button mnemonicParsing="false" onAction="#btn_RegistrarVaga" prefHeight="35.0" prefWidth="165.0" text="Registrar Vagas" textFill="WHITE" />
+                                <Button mnemonicParsing="false" onAction="#btn_candidatos" prefHeight="35.0" prefWidth="165.0" text="Listar Candidatos" textFill="WHITE" />
+                        <Button mnemonicParsing="false" onAction="#btn_RegistrarCandidato" prefHeight="35.0" prefWidth="165.0" text="Registrar Candidato" textFill="WHITE" />
+                        <Region prefHeight="455.0" prefWidth="165.0" />
                                 <Button fx:id="btn_sair" mnemonicParsing="false" onAction="#onClickSair" prefHeight="35.0" prefWidth="165.0" text="Sair" textFill="WHITE" />
-                            </items>
-                        </ToolBar>
+                     </children>
+                  </VBox>
                         <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
                         <VBox prefHeight="678.0" prefWidth="1047.0">
                             <children>

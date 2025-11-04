@@ -1,13 +1,9 @@
 package com.Projeto_Tp1_2025_2.models.recrutador;
 
-import com.Projeto_Tp1_2025_2.exceptions.InvalidCPF;
-import com.Projeto_Tp1_2025_2.exceptions.InvalidPassword;
-import com.Projeto_Tp1_2025_2.models.Usuario;
-import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import java.lang.reflect.Array;
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +24,22 @@ public class Recrutador extends Funcionario {
     public ArrayList<Vaga> getVagas() {
         return vagas;
     }
+
+    public boolean addVaga(Vaga vaga) {
+        for (Vaga v : vagas) {
+            if (v.getId() == vaga.getId()) {
+                return false;                // nao vai adicioanar se a vaga for a mesma
+            }
+        }
+
+        this.vagas.add(vaga);
+        return true;
+    }
+
+    public void removeVaga(int index) {
+        this.vagas.remove(index);
+    }
+
 
     //nao apagar
     public Recrutador(){super();}
