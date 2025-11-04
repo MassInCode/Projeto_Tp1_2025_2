@@ -9,6 +9,7 @@ public class Administrador extends Funcionario {
 
     public Administrador(String nome, String senha, String cpf, String email, String cargo) {
         super(nome, senha, cpf, email, cargo);
+        this.setStatus(true); // admin já começa podendo usar o sistema
     }
 
     //nao apagar

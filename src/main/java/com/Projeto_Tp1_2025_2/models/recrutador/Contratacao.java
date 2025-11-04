@@ -25,9 +25,4 @@ public class Contratacao {
 
     public String getDataContratacao() {return dataContratacao;}
     public String getRegime() {return regime;}
-
-    /*
-    public void casdastrarFuncionario(Candidatura candidatura){
-
-    } */
 }

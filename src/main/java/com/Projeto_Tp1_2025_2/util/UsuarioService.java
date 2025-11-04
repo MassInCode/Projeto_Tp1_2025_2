@@ -30,12 +30,16 @@ public class UsuarioService {
     }
 
 
-    public Usuario autenticar(String cpf, String senha) throws IOException { // mudar pra cpf pra manter a pk certa
+    public Usuario autenticar(String cpf, String senha) throws IOException, AuthenticationException { // mudar pra cpf pra manter a pk certa
 
-        Usuario usuario = db.searchUsuario("usuarios", "cpf", cpf, "senha", senha);
+        Funcionario usuario = (Funcionario) db.searchUsuario("usuarios", "cpf", cpf, "senha", senha);
 
         if(usuario == null){
-            throw new AuthenticationException("Usuario ou senha invalidos.");
+            throw new AuthenticationException("Usuario ou senha inválidos.");
+        }
+
+        else if (!usuario.getStatus()) {
+            throw new AuthenticationException("Usuário inativo.\nUm Administrador é necessário.");
         }
 
         return usuario;

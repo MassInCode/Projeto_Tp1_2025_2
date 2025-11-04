@@ -1,4 +1,5 @@
 package com.Projeto_Tp1_2025_2.controllers;
+import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
 import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
 import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
@@ -21,12 +22,13 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class CandidaturaController implements TelaController {
+public class CandidaturaController extends ApplicationController implements TelaController {
+    // AVISO PRO ENZO BOIOLA: o application controller tem o search ja, vc so precisa fazer o filtro pra botar nele
 
     @FXML private Button btn_sair;
     @FXML private AnchorPane tab_vagas;
     @FXML private AnchorPane tab_candidatos;
-    @FXML private AnchorPane tab_RegistrarVaga;
+    @FXML private AnchorPane tab_RegistrarVagas;
     @FXML private AnchorPane tab_RegistrarCandidato;
     @FXML private TableView<Candidato> tabCandidatos;
     @FXML private TableColumn<Candidato, String> colNome;
@@ -39,7 +41,7 @@ public class CandidaturaController implements TelaController {
     @FXML private TextField txtDepartamento;
     @FXML private TextField txtRequisitos;
     @FXML private ChoiceBox<String> choiceRegime;
-    @FXML private TableView<Vaga> tabVagas;
+    @FXML private TableView<Vaga> tabelaRegistrarVagas;
     @FXML private TableColumn<Vaga, String> colVaga;
     @FXML private TableColumn<Vaga, String> colDepartamento;
     @FXML private TableColumn<Vaga, String> colNumCandidatos;
@@ -91,7 +93,7 @@ public class CandidaturaController implements TelaController {
         colFormacao.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFormacao()));
 
 
-        nowVisible = tab_RegistrarVaga;
+        nowVisible = tab_RegistrarVagas;
         nowVisible.setVisible(false);
         carregarCandidatos();
         carregarVagas();
@@ -99,6 +101,12 @@ public class CandidaturaController implements TelaController {
     }
 
 
+
+    @FXML
+    public <T> String filtro(String campo, T classe) throws BadFilter {
+
+        return "fodase";
+    }
 
     //==============CONTEXT MENU DE CANDIDATOS(EDITAR E EXCLUIR)==============
     private void criarContextMenuCandidato() throws IOException {
@@ -183,7 +191,7 @@ public class CandidaturaController implements TelaController {
             carregarCandidatos();
             this.allCandidaturas = candidaturaService.getAllCandidaturas();
             tabCandidatos.refresh();
-            tabVagas.refresh();
+            tabelaRegistrarVagas.refresh();
         } catch(IOException e){
             e.printStackTrace();
         }
@@ -265,7 +273,7 @@ public class CandidaturaController implements TelaController {
 
         try{
             List<Vaga> vagas = vagaService.getAllVagas();
-            tabVagas.setItems(FXCollections.observableArrayList(vagas));
+            tabelaRegistrarVagas.setItems(FXCollections.observableArrayList(vagas));
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -296,11 +304,11 @@ public class CandidaturaController implements TelaController {
     }
 
     @FXML private void btn_RegistrarVaga(ActionEvent event) throws IOException {
-        if(nowVisible != tab_RegistrarVaga){
+        if(nowVisible != tab_RegistrarVagas){
             nowVisible.setVisible(false);
         }
-        tab_RegistrarVaga.setVisible(true);
-        nowVisible = tab_RegistrarVaga;
+        tab_RegistrarVagas.setVisible(true);
+        nowVisible = tab_RegistrarVagas;
     }
 
     @FXML private void btn_RegistrarCandidato(ActionEvent event) throws IOException {
@@ -374,8 +382,7 @@ public class CandidaturaController implements TelaController {
         return;
     }
     @FXML public void sair() throws IOException {
-        Stage stage = (Stage) btn_sair.getScene().getWindow();
-        SceneSwitcher.sceneswitcher(stage, "Sistema de RH", telas.get("LOGIN"));
+        super.sair(btn_sair);
     }
 
 }

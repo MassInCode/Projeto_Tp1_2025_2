@@ -1,5 +1,9 @@
 package com.Projeto_Tp1_2025_2.controllers;
 
+import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
+import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
+import javafx.fxml.FXML;
+
 import java.io.IOException;
 import java.util.Map;
 
@@ -24,6 +28,14 @@ public interface TelaController {
     );
 
     void carregarDados(); // todo controller tem que carregar os dados da database
-    void sair() throws IOException;
-
+    //void sair() throws IOException;
+    <T> String filtro(String campo, T classe) throws BadFilter;
+    /**
+     * Essa função receberá o campo do ComboBox de filtro junto com a classe da TableView.
+     * Ela deve receber o campo e retornar a informação da classe T correta. Por exemplo, seja o campo "Nome" e a classe "Funcionário",
+     * a classe tem que fazer com que if (campo.equals("kaio")) return funcionario.getNome();
+     *
+     * @param campo Campo do ComboBox
+     * @param classe Classe do TableView
+     */
 }

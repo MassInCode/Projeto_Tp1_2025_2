@@ -1,6 +1,8 @@
 package com.Projeto_Tp1_2025_2.controllers.admin;
 
+import com.Projeto_Tp1_2025_2.controllers.ApplicationController;
 import com.Projeto_Tp1_2025_2.controllers.TelaController;
+import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
 import com.Projeto_Tp1_2025_2.models.recrutador.Contratacao;
 import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
 import com.Projeto_Tp1_2025_2.models.recrutador.StatusVaga;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class GestaoController implements TelaController {
+public class GestaoController extends ApplicationController implements TelaController {
     Database db;
     Database udb;
     ArrayList<Recrutador> recrutadores;
@@ -83,7 +85,7 @@ public class GestaoController implements TelaController {
         colunaSalario.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("R$ %.2f", cellData.getValue().getSalarioBase())));
         colunaRequisitos.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRequisitos()));
         colunaDepartamento.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDepartamento()));
-        colunaRegime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRegime()));
+        colunaRegime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRegimeContratacao()));
         colunaDataAbertura.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataAbertura().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
         colunaRecrutador.setCellValueFactory(cellData -> {
                     int a = cellData.getValue().getRecrutadorId();
@@ -240,7 +242,7 @@ public class GestaoController implements TelaController {
         ev_salario.setText(String.valueOf(row.getItem().getSalarioBase()));
         ev_requisitos.setText(row.getItem().getRequisitos());
         ev_departamento.setText(row.getItem().getDepartamento());
-        ev_regime.setText(row.getItem().getRegime());
+        ev_regime.setText(row.getItem().getRegimeContratacao());
 
         btn_ev_salvar.setOnAction(e -> {
             row.getItem().editarVaga(ev_cargo.getText(), Double.parseDouble(ev_salario.getText()), ev_requisitos.getText(), ev_departamento.getText(), ev_regime.getText());
@@ -311,6 +313,12 @@ public class GestaoController implements TelaController {
     }
 
     @FXML
+    public <T> String filtro(String campo, T classe) throws BadFilter {
+
+        return "fodase";
+    }
+
+    @FXML
     private void cancelar() {
         cv_cargo.setText("");
         cv_salario.setText("");
@@ -343,16 +351,6 @@ public class GestaoController implements TelaController {
 
     @FXML
     public void sair() throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmação");
-        alert.setHeaderText("Você realmente deseja sair?");
-
-        var resultado = alert.showAndWait();
-
-        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            Stage stage = (Stage) btn_sair.getScene().getWindow();
-            SceneSwitcher.sceneswitcher(stage, "Sistema de RH", telas.get("LOGIN"));
-        }
-
+        super.sair(btn_sair);
     }
 }
