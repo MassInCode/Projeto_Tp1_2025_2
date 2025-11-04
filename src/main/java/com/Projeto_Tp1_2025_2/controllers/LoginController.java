@@ -53,7 +53,7 @@ public class LoginController {
                 "GESTOR"
         ));
 
-        choiceBox.setValue("CANDIDATO");                          //define a opção inicial como funcionario
+        choiceBox.setValue("ADMIN");                          //define a opção inicial como funcionario
 
         separator_formacao.setManaged(false);                       //esconde a parte de formação
         ld_formacao_cadastro.setManaged(false);                     //msm coisa

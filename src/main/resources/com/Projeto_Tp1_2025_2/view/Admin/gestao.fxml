@@ -25,7 +25,7 @@
          <children>
             <HBox layoutX="37.0" layoutY="38.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <VBox spacing="5.0" styleClass="tool-bar">
+                  <VBox fx:id="tool_box" spacing="5.0" styleClass="tool-bar">
                      <children>
                       <Button fx:id="vagas_btn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#abrirVagas" prefHeight="35.0" prefWidth="165.0" text="Vagas" textFill="WHITE" />
                         <Button fx:id="pedidos_btn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#abrirContratacoes" prefHeight="35.0" prefWidth="165.0" text="Pedidos de Contrataçao" textFill="WHITE" />

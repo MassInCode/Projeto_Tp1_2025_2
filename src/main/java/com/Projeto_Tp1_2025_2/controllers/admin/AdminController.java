@@ -24,13 +24,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class AdminController implements TelaController {
     Database db;
     ArrayList<Map<String, Object>> usuarios_filtrado = new ArrayList<>();
 
     @FXML private AnchorPane janelaSobreposta;
+    @FXML private AnchorPane selecaoJanela;
+
     @FXML private Button btn_sair;
+    @FXML private Button btn_gestor;
+
     @FXML private TableView<Funcionario> tabelaFuncionarios;
     @FXML private TableView<?> tabelaSalarios;
 
@@ -177,6 +182,34 @@ public class AdminController implements TelaController {
             System.out.println(e.getMessage());
         }
 
+    }
+
+    @FXML
+    private void abrirSelecao() {
+        selecaoJanela.setVisible(true);
+    }
+
+    @FXML
+    private void alterarPerfil(ActionEvent event) {
+        Stage stage = (Stage) btn_gestor.getScene().getWindow(); // tanto faz o botao
+        try {
+            if (event.getSource() instanceof Button botao) {
+                switch (botao.getText()) {
+                    case "Candidato" : SceneSwitcher.sceneswitcher(stage, "Candidatura", telas.get("CANDIDATO"), true);
+                    case "Recrutador" : SceneSwitcher.sceneswitcher(stage, "Recrutamento", telas.get("RECRUTADOR"), true);
+                    case "Gestor" : SceneSwitcher.sceneswitcher(stage, "Gestão", telas.get("GESTOR"), true);
+                    default : System.out.println("erro no getText");
+                }
+            }
+        }
+        catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void cancelar() {
+        selecaoJanela.setVisible(false);
     }
 
     @FXML

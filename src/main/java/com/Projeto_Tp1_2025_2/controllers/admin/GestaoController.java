@@ -105,7 +105,7 @@ public class GestaoController implements TelaController {
         loadRecrutadores();
 
         ContextMenu tabela_menu = new ContextMenu();
-        MenuItem cadastrar_usuario = new MenuItem("Criar vaga."); // cria o item de ação
+        MenuItem cadastrar_usuario = new MenuItem("Criar vaga"); // cria o item de ação
         tabela_menu.getItems().add(cadastrar_usuario);
 
         // linka o item à sua função
