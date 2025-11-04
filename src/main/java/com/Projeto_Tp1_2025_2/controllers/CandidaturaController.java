@@ -1,4 +1,5 @@
 package com.Projeto_Tp1_2025_2.controllers;
+import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
 import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
 import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
@@ -100,6 +101,12 @@ public class CandidaturaController extends ApplicationController implements Tela
     }
 
 
+
+    @FXML
+    public <T> String filtro(String campo, T classe) throws BadFilter {
+
+        return "fodase";
+    }
 
     //==============CONTEXT MENU DE CANDIDATOS(EDITAR E EXCLUIR)==============
     private void criarContextMenuCandidato() throws IOException {

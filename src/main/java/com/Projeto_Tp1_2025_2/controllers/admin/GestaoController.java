@@ -2,6 +2,7 @@ package com.Projeto_Tp1_2025_2.controllers.admin;
 
 import com.Projeto_Tp1_2025_2.controllers.ApplicationController;
 import com.Projeto_Tp1_2025_2.controllers.TelaController;
+import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
 import com.Projeto_Tp1_2025_2.models.recrutador.Contratacao;
 import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
 import com.Projeto_Tp1_2025_2.models.recrutador.StatusVaga;
@@ -309,6 +310,12 @@ public class GestaoController extends ApplicationController implements TelaContr
                 udb.editObject(r, "usuarios");
             }
         }
+    }
+
+    @FXML
+    public <T> String filtro(String campo, T classe) throws BadFilter {
+
+        return "fodase";
     }
 
     @FXML

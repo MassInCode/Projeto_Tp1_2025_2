@@ -1,5 +1,6 @@
 package com.Projeto_Tp1_2025_2.controllers;
 
+import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
 import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,5 +30,11 @@ public class RecrutamentoController extends ApplicationController implements Tel
     @FXML
     public void sair() throws IOException {
         super.sair(btn_sair);
+    }
+
+    @FXML
+    public <T> String filtro(String campo, T classe) throws BadFilter {
+
+        return "fodase";
     }
 }

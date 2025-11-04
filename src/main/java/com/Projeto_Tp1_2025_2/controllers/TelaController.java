@@ -29,7 +29,7 @@ public interface TelaController {
 
     void carregarDados(); // todo controller tem que carregar os dados da database
     //void sair() throws IOException;
-    //<T> String filtro(String campo, T classe) throws BadFilter;
+    <T> String filtro(String campo, T classe) throws BadFilter;
     /**
      * Essa função receberá o campo do ComboBox de filtro junto com a classe da TableView.
      * Ela deve receber o campo e retornar a informação da classe T correta. Por exemplo, seja o campo "Nome" e a classe "Funcionário",
