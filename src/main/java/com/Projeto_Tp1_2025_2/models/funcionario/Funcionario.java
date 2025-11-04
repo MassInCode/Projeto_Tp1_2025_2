@@ -52,6 +52,15 @@
             this.departamento = "NULL";
         }
 
+        public Funcionario(Usuario user) {
+            super(user.getId(), user.getNome(), user.getSenha(), user.getCpf(), user.getEmail(), user.getCargo());
+            this.salariobruto = 0.0;
+            this.status = false;
+            this.dataContratacao = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
+            this.regime = "NULL";
+            this.departamento = "NULL";
+        }
+
         public double getSalariobruto() {
             return salariobruto;
         }
@@ -91,5 +100,9 @@
 
         public void changeStatus() {
             this.status = !this.status; // alterna de true pra false
+        }
+
+        public boolean getStatus() {
+            return status;
         }
     }

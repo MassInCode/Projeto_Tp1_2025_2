@@ -1,5 +1,6 @@
 package com.Projeto_Tp1_2025_2.controllers.admin;
 
+import com.Projeto_Tp1_2025_2.controllers.ApplicationController;
 import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.models.recrutador.Contratacao;
 import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class GestaoController implements TelaController {
+public class GestaoController extends ApplicationController implements TelaController {
     Database db;
     Database udb;
     ArrayList<Recrutador> recrutadores;
@@ -343,16 +344,6 @@ public class GestaoController implements TelaController {
 
     @FXML
     public void sair() throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmação");
-        alert.setHeaderText("Você realmente deseja sair?");
-
-        var resultado = alert.showAndWait();
-
-        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            Stage stage = (Stage) btn_sair.getScene().getWindow();
-            SceneSwitcher.sceneswitcher(stage, "Sistema de RH", telas.get("LOGIN"));
-        }
-
+        super.sair(btn_sair);
     }
 }

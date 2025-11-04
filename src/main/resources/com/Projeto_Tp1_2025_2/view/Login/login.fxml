@@ -174,10 +174,10 @@
                                     <Insets />
                                  </VBox.margin>
                               </TextField>
-                              <Separator orientation="VERTICAL" prefHeight="30.0" visible="false" />
+                              <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                               <PasswordField fx:id="ld_senha" minWidth="-Infinity" onKeyReleased="#onClickEnter" prefHeight="30.0" promptText="Senha" styleClass="lineedit" />
                               <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
-                              <Label fx:id="mensagem_erro" alignment="CENTER" prefHeight="30.0" prefWidth="250.0" textFill="#e41111">
+                              <Label fx:id="mensagem_erro" alignment="CENTER" maxHeight="50.0" maxWidth="250.0" prefHeight="50.0" prefWidth="250.0" textAlignment="CENTER" textFill="#e41111" wrapText="true">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>

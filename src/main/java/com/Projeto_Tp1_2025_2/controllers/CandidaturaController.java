@@ -21,7 +21,8 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class CandidaturaController implements TelaController {
+public class CandidaturaController extends ApplicationController implements TelaController {
+    // AVISO PRO ENZO BOIOLA: o application controller tem o search ja, vc so precisa fazer o filtro pra botar nele
 
     @FXML private Button btn_sair;
     @FXML private AnchorPane tab_vagas;
@@ -332,8 +333,7 @@ public class CandidaturaController implements TelaController {
         return;
     }
     @FXML public void sair() throws IOException {
-        Stage stage = (Stage) btn_sair.getScene().getWindow();
-        SceneSwitcher.sceneswitcher(stage, "Sistema de RH", telas.get("LOGIN"));
+        super.sair(btn_sair);
     }
 
 }

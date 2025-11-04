@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class RecrutamentoController implements TelaController {
+public class RecrutamentoController extends ApplicationController implements TelaController {
 
     @FXML
     private Button btn_sair;
@@ -28,7 +28,6 @@ public class RecrutamentoController implements TelaController {
 
     @FXML
     public void sair() throws IOException {
-        Stage stage = (Stage) btn_sair.getScene().getWindow();
-        SceneSwitcher.sceneswitcher(stage, "Sistema de RH", telas.get("LOGIN"));
+        super.sair(btn_sair);
     }
 }

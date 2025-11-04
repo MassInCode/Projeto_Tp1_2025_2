@@ -2,6 +2,7 @@ package com.Projeto_Tp1_2025_2.controllers;
 
 import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
 import com.Projeto_Tp1_2025_2.models.Usuario;
+import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
 import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
 import com.Projeto_Tp1_2025_2.controllers.admin.AdminController;
 import com.Projeto_Tp1_2025_2.controllers.TelaController;
@@ -55,6 +56,7 @@ public class LoginController {
 
         choiceBox.setValue("ADMIN");                          //define a opção inicial como funcionario
 
+        mensagem_erro.setManaged(false);
         separator_formacao.setManaged(false);                       //esconde a parte de formação
         ld_formacao_cadastro.setManaged(false);                     //msm coisa
 
@@ -126,6 +128,7 @@ public class LoginController {
         }
 
         mensagem_erro.setText("");
+        mensagem_erro.setManaged(false);
         mensagem_erro2.setText("");
         tab_telaInicial.setVisible(true);
     }
@@ -154,8 +157,10 @@ public class LoginController {
         try{
             UsuarioService us = new UsuarioService();
             Usuario usuario = us.autenticar(ld_nome.getText(), ld_senha.getText());
+
             entrar(usuario.getCargo());
         } catch (AuthenticationException e){
+            mensagem_erro.setManaged(true);
             mensagem_erro.setText(e.getMessage());
         }
     }
@@ -177,7 +182,6 @@ public class LoginController {
     //botao que cadastra
     @FXML
     protected void onClickCadastroBtn() {
-
         UsuarioService us = new UsuarioService();
         try{
             us.registrar(ld_nome_cadastro.getText(), ld_email_cadastro.getText(), ld_cpf_cadastro.getText(), ld_senha_cadastro.getText(), ld_senha2_cadastro.getText(), choiceBox.getValue(), ld_formacao_cadastro.getText());

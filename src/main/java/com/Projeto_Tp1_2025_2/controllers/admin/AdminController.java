@@ -1,6 +1,8 @@
 package com.Projeto_Tp1_2025_2.controllers.admin;
 
+import com.Projeto_Tp1_2025_2.controllers.ApplicationController;
 import com.Projeto_Tp1_2025_2.controllers.TelaController;
+import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
 import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
 import com.Projeto_Tp1_2025_2.util.Database;
 import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
@@ -9,6 +11,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class AdminController implements TelaController {
+public class AdminController extends ApplicationController implements TelaController {
     Database db;
     ArrayList<Map<String, Object>> usuarios_filtrado = new ArrayList<>();
 
@@ -39,6 +42,9 @@ public class AdminController implements TelaController {
     @FXML private TableView<Funcionario> tabelaFuncionarios;
     @FXML private TableView<?> tabelaSalarios;
 
+    @FXML private TextField barraBuscar;
+    @FXML private ComboBox<String> btn_filtrar;
+
     @FXML private TableColumn<Funcionario, String> colunaNome;
     @FXML private TableColumn<Funcionario, String> colunaCPF;
     @FXML private TableColumn<Funcionario, String> colunaEmail;
@@ -48,7 +54,7 @@ public class AdminController implements TelaController {
 
     @FXML
     public void initialize() {
-        // inicializa a database
+        // ----------- Inicialização da Database -----------
         try {
             db = new Database(db_paths.get(DATABASES.USUARIOS));
         }
@@ -60,7 +66,7 @@ public class AdminController implements TelaController {
             System.out.println(e.getMessage() + " : " + e.getCause().getMessage());
         }
 
-        // linka as colunas ao atributos de Funcionario
+        // ----------- Linkagem de colunas para os dados de Funcionario -----------
         colunaNome.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNome()));
         colunaCPF.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCpf()));
         colunaEmail.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
@@ -69,9 +75,10 @@ public class AdminController implements TelaController {
         colunaStatus.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().isStatus() ? "Ativo" : "Inativo"));
 
-        // carrega os dados da database na tabela
+        // ----------- Carregamento de dados na tabela
         carregarDados();
 
+        // ----------- Configurações da tabela
         ContextMenu tabela_menu = new ContextMenu();
         MenuItem cadastrar_usuario = new MenuItem("Cadastrar novo usuário"); // cria o item de ação
         tabela_menu.getItems().add(cadastrar_usuario);
@@ -126,6 +133,33 @@ public class AdminController implements TelaController {
 
             return row;
         });
+
+        // ----------- Mecânica de pesqusia na Tabela -----------
+
+        btn_filtrar.setItems(FXCollections.observableArrayList(
+                "Nome", "CPF", "Email", "Perfil", "Departamento", "Status"
+        ));
+
+        btn_filtrar.setValue("Nome");
+
+        search(tabelaFuncionarios, barraBuscar, btn_filtrar, this::filtro);
+    }
+
+    @FXML
+    public <T> String filtro(String campo, T classe) throws BadFilter {
+        if (classe instanceof Funcionario funcionario) {
+            return switch (campo) {
+                case "CPF" -> funcionario.getCpf();
+                case "Email" -> funcionario.getEmail();
+                case "Perfil" -> funcionario.getCargo();
+                case "Departamento" -> funcionario.getDepartamento();
+                case "Status" -> (funcionario.getStatus() ? "Ativo" : "Inativo");
+                default -> funcionario.getNome(); // case "Nome" está inclusa
+            };
+        }
+        else {
+            throw new BadFilter();
+        }
     }
 
     @FXML
@@ -241,16 +275,7 @@ public class AdminController implements TelaController {
 
     @FXML
     public void sair() throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmação");
-        alert.setHeaderText("Você realmente deseja sair?");
-
-        var resultado = alert.showAndWait();
-
-        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            Stage stage = (Stage) btn_sair.getScene().getWindow();
-            SceneSwitcher.sceneswitcher(stage, "Sistema de RH", telas.get("LOGIN"));
-        }
+        super.sair(btn_sair);
 
     }
 }

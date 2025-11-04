@@ -11,7 +11,6 @@ module Projeto_Tp1_2025_2 {
     requires com.fasterxml.jackson.datatype.jsr310;
     requires java.security.sasl;
     requires java.sql;
-    //requires Projeto_Tp1_2025_2;
 
     opens com.Projeto_Tp1_2025_2.models.candidatura to com.fasterxml.jackson.databind;
     opens com.Projeto_Tp1_2025_2.models.funcionario to com.fasterxml.jackson.databind;

@@ -56,6 +56,12 @@ Button  {
     -fx-background-color: #2F2A4F;
 }
 
+ComboBox {
+    -fx-background-radius: 15 15 15 15;
+    -fx-border-radius: 15 15 15 15;
+    -fx-background-color: #2F2A4F;
+}
+
 Button:hover {
     -fx-background-color: #4D4582;
 }

@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
@@ -38,9 +39,9 @@
                                 <Separator orientation="VERTICAL" prefHeight="5.0" visible="false" />
                                 <HBox>
                                     <children>
-                                        <TextField prefHeight="30.0" prefWidth="1000.0" promptText="Buscar" styleClass="lineedit" />
+                                        <TextField fx:id="barraBuscar" prefHeight="30.0" prefWidth="1000.0" promptText="Buscar" styleClass="lineedit" />
                                         <Separator prefWidth="40.0" visible="false" />
-                                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="75.0" text="Procurar" textFill="WHITE" />
+                              <ComboBox fx:id="btn_filtrar" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="130.0" promptText="Filtro" />
                                     </children>
                                 </HBox>
                                 <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />

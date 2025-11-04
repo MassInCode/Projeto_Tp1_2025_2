@@ -182,7 +182,7 @@ public class EditarController implements TelaController {
 
     }
 
-    @Override
+    //@Override
     public void sair() throws IOException {
 
     }
