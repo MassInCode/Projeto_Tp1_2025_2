@@ -5,10 +5,7 @@ import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
 import com.Projeto_Tp1_2025_2.models.recrutador.StatusVaga;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
-import com.Projeto_Tp1_2025_2.util.CandidaturaService;
-import com.Projeto_Tp1_2025_2.util.Database;
-import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
-import com.Projeto_Tp1_2025_2.util.VagaService;
+import com.Projeto_Tp1_2025_2.util.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,20 +34,23 @@ public class EditarController implements TelaController {
     @FXML AnchorPane tabRegistrarCandidatura;
     @FXML AnchorPane tabEditarCandidato;
     @FXML Label mensagem_erro;
+    @FXML Label mensagem_erro_edit;
 
     private Candidato candidato;
     private Database db;
+    UsuarioService usuarioService;
     VagaService vagaService;
     CandidaturaService candidaturaService;
     List<Vaga> vagasAtivas = new ArrayList<>();
 
 
-    @FXML
-    public void initData(Candidato candidatoSelecionado, String tela, VagaService vs, CandidaturaService cs) throws IOException {
+    //RECEBE AS INFORMAÇÕES DA TELA QUE CHAMOU ELE
+    @FXML public void initData(Candidato candidatoSelecionado, String tela, VagaService vs, CandidaturaService cs, UsuarioService us) throws IOException {
 
         this.candidato = candidatoSelecionado;
         vagaService = vs;
         candidaturaService = cs;
+        usuarioService = us;
 
         if(tela.equals("Registrar Candidatura: ")){
             carregarNomesVagas();
@@ -74,7 +74,7 @@ public class EditarController implements TelaController {
         }
     }
 
-
+    //CARREGA AS VAGAS NA CHOICE BOX
     private void carregarNomesVagas() throws IOException {
 
         List<Vaga> vagasAtivas = new ArrayList<>();
@@ -124,27 +124,29 @@ public class EditarController implements TelaController {
 
     }
 
-
-    @FXML
-    protected void onClickSaveEdits(ActionEvent event) throws IOException {
+    //==============ON CLICKS==============
+    @FXML protected void onClickSaveEdits(ActionEvent event) throws IOException {
         try{
             candidato.setNome(txtNome.getText());
             candidato.setEmail(txtEmail.getText());
             candidato.setCpf(txtCpf.getText());
             candidato.setFormacao(txtForm.getText());
 
-            boolean veri = db.editObject(candidato, "usuarios");
+            boolean veri = usuarioService.editObject(candidato, "usuarios");
 
             if(veri){
                 System.out.println("Editado com sucesso");
+                mensagem_erro_edit.setStyle("-fx-text-fill: green;");
+                mensagem_erro_edit.setText("Cadastro editado com sucesso.");
             } else {
                 System.out.println("Erro ao editar");
+                mensagem_erro_edit.setStyle("-fx-text-fill: red;");
+                mensagem_erro_edit.setText("Falha ao editar usuario.");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
     @FXML protected void onClickRegister(){
         try {
@@ -160,22 +162,18 @@ public class EditarController implements TelaController {
         }
     }
 
-
-    @FXML
-    protected void onClickResetEdits(ActionEvent event) throws IOException {
+    @FXML protected void onClickResetEdits(ActionEvent event) throws IOException {
         txtNome.setText(candidato.getNome());
         txtCpf.setText(candidato.getCpf());
         txtEmail.setText(candidato.getEmail());
         txtForm.setText(candidato.getFormacao());
     }
 
-
-    @FXML
-    protected void onClickReturn(ActionEvent event) throws IOException {
+    @FXML protected void onClickReturn(ActionEvent event) throws IOException {
         Stage stage = (Stage) txtNome.getScene().getWindow();
         stage.close();
     }
-
+    //==============ON CLICKS==============
 
     @Override
     public void carregarDados() {

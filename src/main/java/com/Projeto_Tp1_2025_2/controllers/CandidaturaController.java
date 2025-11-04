@@ -107,20 +107,21 @@ public class CandidaturaController implements TelaController {
         MenuItem editarItem =  new MenuItem("Editar Candidato");
         MenuItem excluirItem =  new MenuItem("Excluir Candidato");
         MenuItem registrarCandidatura = new MenuItem("Registrar Candidatura");
+        MenuItem showAllCandidaturas = new MenuItem("Mostrar Candidaturas");
 
+        //==============ITENS==============
         editarItem.setOnAction(event -> {
 
             Candidato candidatoSelecionado = tabCandidatos.getSelectionModel().getSelectedItem();
             if(candidatoSelecionado != null){
                 try {
-                    abrirModalDeEdicao(candidatoSelecionado, "Editar Candidato: ");
+                    abrirModalDeEdicao(candidatoSelecionado, "Editar Candidato: ", "/com/Projeto_Tp1_2025_2/view/Recrutamento/TelaEditarCandidato.fxml");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
 
         });
-
         excluirItem.setOnAction(event -> {
             Candidato candidatoSelecionado = tabCandidatos.getSelectionModel().getSelectedItem();
             if(candidatoSelecionado != null){
@@ -131,20 +132,29 @@ public class CandidaturaController implements TelaController {
                 }
             }
         });
-
         registrarCandidatura.setOnAction(event -> {
             Candidato candidatoSelecionado = tabCandidatos.getSelectionModel().getSelectedItem();
             if(candidatoSelecionado != null){
                 try {
-                    abrirModalDeEdicao(candidatoSelecionado, "Registrar Candidatura: ");
+                    abrirModalDeEdicao(candidatoSelecionado, "Registrar Candidatura: ", "/com/Projeto_Tp1_2025_2/view/Recrutamento/TelaEditarCandidato.fxml");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
         });
+        showAllCandidaturas.setOnAction(event -> {
+            Candidato candidatoSelecionado = tabCandidatos.getSelectionModel().getSelectedItem();
+            if(candidatoSelecionado != null){
+                try{
+                    abrirModalDeInfos(candidatoSelecionado, "Candidaturas de ", "/com/Projeto_Tp1_2025_2/view/Recrutamento/CandidaturaInfos.fxml");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        //==============ITENS==============
 
-
-        contextMenu.getItems().addAll(editarItem, excluirItem,  registrarCandidatura);
+        contextMenu.getItems().addAll(editarItem, excluirItem,  registrarCandidatura, showAllCandidaturas);
 
         tabCandidatos.setRowFactory(tv -> {
             TableRow<Candidato> row = new TableRow<>();
@@ -160,13 +170,13 @@ public class CandidaturaController implements TelaController {
         });
     }
 
-    private void abrirModalDeEdicao(Candidato candidatoSelecionado, String tela) throws IOException {
+    private void abrirModalDeEdicao(Candidato candidatoSelecionado, String tela, String name) throws IOException {
         try{
-            var resource = getClass().getResource("/com/Projeto_Tp1_2025_2/view/Recrutamento/TelaEditarCandidato.fxml");
+            var resource = getClass().getResource(name);
             FXMLLoader loader = new FXMLLoader(resource);
             Parent root = loader.load();
             EditarController controller = loader.getController();
-            controller.initData(candidatoSelecionado, tela, vagaService, candidaturaService);
+            controller.initData(candidatoSelecionado, tela, vagaService, candidaturaService, usuarioService);
             Window ownerStage = (Window) tab_vagas.getScene().getWindow();
             SceneSwitcher.newfloatingscene(root, tela + candidatoSelecionado.getNome(), ownerStage);
             carregarVagas();
@@ -178,6 +188,26 @@ public class CandidaturaController implements TelaController {
             e.printStackTrace();
         }
     }
+
+    private void abrirModalDeInfos(Candidato candidatoSelecionado, String tela, String name) throws IOException {
+        try{
+            var resource = getClass().getResource(name);
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent root = loader.load();
+            InfoCandidaturaController controller = loader.getController();
+            controller.initData(candidatoSelecionado, tela, vagaService, candidaturaService, usuarioService);
+            Window ownerStage = (Window) tab_vagas.getScene().getWindow();
+            SceneSwitcher.newfloatingscene(root, tela + candidatoSelecionado.getNome(), ownerStage);
+            carregarVagas();
+            carregarCandidatos();
+            this.allCandidaturas = candidaturaService.getAllCandidaturas();
+            tabCandidatos.refresh();
+            tabVagas.refresh();
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
 
     @FXML private void excluirCandidato(Candidato candidatoSelecionado) throws IOException {
         if(candidatoSelecionado == null){
@@ -193,6 +223,12 @@ public class CandidaturaController implements TelaController {
         Optional<ButtonType> result = alert.showAndWait();
 
         if(result.get() == ButtonType.OK && result.isPresent()){
+
+            List<Candidatura> candidaturas = candidaturaService.getAllCandidaturasPorCandidato(candidatoSelecionado);
+            for(var candidatura : candidaturas){
+                candidaturaService.excluirCandidatura(candidatura);
+            }
+            this.allCandidaturas = candidaturaService.getAllCandidaturas();
             boolean veri = usuarioService.excluirUsuario(candidatoSelecionado);
             if(veri){
                 tabCandidatos.getItems().remove(candidatoSelecionado);
@@ -241,6 +277,8 @@ public class CandidaturaController implements TelaController {
 
     //=====================BOTOES=======================
     @FXML private void btn_vagas(ActionEvent event) throws IOException {
+        carregarVagas();
+        tabVagas.refresh();
         if(nowVisible != tab_vagas && nowVisible != null){
             nowVisible.setVisible(false);
         }
@@ -306,6 +344,10 @@ public class CandidaturaController implements TelaController {
             mensagem_erro2.setStyle("-fx-text-fill: red;");
             mensagem_erro2.setText(e.getMessage());
         }
+    }
+
+    @FXML protected void onClickAbrirRegistrarCandidato(ActionEvent event) throws IOException {
+        this.btn_RegistrarCandidato(event);
     }
     //==============ON CLICKS==============
 

@@ -41,7 +41,7 @@ public class UsuarioService {
         return usuario;
     }
 
-
+    //==============REGISTRAR==============
     public void registrar(String nome, String email, String cpf, String senha, String senhaConfirm, String cargo, String formacao) throws IOException, ValidationException {
         if(!(senha.equals(senhaConfirm))){
             throw new ValidationException("Senhas não conferem.");
@@ -58,8 +58,6 @@ public class UsuarioService {
         int id = user.getId();
         db.setActualId(++id);
     }
-
-
     //==============SOBRECARGA DE REGISTRAR==============
     public void registrar(String nome, String email, String cpf, String senha, String cargo, String formacao) throws IOException, ValidationException {
 
@@ -75,7 +73,7 @@ public class UsuarioService {
         int id = user.getId();
         db.setActualId(++id);
     }
-
+    //==============REGISTRAR==============
 
     private Usuario criarUsuarioPorCargo(String nome, String email, String cpf, String senha, String cargo, String formacao) throws IOException, ValidationException, FileNotFoundException {
         try{
@@ -94,17 +92,19 @@ public class UsuarioService {
         }
     }
 
-
     public List<Usuario> getAllUsuarios() throws IOException {
         return db.getAllUsuarios("usuarios");
     }
-
 
     public boolean excluirUsuario(Usuario usuario) throws IOException {
         if (usuario == null) {
             return false;
         }
         return db.deleteObject(usuario, "usuarios");
+    }
+
+    public boolean editObject(Usuario usuario, String data) throws IOException {
+        return db.editObject(usuario, "usuarios");
     }
 
 

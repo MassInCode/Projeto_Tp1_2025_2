@@ -14,13 +14,18 @@
          <children>
             <AnchorPane fx:id="tabEditarCandidato" prefHeight="678.0" prefWidth="1228.0" visible="false">
                <children>
-                  <Button layoutX="554.0" layoutY="444.0" mnemonicParsing="false" onAction="#onClickReturn" prefHeight="40.0" prefWidth="120.0" styleClass="btn_entrar" text="Voltar" textFill="WHITE" />
-                  <Button layoutX="674.0" layoutY="387.0" mnemonicParsing="false" onAction="#onClickResetEdits" prefHeight="40.0" prefWidth="120.0" styleClass="btn_entrar" text="Redefinir" textFill="WHITE" />
-                  <Button layoutX="434.0" layoutY="387.0" mnemonicParsing="false" onAction="#onClickSaveEdits" prefHeight="40.0" prefWidth="120.0" styleClass="btn_entrar" text="Salvar" textFill="WHITE" />
+                  <Button layoutX="554.0" layoutY="465.0" mnemonicParsing="false" onAction="#onClickReturn" prefHeight="40.0" prefWidth="120.0" styleClass="btn_entrar" text="Voltar" textFill="WHITE" />
+                  <Button layoutX="674.0" layoutY="407.0" mnemonicParsing="false" onAction="#onClickResetEdits" prefHeight="40.0" prefWidth="120.0" styleClass="btn_entrar" text="Redefinir" textFill="WHITE" />
+                  <Button layoutX="434.0" layoutY="407.0" mnemonicParsing="false" onAction="#onClickSaveEdits" prefHeight="40.0" prefWidth="120.0" styleClass="btn_entrar" text="Salvar" textFill="WHITE" />
                   <TextField fx:id="txtForm" layoutX="434.0" layoutY="324.0" minHeight="-Infinity" prefHeight="30.0" prefWidth="360.0" styleClass="lineedit" />
                   <TextField fx:id="txtEmail" layoutX="434.0" layoutY="275.0" minHeight="-Infinity" prefHeight="30.0" prefWidth="360.0" styleClass="lineedit" />
                   <TextField fx:id="txtCpf" layoutX="434.0" layoutY="226.0" minHeight="-Infinity" prefHeight="30.0" prefWidth="360.0" styleClass="lineedit" />
                   <TextField fx:id="txtNome" layoutX="434.0" layoutY="176.0" minHeight="-Infinity" prefHeight="30.0" prefWidth="360.0" styleClass="lineedit" />
+                  <Label fx:id="mensagem_erro_edit" alignment="CENTER" layoutX="434.0" layoutY="369.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="355.0" textFill="#e41111">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
             <AnchorPane fx:id="tabRegistrarCandidatura" prefHeight="678.0" prefWidth="1228.0" visible="false">

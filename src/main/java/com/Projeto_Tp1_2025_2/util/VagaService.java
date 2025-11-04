@@ -52,4 +52,15 @@ public class VagaService {
     }
 
 
+    public Vaga getVagaPorId(int id) throws IOException {
+        this.db = new Database("src/main/resources/vagas.json");
+        List<Vaga> allVagas = db.getAllVagas("vagas");
+        for(Vaga vaga : allVagas){
+            if(vaga.getId() == id){
+                return vaga;
+            }
+        }
+        return null;
+    }
+
 }
