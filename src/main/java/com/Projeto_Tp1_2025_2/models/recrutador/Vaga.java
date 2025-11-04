@@ -120,7 +120,7 @@ public class Vaga {
     }
     public void setDepartamento(String departamento) {this.departamento = departamento;}
 
-    public String getRegime() {return regimeContratacao;}
+    public String getRegimeContratacao() {return regimeContratacao;}
     public void setRegimeContratacao(String regimeContratacao) {this.regimeContratacao = regimeContratacao;}
 
     public StatusVaga getStatus() {return status;}

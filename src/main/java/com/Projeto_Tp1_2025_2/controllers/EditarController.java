@@ -109,7 +109,7 @@ public class EditarController implements TelaController {
                 (obs, vagaAntiga, vagaNova) -> {
                     if (vagaNova != null) {
                         txtCargo.setText(vagaNova.getCargo());
-                        txtRegime.setText(vagaNova.getRegime());
+                        txtRegime.setText(vagaNova.getRegimeContratacao());
                         txtDepart.setText(vagaNova.getDepartamento());
                         txtSalario.setText(String.valueOf(vagaNova.getSalarioBase()));
                     } else {
