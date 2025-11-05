@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Vaga {
@@ -34,7 +33,7 @@ public class Vaga {
     private LocalDate dataAbertura;
     private StatusVaga status;
 
-    private int id_recrutador_atribuido;
+    private int recrutadorId;
 
 
     //NAO APAGAR
@@ -42,14 +41,14 @@ public class Vaga {
         //this.candidaturas = new ArrayList<>();
     }
 
-    public Vaga(String cargo, double salarioBase, String requisitos, String departamento, String regimeContratacao, int id_recrutador_atribuido) {
+    public Vaga(String cargo, double salarioBase, String requisitos, String departamento, String regimeContratacao, int idRecrutador) {
         this.id = ++contador;  // vai incrementar o contador cada vez que chamar o construtor
         this.cargo = cargo;
         this.salarioBase = salarioBase;
         this.requisitos = requisitos;
         this.departamento = departamento;
         this.regimeContratacao = regimeContratacao;
-        this.id_recrutador_atribuido = id_recrutador_atribuido;
+        this.recrutadorId = idRecrutador;
 
         this.dataAbertura = LocalDate.of(0, 1, 1); // não está aberta ainda
         this.status = StatusVaga.FECHADA;
@@ -65,7 +64,7 @@ public class Vaga {
         this.regimeContratacao = regimeContratacao;
         this.status = status;
 
-        this.id_recrutador_atribuido = -1;
+        this.recrutadorId = -1;
     }
 
     public Vaga(String cargo, double salarioBase, String requisitos, String departamento, String regimeContratacao, LocalDate dataAbertura, StatusVaga status) {
@@ -78,7 +77,7 @@ public class Vaga {
         this.regimeContratacao = regimeContratacao;
         this.status = status;
 
-        this.id_recrutador_atribuido = -1;
+        this.recrutadorId = -1;
 
     }
 
@@ -139,12 +138,12 @@ public class Vaga {
     }
 
     public int getRecrutadorId() {
-        return this.id_recrutador_atribuido;
+        return this.recrutadorId;
     }
 
     public boolean atribuir(int recrutador_id) {
-        boolean retorno = id_recrutador_atribuido == -1;
-        this.id_recrutador_atribuido = recrutador_id;
+        boolean retorno = recrutadorId == -1;
+        this.recrutadorId = recrutador_id;
 
         return retorno; // se nao tem um recrutador, simplesmente o atribui. se ja tem, tem que tirar a vaga do outro
     }

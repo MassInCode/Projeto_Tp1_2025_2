@@ -5,10 +5,8 @@ import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
 import com.Projeto_Tp1_2025_2.models.recrutador.Contratacao;
 import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
-import com.Projeto_Tp1_2025_2.models.recrutador.StatusVaga;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
 import com.Projeto_Tp1_2025_2.util.Database;
-import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -24,6 +22,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +30,8 @@ public class GestaoController extends ApplicationController implements TelaContr
     Database db;
     Database udb;
     ArrayList<Recrutador> recrutadores;
+    private final ObservableList<Vaga> vagasBase = FXCollections.observableArrayList();
+    private final Map<Integer, String> cacheRecrutadores = new HashMap<>();
 
     @FXML Button btn_sair;
     @FXML Button atribuirSelecao;
@@ -49,6 +50,7 @@ public class GestaoController extends ApplicationController implements TelaContr
     @FXML TextField cv_requisitos;
     @FXML TextField cv_departamento;
     @FXML TextField cv_regime;
+    @FXML Label cv_error;
 
     @FXML TextField ev_cargo;
     @FXML TextField ev_salario;
@@ -56,6 +58,10 @@ public class GestaoController extends ApplicationController implements TelaContr
     @FXML TextField ev_departamento;
     @FXML TextField ev_regime;
     @FXML Button btn_ev_salvar;
+    @FXML Label ev_error;
+
+    @FXML ComboBox<String> btn_filtrar;
+    @FXML TextField barraPesquisar;
 
     @FXML private TableColumn<Vaga, String> colunaCargo;
     @FXML private TableColumn<Vaga, String> colunaSalario;
@@ -71,6 +77,7 @@ public class GestaoController extends ApplicationController implements TelaContr
 
     @FXML
     public void initialize() {
+        // ------------- Inicialização das Databases -------------
         try {
             db = new Database(db_paths.get(DATABASES.VAGAS));
             udb = new Database(db_paths.get(DATABASES.USUARIOS));
@@ -80,7 +87,21 @@ public class GestaoController extends ApplicationController implements TelaContr
             return;
         }
 
-        // linka as colunas ao atributos de Vaga
+        // ------------- Carregamento de CACHE -------------
+        try {
+            for (Map<String,Object> mapa : udb.getData("usuarios")) {
+                if ("RECRUTADOR".equals(mapa.get("cargo"))) {
+                    Integer id = Integer.valueOf(mapa.get("id").toString());
+                    cacheRecrutadores.put(id, mapa.get("nome").toString());
+                }
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        // ------------- Configurações das Tabelas
         colunaCargo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCargo()));
         colunaSalario.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("R$ %.2f", cellData.getValue().getSalarioBase())));
         colunaRequisitos.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRequisitos()));
@@ -88,8 +109,10 @@ public class GestaoController extends ApplicationController implements TelaContr
         colunaRegime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRegimeContratacao()));
         colunaDataAbertura.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataAbertura().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
         colunaRecrutador.setCellValueFactory(cellData -> {
+                System.out.println(cellData.getValue().getCargo());
                     int a = cellData.getValue().getRecrutadorId();
-                    return new SimpleStringProperty((a == -1) ? "Nenhum" : udb.searchMap("usuarios", "id", String.valueOf(a)).get("nome").toString());
+                    System.out.println(a);
+                        return new SimpleStringProperty(cacheRecrutadores.getOrDefault(a, "Nenhum"));
         });
 
         colunaRNome.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNome()));
@@ -103,9 +126,12 @@ public class GestaoController extends ApplicationController implements TelaContr
 
             return new SimpleStringProperty(builder.toString());
         });
+
+        // ------------- Carregamento de Dados -------------
         carregarDados();
         loadRecrutadores();
 
+        // ------------- Menus da Tabela -------------
         ContextMenu tabela_menu = new ContextMenu();
         MenuItem cadastrar_usuario = new MenuItem("Criar vaga"); // cria o item de ação
         tabela_menu.getItems().add(cadastrar_usuario);
@@ -121,12 +147,14 @@ public class GestaoController extends ApplicationController implements TelaContr
             TableRow<Vaga> row = new TableRow<>(); // row especifica
             ContextMenu rowMenu = new ContextMenu();
 
+            MenuItem cadastrarVaga = new MenuItem("Criar Vaga");
             MenuItem editarVaga = new MenuItem("Editar vaga");
             MenuItem excluirVaga = new MenuItem("Excluir vaga");
             MenuItem atribuirRecrutador = new MenuItem("Atribuir recrutador");
 
-            rowMenu.getItems().addAll(editarVaga, excluirVaga, atribuirRecrutador);
+            rowMenu.getItems().addAll(cadastrarVaga, editarVaga, excluirVaga, atribuirRecrutador);
 
+            cadastrarVaga.setOnAction(e -> criacaoVagaJanela.setVisible(true));
             editarVaga.setOnAction(e -> abrirEdicao(row));
 
             excluirVaga.setOnAction(e -> {
@@ -143,7 +171,8 @@ public class GestaoController extends ApplicationController implements TelaContr
                         tabela_recrutadores.refresh();
                     }
 
-                    tabela_vagas.getItems().remove(vaga);
+                    vagasBase.remove(vaga);
+                    tabela_vagas.refresh();
                     db.deleteObject(vaga, "vagas");
                 }
             });
@@ -159,6 +188,19 @@ public class GestaoController extends ApplicationController implements TelaContr
 
             return row;
         });
+
+        // ------------- Mecânica de Busca -------------
+        btn_filtrar.setItems(FXCollections.observableArrayList(
+                "Cargo", "Salário", "Requisitos", "Departamento", "Regime", "Data de Abertura", "Recrutador"
+        ));
+
+        btn_filtrar.setValue("Cargo");
+
+        search(tabela_vagas, barraPesquisar, btn_filtrar, this::filtro, vagasBase);
+
+        // ------------- Configurações Gerais -------------
+        cv_error.setManaged(false);
+        ev_error.setManaged(false);
     }
 
     @FXML
@@ -181,15 +223,16 @@ public class GestaoController extends ApplicationController implements TelaContr
     @FXML
     public void carregarDados() {
         try {
-            ObservableList<Vaga> data1 = FXCollections.observableArrayList();
             List<Map<String, Object>> dados = db.getData("vagas");
 
             for (Map<String, Object> mapa : dados) {
-                data1.add(db.convertMaptoObject(mapa, Vaga.class));
+                System.out.println("de cima: " + mapa.get("recrutadorId"));
+                vagasBase.add(db.convertMaptoObject(mapa, Vaga.class));
+                System.out.println("debaixo: " + db.convertMaptoObject(mapa, Vaga.class).getRecrutadorId());
 
             }
 
-            tabela_vagas.setItems(data1);
+            tabela_vagas.setItems(vagasBase);
             /*
             ObservableList<Contratacao> data2 = FXCollections.observableArrayList();
             List<Map<String, Object>> dados2 = db.getData("pedidos");
@@ -221,14 +264,21 @@ public class GestaoController extends ApplicationController implements TelaContr
 
     @FXML
     private void criarVaga() {
-        Vaga vaga = new Vaga(cv_cargo.getText(), Double.parseDouble(cv_salario.getText()), cv_requisitos.getText(), cv_departamento.getText(), cv_regime.getText(), -1);
-        db.addObject(vaga, "vagas");
-        int id = vaga.getId();
-        db.setActualId(++id);
+        try {
+            Vaga vaga = new Vaga(cv_cargo.getText(), Double.parseDouble(cv_salario.getText()), cv_requisitos.getText(), cv_departamento.getText(), cv_regime.getText(), -1);
+            db.addObject(vaga, "vagas");
+            int id = vaga.getId();
+            db.setActualId(++id);
 
-        tabela_vagas.getItems().add(vaga);
+            vagasBase.add(vaga);
+            tabela_vagas.refresh();
 
-        this.cancelar();
+            this.cancelar();
+        }
+        catch (NumberFormatException e) {
+            cv_error.setManaged(true);
+            cv_error.setText("Salário deve ser um número real válido.");
+        }
     }
 
     @FXML
@@ -245,16 +295,18 @@ public class GestaoController extends ApplicationController implements TelaContr
         ev_regime.setText(row.getItem().getRegimeContratacao());
 
         btn_ev_salvar.setOnAction(e -> {
-            row.getItem().editarVaga(ev_cargo.getText(), Double.parseDouble(ev_salario.getText()), ev_requisitos.getText(), ev_departamento.getText(), ev_regime.getText());
-            tabela_vagas.refresh();
+            try {
+                row.getItem().editarVaga(ev_cargo.getText(), Double.parseDouble(ev_salario.getText()), ev_requisitos.getText(), ev_departamento.getText(), ev_regime.getText());
+                tabela_vagas.refresh();
 
-            if (db.editObject(row.getItem(), "vagas")) {
-                System.out.println("foi");
+                db.editObject(row.getItem(), "vagas");
+                this.cancelar();
             }
-            else {
-                System.out.println("erro");
+            catch (NumberFormatException f) {
+                ev_error.setManaged(true);
+                ev_error.setText("Salário deve ser um número real válido.");
             }
-            this.cancelar();
+
         });
 
     }
@@ -314,8 +366,25 @@ public class GestaoController extends ApplicationController implements TelaContr
 
     @FXML
     public <T> String filtro(String campo, T classe) throws BadFilter {
+        if (classe instanceof Vaga vaga) {
+            return switch (campo) {
+                case "Salário" -> String.valueOf(vaga.getSalarioBase());
+                case "Requisitos" -> vaga.getRequisitos();
+                case "Departamento" -> vaga.getDepartamento();
+                case "Regime" -> vaga.getRegimeContratacao();
+                case "Data de Abertura" -> vaga.getDataAbertura().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                case "Recrutador" -> cacheRecrutadores.getOrDefault(vaga.getRecrutadorId(), "Nenhum");
+                default -> vaga.getCargo(); // case "Cargo" está inclusa
+            };
+        }
+/*
+        else if (classe instanceof Candidatura candidatura) {
 
-        return "fodase";
+        }*/
+
+        else {
+            throw new BadFilter();
+        }
     }
 
     @FXML
@@ -325,12 +394,16 @@ public class GestaoController extends ApplicationController implements TelaContr
         cv_requisitos.setText("");
         cv_departamento.setText("");
         cv_regime.setText("");
+        cv_error.setText("");
+        cv_error.setManaged(false);
 
         ev_cargo.setText("");
         ev_salario.setText("");
         ev_requisitos.setText("");
         ev_departamento.setText("");
         ev_regime.setText("");
+        ev_error.setText("");
+        ev_error.setManaged(false);
 
         criacaoVagaJanela.setVisible(false);
         edicaoVagaJanela.setVisible(false);

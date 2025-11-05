@@ -1,7 +1,6 @@
-package com.Projeto_Tp1_2025_2.controllers;
+package com.Projeto_Tp1_2025_2.controllers.recrutamento;
+import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
-import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
-import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
 import com.Projeto_Tp1_2025_2.models.recrutador.InfoCandidaturaViewModel;
@@ -9,20 +8,14 @@ import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
 import com.Projeto_Tp1_2025_2.util.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-import javafx.stage.Window;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class InfoCandidaturaController implements TelaController {
 
@@ -155,11 +148,6 @@ public class InfoCandidaturaController implements TelaController {
         }
     }*/
 
-
-    @Override
-    public void carregarDados() {
-
-    }
 
     @Override
     public <T> String filtro(String campo, T classe) throws BadFilter {

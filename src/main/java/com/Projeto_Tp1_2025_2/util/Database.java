@@ -110,6 +110,7 @@ public class Database {
             List<Map<String, Object>> info = this.getData(data);
 
             for (Map<String, Object> mapa : info) {
+                System.out.println(mapa + " " + Arrays.toString(kvalues));
                 if (comparator(kvalues, mapa)) {
                     return mapa;
                 }

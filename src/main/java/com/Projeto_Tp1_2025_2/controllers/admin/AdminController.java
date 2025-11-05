@@ -3,15 +3,17 @@ package com.Projeto_Tp1_2025_2.controllers.admin;
 import com.Projeto_Tp1_2025_2.controllers.ApplicationController;
 import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
+import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
+import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
 import com.Projeto_Tp1_2025_2.util.Database;
 import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
+import com.Projeto_Tp1_2025_2.util.UsuarioService;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,17 +26,16 @@ import javafx.stage.Stage;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class AdminController extends ApplicationController implements TelaController {
     Database db;
-    ArrayList<Map<String, Object>> usuarios_filtrado = new ArrayList<>();
+    private final ObservableList<Funcionario> funcionariosBase = FXCollections.observableArrayList();
 
     @FXML private AnchorPane janelaSobreposta;
     @FXML private AnchorPane selecaoJanela;
+    @FXML private AnchorPane cadastrarJanela;
 
     @FXML private Button btn_sair;
     @FXML private Button btn_gestor;
@@ -44,6 +45,15 @@ public class AdminController extends ApplicationController implements TelaContro
 
     @FXML private TextField barraBuscar;
     @FXML private ComboBox<String> btn_filtrar;
+
+    @FXML private TextField cf_nome;
+    @FXML private PasswordField cf_senha;
+    @FXML private PasswordField cf_senha2;
+    @FXML private TextField cf_cpf;
+    @FXML private TextField cf_email;
+    @FXML private ComboBox<String> cf_cargo_box;
+    @FXML private Label mensagem_erro;
+    @FXML private Button btn_cadastrar;
 
     @FXML private TableColumn<Funcionario, String> colunaNome;
     @FXML private TableColumn<Funcionario, String> colunaCPF;
@@ -84,9 +94,7 @@ public class AdminController extends ApplicationController implements TelaContro
         tabela_menu.getItems().add(cadastrar_usuario);
 
         // linka o item à sua função
-        cadastrar_usuario.setOnAction(e -> {
-            System.out.println("cadastramento");
-        });
+        cadastrar_usuario.setOnAction(e -> adicionarFuncionario());
 
         tabelaFuncionarios.setContextMenu(tabela_menu);
 
@@ -95,33 +103,23 @@ public class AdminController extends ApplicationController implements TelaContro
             TableRow<Funcionario> row = new TableRow<>(); // essa é a row especifica
             ContextMenu rowMenu = new ContextMenu();
 
+            MenuItem adicionarFuncionarioMenu = new MenuItem("Cadastrar novo usuário");
             MenuItem editarItem = new MenuItem("Editar funcionário");
             MenuItem excluirItem = new MenuItem("Excluir funcionário");
             MenuItem alterarStatus = new MenuItem("Alterar status");
 
-            rowMenu.getItems().addAll(editarItem, excluirItem, alterarStatus);
+            rowMenu.getItems().addAll(adicionarFuncionarioMenu, editarItem, excluirItem, alterarStatus);
 
             // linka as ações
+
+            adicionarFuncionarioMenu.setOnAction(e -> adicionarFuncionario());
             editarItem.setOnAction(e -> editarFuncionario(e, row.getItem()));
+            excluirItem.setOnAction(e -> excluirFuncionario(e, row.getItem()));
 
             alterarStatus.setOnAction(e -> {
                 row.getItem().changeStatus();
                 db.editObject(row.getItem(), "usuarios");
                 tabelaFuncionarios.refresh();
-            });
-
-            excluirItem.setOnAction(e -> {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Confirmação");
-                alert.setHeaderText("Tem certeza que deseja excluir este usuário?");
-
-                var resultado = alert.showAndWait();
-
-                if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                    tabelaFuncionarios.getItems().remove(row.getItem());
-                    db.deleteObject(row.getItem(), "usuarios");
-                }
-
             });
 
             // so vai aparecer quando clicado em cima de uma linha
@@ -142,7 +140,18 @@ public class AdminController extends ApplicationController implements TelaContro
 
         btn_filtrar.setValue("Nome");
 
-        search(tabelaFuncionarios, barraBuscar, btn_filtrar, this::filtro);
+        search(tabelaFuncionarios, barraBuscar, btn_filtrar, this::filtro, funcionariosBase);
+
+        // ----------- Configurações Gerais -----------
+        cf_cargo_box.setItems(FXCollections.observableArrayList(
+                "ADMIN",
+                "RECRUTADOR",
+                "GESTOR"
+        ));
+
+        cf_cargo_box.setValue("ADMIN");
+
+        mensagem_erro.setManaged(false); // por padrão, a mensagem de erro "nao existe"
     }
 
     @FXML
@@ -160,6 +169,25 @@ public class AdminController extends ApplicationController implements TelaContro
         else {
             throw new BadFilter();
         }
+    }
+
+    @FXML
+    private void adicionarFuncionario() {
+        cadastrarJanela.setVisible(true);
+
+        btn_cadastrar.setOnAction(k -> {
+            UsuarioService us = new UsuarioService();
+
+            try{
+                Usuario user = us.registrar(cf_nome.getText(), cf_email.getText(), cf_cpf.getText(), cf_senha.getText(), cf_senha2.getText(), cf_cargo_box.getValue());
+                funcionariosBase.add((Funcionario) user);
+                tabelaFuncionarios.refresh();
+                cancelar();
+            } catch(ValidationException | IOException e){
+                mensagem_erro.setManaged(true);
+                mensagem_erro.setText(e.getMessage());
+            }
+        });
     }
 
     @FXML
@@ -197,20 +225,31 @@ public class AdminController extends ApplicationController implements TelaContro
 
     }
 
+    @FXML
+    private void excluirFuncionario(ActionEvent e, Funcionario funcionario) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmação");
+        alert.setHeaderText("Tem certeza que deseja excluir este usuário?");
+
+        var resultado = alert.showAndWait();
+
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            funcionariosBase.remove(funcionario);
+            db.deleteObject(funcionario, "usuarios");
+            tabelaFuncionarios.refresh();
+        }
+    }
 
     @FXML
     public void carregarDados() {
         try {
-            ObservableList<Funcionario> data = FXCollections.observableArrayList();
             List<Map<String, Object>> dados = db.getData("usuarios");
 
             for (Map<String, Object> mapa : dados) {
-                if (mapa.get("cargo").equals("CANDIDATO")) continue;
-                usuarios_filtrado.add(mapa);
-                data.add(db.convertMaptoObject(mapa, Funcionario.class));
+                funcionariosBase.add(db.convertMaptoObject(mapa, Funcionario.class));
             }
 
-            tabelaFuncionarios.setItems(data);
+            tabelaFuncionarios.setItems(funcionariosBase);
         }
         catch (IOException e) {
             System.out.println(e.getMessage());
@@ -229,9 +268,9 @@ public class AdminController extends ApplicationController implements TelaContro
         try {
             if (event.getSource() instanceof Button botao) {
                 switch (botao.getText()) {
-                    case "Candidato" : SceneSwitcher.sceneswitcher(stage, "Candidatura", telas.get("CANDIDATO"), true);
-                    case "Recrutador" : SceneSwitcher.sceneswitcher(stage, "Recrutamento", telas.get("RECRUTADOR"), true);
-                    case "Gestor" : SceneSwitcher.sceneswitcher(stage, "Gestão", telas.get("GESTOR"), true);
+                    case "Candidato" : SceneSwitcher.sceneswitcher(stage, "Candidatura", telas_path.get("CANDIDATO"), true); break;
+                    case "Recrutador" : SceneSwitcher.sceneswitcher(stage, "Recrutamento", telas_path.get("RECRUTADOR"), true); break;
+                    case "Gestor" : SceneSwitcher.sceneswitcher(stage, "Gestão", telas_path.get("GESTOR"), true); break;
                     default : System.out.println("erro no getText");
                 }
             }
@@ -243,6 +282,14 @@ public class AdminController extends ApplicationController implements TelaContro
 
     @FXML
     public void cancelar() {
+        cf_nome.setText("");
+        cf_email.setText("");
+        cf_cpf.setText("");
+        cf_senha.setText("");
+        cf_senha2.setText("");
+        mensagem_erro.setManaged(false);
+
+        cadastrarJanela.setVisible(false);
         selecaoJanela.setVisible(false);
     }
 
