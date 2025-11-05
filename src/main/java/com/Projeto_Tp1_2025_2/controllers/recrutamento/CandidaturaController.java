@@ -25,7 +25,6 @@ import java.util.Optional;
 
 
 public class CandidaturaController extends ApplicationController implements TelaController {
-    // AVISO PRO ENZO BOIOLA: o application controller tem o search ja, vc so precisa fazer o filtro pra botar nele
 
     @FXML private Button btn_sair;
     @FXML private AnchorPane tab_vagas;
@@ -61,7 +60,7 @@ public class CandidaturaController extends ApplicationController implements Tela
     VagaService vagaService;
     CandidaturaService candidaturaService;
     List<Candidatura> allCandidaturas;
-
+    private List<Vaga> allVagas;
 
 
     @FXML
@@ -129,7 +128,14 @@ public class CandidaturaController extends ApplicationController implements Tela
             });
 
             excluirItem.setOnAction(e -> {
-                //excluirVaga(vaga_atual);
+                Vaga vagaSelecionada = tabelaRegistrarVagas.getSelectionModel().getSelectedItem();
+                if(vagaSelecionada != null){
+                    try {
+                        excluirVaga(vagaSelecionada);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
             });
 
             row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
@@ -283,6 +289,38 @@ public class CandidaturaController extends ApplicationController implements Tela
             }
         }
     }
+
+    @FXML private void excluirVaga(Vaga vagaSelecionada) throws IOException {
+        if(vagaSelecionada == null){
+            System.out.println("Nenhuma vaga selecionada para excluir.");
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Excluir Vaga");
+        alert.setHeaderText("Excluir Vaga");
+        alert.setContentText("Vaga: " + vagaSelecionada.getId() + "\nCargo: " + vagaSelecionada.getCargo());
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if(result.get() == ButtonType.OK && result.isPresent()){
+
+            List<Candidatura> candidaturas = candidaturaService.getAllCandidaturasPorVaga(vagaSelecionada);
+            for(var candidatura : candidaturas){
+                candidaturaService.excluirCandidatura(candidatura);
+            }
+            this.allVagas = vagaService.getAllVagas();
+            boolean veri = vagaService.excluirVaga(vagaSelecionada);
+            if(veri){
+                tabelaRegistrarVagas.getItems().remove(vagaSelecionada);
+                tabelaRegistrarVagas.refresh();
+                System.out.println("Vaga excluida com sucesso.");
+            } else{
+                System.out.println("Erro ao excluir Vaga");
+            }
+        }
+    }
+
     //==============CONTEXT MENU DE CANDIDATOS(EDITAR E EXCLUIR)==============
 
 

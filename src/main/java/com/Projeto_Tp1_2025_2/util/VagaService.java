@@ -8,6 +8,7 @@ import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.admin.Administrador;
 import com.Projeto_Tp1_2025_2.models.admin.Gestor;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
+import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
 import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
 import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
 import com.Projeto_Tp1_2025_2.models.recrutador.StatusVaga;
@@ -63,4 +64,10 @@ public class VagaService {
         return null;
     }
 
+    public boolean excluirVaga(Vaga vaga) throws IOException {
+        if (vaga == null) {
+            return false;
+        }
+        return db.deleteObject(vaga, "vagas");
+    }
 }

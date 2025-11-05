@@ -53,6 +53,17 @@ public class CandidaturaService {
         return candidaturas;
     }
 
+    public List<Candidatura> getAllCandidaturasPorVaga(Vaga vaga) throws IOException{
+        List<Candidatura> allCandidaturas = getAllCandidaturas();
+        List<Candidatura> candidaturas = new ArrayList<>();
+        for(Candidatura candidatura : allCandidaturas){
+            if(candidatura.getVagaId() == vaga.getId()){
+                candidaturas.add(candidatura);
+            }
+        }
+        return candidaturas;
+    }
+
     public List<Vaga> getAllVagasPorCandidato(Candidato candidato) throws IOException{
 
         List<Candidatura> allCandidaturas = getAllCandidaturas();
