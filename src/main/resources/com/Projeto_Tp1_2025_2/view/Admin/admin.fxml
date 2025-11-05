@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -126,6 +127,43 @@
                         <Button fx:id="btn_gestor" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#alterarPerfil" prefHeight="30.0" prefWidth="200.0" text="Gestor" textFill="WHITE" />
                         <Separator orientation="VERTICAL" prefHeight="20.0" />
                         <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelar" prefHeight="30.0" prefWidth="200.0" styleClass="btn_cancelar" text="Cancelar" textFill="WHITE" />
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="cadastrarJanela" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: rgba(0,0,0,0.5);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane layoutX="397.0" layoutY="160.0" prefHeight="480.0" prefWidth="500.0" styleClass="telaaction">
+               <children>
+                  <VBox alignment="CENTER" layoutX="30.0" layoutY="34.0" prefHeight="482.0" prefWidth="597.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label text="Cadastrar Usuario">
+                           <font>
+                              <Font name="System Bold" size="36.0" />
+                           </font>
+                        </Label>
+                        <Separator orientation="VERTICAL" prefHeight="15.0" visible="false" />
+                        <TextField fx:id="cf_nome" maxHeight="370.0" maxWidth="370.0" promptText="Nome" styleClass="lineedit" />
+                        <TextField fx:id="cf_email" maxHeight="370.0" maxWidth="370.0" promptText="Email" styleClass="lineedit" />
+                        <TextField fx:id="cf_cpf" maxHeight="370.0" maxWidth="370.0" promptText="CPF" styleClass="lineedit" />
+                        <PasswordField fx:id="cf_senha" maxHeight="370.0" maxWidth="370.0" promptText="Senha" styleClass="lineedit" />
+                        <PasswordField fx:id="cf_senha2" maxHeight="370.0" maxWidth="370.0" promptText="Confirme a senha" styleClass="lineedit" />
+                        <ComboBox fx:id="cf_cargo_box" prefWidth="150.0" promptText="Cargo" />
+                        <Label fx:id="mensagem_erro" alignment="CENTER" contentDisplay="CENTER" prefHeight="33.0" prefWidth="306.0" textFill="RED">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                        <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Button fx:id="btn_cadastrar" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="120.0" styleClass="btn_confirmar" text="Cadastrar" textFill="WHITE" />
+                              <Separator prefWidth="30.0" visible="false" />
+                              <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelar" prefHeight="35.0" prefWidth="120.0" styleClass="btn_cancelar" text="Cancelar" textFill="WHITE" />
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                </children>

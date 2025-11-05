@@ -46,24 +46,26 @@ public class UsuarioService {
     }
 
     //==============REGISTRAR==============
-    public void registrar(String nome, String email, String cpf, String senha, String senhaConfirm, String cargo, String formacao) throws IOException, ValidationException {
+    public Usuario registrar(String nome, String email, String cpf, String senha, String senhaConfirm, String cargo) throws IOException, ValidationException { // modificação no retorno para um uso no adm
         if(!(senha.equals(senhaConfirm))){
             throw new ValidationException("Senhas não conferem.");
         }
-        if(email.isEmpty() || nome.isEmpty() || cpf.isEmpty() || senha.isEmpty() || senhaConfirm.isEmpty()){
+        if(email.isEmpty() || nome.isEmpty() || cpf.isEmpty() || senha.isEmpty()){
             throw new ValidationException("Campos Obrigatorios Vazios.");
         }
         if(db.searchMap("usuarios", "cpf", cpf, "nome", nome) != null){
             throw new ValidationException("Cpf ou nome ja cadastrados.");
         }
 
-        Usuario user = criarUsuarioPorCargo(nome, email, cpf, senha, cargo, formacao);
+        Usuario user = criarUsuarioPorCargo(nome, email, cpf, senha, cargo);
         db.addObject(user, "usuarios");
         int id = user.getId();
         db.setActualId(++id);
+
+        return user;
     }
     //==============SOBRECARGA DE REGISTRAR==============
-    public void registrar(String nome, String email, String cpf, String senha, String cargo, String formacao) throws IOException, ValidationException {
+    public void registrar(String nome, String email, String cpf, String senha, String cargo) throws IOException, ValidationException {
 
         if(email.isEmpty() || nome.isEmpty() || cpf.isEmpty() || senha.isEmpty()){
             throw new ValidationException("Campos Obrigatorios Vazios.");
@@ -72,20 +74,17 @@ public class UsuarioService {
             throw new ValidationException("Cpf ou nome ja cadastrados.");
         }
 
-        Usuario user = criarUsuarioPorCargo(nome, email, cpf, senha, cargo, formacao);
+        Usuario user = criarUsuarioPorCargo(nome, email, cpf, senha, cargo);
         db.addObject(user, "usuarios");
         int id = user.getId();
         db.setActualId(++id);
     }
     //==============REGISTRAR==============
 
-    private Usuario criarUsuarioPorCargo(String nome, String email, String cpf, String senha, String cargo, String formacao) throws IOException, ValidationException, FileNotFoundException {
+    private Usuario criarUsuarioPorCargo(String nome, String email, String cpf, String senha, String cargo) throws IOException, ValidationException, FileNotFoundException {
         try{
             return switch (cargo) {
                 case "ADMIN" -> new Administrador(nome, senha, cpf, email, cargo);
-                case "CANDIDATO" -> new Candidato(nome, senha, cpf, email, cargo, (
-                        (formacao.isEmpty()) ? "Null" : formacao)
-                ); //! ALTERAR LOGIN PARA MODIFICAR O CANDIDATO
                 case "RECRUTADOR" -> new Recrutador(nome, senha, cpf, email, cargo);
                 case "FUNCIONARIO" -> new Funcionario(nome, senha, cpf, email, cargo);
                 case "GESTOR" -> new Gestor(nome, senha, cpf, email, cargo);

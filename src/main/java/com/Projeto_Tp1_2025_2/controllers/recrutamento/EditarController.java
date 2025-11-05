@@ -1,12 +1,9 @@
-package com.Projeto_Tp1_2025_2.controllers;
+package com.Projeto_Tp1_2025_2.controllers.recrutamento;
 
-import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
-import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
 import com.Projeto_Tp1_2025_2.models.recrutador.StatusVaga;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
 import com.Projeto_Tp1_2025_2.util.*;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,7 +14,6 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 

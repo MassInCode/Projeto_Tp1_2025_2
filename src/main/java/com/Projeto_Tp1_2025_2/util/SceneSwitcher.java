@@ -20,7 +20,7 @@ import javafx.stage.Window;
 
 /*
 
-para melhor uso, dá para usar o hashmap `telas` em AdminController
+para melhor uso, dá para usar o hashmap `telas_path` em AdminController
 
  */
 
@@ -92,7 +92,7 @@ public class SceneSwitcher{
                     trocarPerfil.setOnAction(e -> {
                         try {
                             Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-                            SceneSwitcher.sceneswitcher(stage, "Administração", TelaController.telas.get("ADMIN"));
+                            SceneSwitcher.sceneswitcher(stage, "Administração", TelaController.telas_path.get("ADMIN"));
                         } catch (FileNotFoundException ex) {
                             ex.printStackTrace();
                         }

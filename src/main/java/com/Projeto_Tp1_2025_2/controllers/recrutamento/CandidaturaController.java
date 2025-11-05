@@ -1,4 +1,6 @@
-package com.Projeto_Tp1_2025_2.controllers;
+package com.Projeto_Tp1_2025_2.controllers.recrutamento;
+import com.Projeto_Tp1_2025_2.controllers.ApplicationController;
+import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
 import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
 import com.Projeto_Tp1_2025_2.models.Usuario;
@@ -14,7 +16,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -335,7 +336,7 @@ public class CandidaturaController extends ApplicationController implements Tela
     }
 
     @FXML private void onClickSair(ActionEvent event) throws IOException {
-        SceneSwitcher.sceneswitcher(event, "Login", telas.get("LOGIN"));
+        SceneSwitcher.sceneswitcher(event, "Login", telas_path.get("LOGIN"));
     }
 
     @FXML protected void onClickCadastroBtn() {
@@ -378,9 +379,6 @@ public class CandidaturaController extends ApplicationController implements Tela
 
 
 
-    @FXML public void carregarDados() {
-        return;
-    }
     @FXML public void sair() throws IOException {
         super.sair(btn_sair);
     }
