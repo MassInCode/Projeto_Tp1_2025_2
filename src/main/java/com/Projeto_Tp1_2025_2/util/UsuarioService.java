@@ -57,7 +57,7 @@ public class UsuarioService {
             throw new ValidationException("Cpf ou nome ja cadastrados.");
         }
 
-        Usuario user = criarUsuarioPorCargo(nome, email, cpf, senha, cargo);
+        Usuario user = criarUsuarioPorCargo(nome, email, cpf, senha, cargo, "");
         db.addObject(user, "usuarios");
         int id = user.getId();
         db.setActualId(++id);
@@ -65,7 +65,7 @@ public class UsuarioService {
         return user;
     }
     //==============SOBRECARGA DE REGISTRAR==============
-    public void registrar(String nome, String email, String cpf, String senha, String cargo) throws IOException, ValidationException {
+    public void registrar(String nome, String email, String cpf, String senha, String senhaConfirm, String formacao, String cargo) throws IOException, ValidationException { // candidato. houve uma alteração nos parâmetros para o overload funcionar
 
         if(email.isEmpty() || nome.isEmpty() || cpf.isEmpty() || senha.isEmpty()){
             throw new ValidationException("Campos Obrigatorios Vazios.");
@@ -74,17 +74,18 @@ public class UsuarioService {
             throw new ValidationException("Cpf ou nome ja cadastrados.");
         }
 
-        Usuario user = criarUsuarioPorCargo(nome, email, cpf, senha, cargo);
+        Usuario user = criarUsuarioPorCargo(nome, email, cpf, senha, cargo, formacao);
         db.addObject(user, "usuarios");
         int id = user.getId();
         db.setActualId(++id);
     }
     //==============REGISTRAR==============
 
-    private Usuario criarUsuarioPorCargo(String nome, String email, String cpf, String senha, String cargo) throws IOException, ValidationException, FileNotFoundException {
+    private Usuario criarUsuarioPorCargo(String nome, String email, String cpf, String senha, String cargo, String formacao) throws IOException, ValidationException, FileNotFoundException {
         try{
             return switch (cargo) {
                 case "ADMIN" -> new Administrador(nome, senha, cpf, email, cargo);
+                case "CANDIDATO" -> new Candidato(nome, senha, cpf, email, cargo, formacao);
                 case "RECRUTADOR" -> new Recrutador(nome, senha, cpf, email, cargo);
                 case "FUNCIONARIO" -> new Funcionario(nome, senha, cpf, email, cargo);
                 case "GESTOR" -> new Gestor(nome, senha, cpf, email, cargo);

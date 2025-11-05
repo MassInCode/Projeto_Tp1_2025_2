@@ -8,6 +8,7 @@ import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
 import com.Projeto_Tp1_2025_2.util.*;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -99,6 +100,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         carregarCandidatos();
         carregarVagas();
         criarContextMenuCandidato();
+        criarContextMenuVaga();
     }
 
 
@@ -107,6 +109,39 @@ public class CandidaturaController extends ApplicationController implements Tela
     public <T> String filtro(String campo, T classe) throws BadFilter {
 
         return "fodase";
+    }
+
+    //==============CONTEXT MENU DE VAGAS(EDITAR E EXCLUIR)==============
+    private void criarContextMenuVaga() {
+        tabelaRegistrarVagas.setRowFactory(tv -> {
+            TableRow<Vaga> row = new TableRow<>(); // row especifica
+            ContextMenu rowMenu = new ContextMenu();
+
+            Vaga vaga_atual = row.getItem();
+
+            MenuItem editarItem = new MenuItem("Editar vaga");
+            MenuItem excluirItem = new MenuItem("Excluir vaga");
+
+            rowMenu.getItems().addAll(editarItem, excluirItem);
+
+            editarItem.setOnAction(e -> {
+                //editarVaga();
+            });
+
+            excluirItem.setOnAction(e -> {
+                //excluirVaga(vaga_atual);
+            });
+
+            row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+                if(isNowEmpty){
+                    row.setContextMenu(null);
+                } else{
+                    row.setContextMenu(rowMenu);
+                }
+            });
+
+            return row;
+        });
     }
 
     //==============CONTEXT MENU DE CANDIDATOS(EDITAR E EXCLUIR)==============
@@ -345,7 +380,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         mensagem_erro2.getStyleClass().removeAll("label-sucesso", "label-erro");
 
         try{
-            usuarioService.registrar(ld_nome_cadastro.getText(), ld_email_cadastro.getText(), ld_cpf_cadastro.getText(), ld_senha_cadastro.getText(), "CANDIDATO", ld_formacao_cadastro.getText());
+            usuarioService.registrar(ld_nome_cadastro.getText(), ld_email_cadastro.getText(), ld_cpf_cadastro.getText(), ld_senha_cadastro.getText(), ld_senha_cadastro.getText(), ld_formacao_cadastro.getText(), "CANDIDATO"); // mesma senha para acertar o overload correto
             limparCampos();
             mensagem_erro2.setStyle("-fx-text-fill: green;");
             mensagem_erro2.setText("Cadastro registrado com sucesso.");
