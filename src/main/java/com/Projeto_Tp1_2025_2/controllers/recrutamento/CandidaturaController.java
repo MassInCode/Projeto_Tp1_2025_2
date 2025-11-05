@@ -430,6 +430,14 @@ public class CandidaturaController extends ApplicationController implements Tela
     @FXML protected void onClickAbrirRegistrarCandidato(ActionEvent event) throws IOException {
         this.btn_RegistrarCandidato(event);
     }
+
+    @FXML protected void btn_ListarEntrevistas(ActionEvent event){
+        return;
+    }
+
+    @FXML protected void onClickAbrirRegistrarEntrevista(ActionEvent event){
+        return;
+    }
     //==============ON CLICKS==============
 
 
