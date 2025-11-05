@@ -86,8 +86,8 @@ public class InfoCandidaturaController implements TelaController {
     }
 
 
-    /*
-    private void criarContextMenuCandidato() throws IOException {
+
+    /*private void criarContextMenuCandidato() throws IOException {
 
         ContextMenu contextMenu = new ContextMenu();
         MenuItem editarStatusDeCandidatura =  new MenuItem("Editar Status de Candidatura");
@@ -153,8 +153,8 @@ public class InfoCandidaturaController implements TelaController {
         } catch(IOException e){
             e.printStackTrace();
         }
-    }
-    */
+    }*/
+
 
     @Override
     public void carregarDados() {
