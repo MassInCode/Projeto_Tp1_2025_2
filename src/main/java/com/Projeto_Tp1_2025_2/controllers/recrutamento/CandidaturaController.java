@@ -252,7 +252,6 @@ public class CandidaturaController extends ApplicationController implements Tela
         }
     }
 
-
     @FXML private void excluirCandidato(Candidato candidatoSelecionado) throws IOException {
         if(candidatoSelecionado == null){
             System.out.println("Nenhum candidato selecionado para excluir.");
