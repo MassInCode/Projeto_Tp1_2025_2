@@ -10,7 +10,7 @@
 
 <AnchorPane prefHeight="500.0" prefWidth="500.0" styleClass="telaaction" stylesheets="@../Login/login.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.recrutamento.TelinhaAuxController">
    <children>
-      <AnchorPane fx:id="apAgendarEntrevista" prefHeight="200.0" prefWidth="200.0" visible="false">
+      <AnchorPane fx:id="apAgendarEntrevista" prefHeight="200.0" prefWidth="200.0">
          <children>
             <VBox alignment="CENTER" prefHeight="500.0" prefWidth="490.0">
                <children>
@@ -21,11 +21,14 @@
                   </Label>
                   <Separator orientation="VERTICAL" prefHeight="127.0" prefWidth="3.0" visible="false" />
                   <DatePicker fx:id="dpCalendario" prefHeight="36.0" prefWidth="234.0" />
+                  <Separator orientation="VERTICAL" prefHeight="30.0" prefWidth="0.0" visible="false" />
+                  <ChoiceBox fx:id="cbAvaliador" prefWidth="150.0" />
+                  <Label fx:id="lblNome" />
                   <Separator orientation="VERTICAL" prefHeight="169.0" prefWidth="0.0" visible="false" />
                   <HBox prefHeight="56.0" prefWidth="490.0">
                      <children>
                         <Separator prefWidth="50.0" visible="false" />
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Agendar" textFill="WHITE">
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickAgendarEntrevista" prefHeight="35.0" prefWidth="165.0" text="Agendar" textFill="WHITE">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -42,7 +45,7 @@
             </VBox>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="apEditarStatusCandidatura" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" visible="false">
+      <AnchorPane fx:id="apEditarStatusCandidatura" layoutY="-1.0" prefHeight="511.0" prefWidth="500.0" visible="false">
          <children>
             <VBox alignment="CENTER" prefHeight="500.0" prefWidth="490.0">
                <children>
@@ -52,7 +55,7 @@
                      </font>
                   </Label>
                   <Separator orientation="VERTICAL" prefHeight="127.0" prefWidth="3.0" visible="false" />
-                  <ChoiceBox prefHeight="29.0" prefWidth="246.0" />
+                  <ChoiceBox fx:id="cbStatusCandidatura" prefHeight="29.0" prefWidth="246.0" />
                   <Separator orientation="VERTICAL" prefHeight="169.0" prefWidth="0.0" visible="false" />
                   <HBox prefHeight="56.0" prefWidth="490.0">
                      <children>

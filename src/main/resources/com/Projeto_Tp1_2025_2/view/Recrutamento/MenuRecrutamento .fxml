@@ -208,7 +208,7 @@
                                     <TableView fx:id="tabEntrevistas" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="618.0" prefWidth="1031.0">
                                        <columns>
                                           <TableColumn fx:id="colCandidato" editable="false" minWidth="-Infinity" prefWidth="347.0" resizable="false" text="Candidato" />
-                                          <TableColumn fx:id="colVaga" editable="false" minWidth="-Infinity" prefWidth="328.0" resizable="false" text="Vaga" />
+                                          <TableColumn fx:id="colVagaEntrevistas" editable="false" minWidth="-Infinity" prefWidth="328.0" resizable="false" text="Vaga" />
                                           <TableColumn fx:id="colData" editable="false" minWidth="-Infinity" prefWidth="404.0" resizable="false" text="Data" />
                                        </columns>
                                        <contextMenu>

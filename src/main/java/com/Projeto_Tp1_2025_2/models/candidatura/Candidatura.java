@@ -1,5 +1,6 @@
 package com.Projeto_Tp1_2025_2.models.candidatura;
 
+import com.Projeto_Tp1_2025_2.models.recrutador.Entrevista;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
 import com.Projeto_Tp1_2025_2.util.Database;
 

@@ -37,5 +37,6 @@ public class InfoCandidaturaViewModel {
     public LocalDate getDataVaga(){
         return this.candidatura.getDataCandidatura();
     }
+    public Candidatura getCandidatura(){return this.candidatura;}
 
 }

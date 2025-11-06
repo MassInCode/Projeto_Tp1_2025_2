@@ -104,7 +104,7 @@ public class Vaga {
     public void setId(int id) {this.id = id;}
 
     public String getCargo() {
-        return cargo;
+        return this.cargo;
     }
     public void setCargo(String cargo) {this.cargo = cargo;}
 

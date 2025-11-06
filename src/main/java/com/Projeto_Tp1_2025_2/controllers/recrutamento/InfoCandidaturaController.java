@@ -38,15 +38,17 @@ public class InfoCandidaturaController implements TelaController {
     UsuarioService usuarioService;
     VagaService vagaService;
     CandidaturaService candidaturaService;
+    EntrevistaService entrevistaService;
     List<Vaga> vagas;
 
     //RECEBE AS INFORMAÇÕES DA TELA QUE CHAMOU ELE
-    @FXML public void initData(Candidato candidatoSelecionado, String tela, VagaService vs, CandidaturaService cs, UsuarioService us) throws IOException {
+    @FXML public void initData(Candidato candidatoSelecionado, String tela, VagaService vs, CandidaturaService cs, UsuarioService us, EntrevistaService es) throws IOException {
 
         this.candidato = candidatoSelecionado;
         vagaService = vs;
         candidaturaService = cs;
         usuarioService = us;
+        entrevistaService = es;
         vagas = candidaturaService.getAllVagasPorCandidato(candidatoSelecionado);
 
         if(tela.equals("Candidaturas de ")){
@@ -140,7 +142,7 @@ public class InfoCandidaturaController implements TelaController {
             FXMLLoader loader = new FXMLLoader(resource);
             Parent root = loader.load();
             TelinhaAuxController controller = loader.getController();
-            controller.initData(candidaturaSelecionada, tela, vagaService, candidaturaService, usuarioService);
+            controller.initData(candidaturaSelecionada, tela, vagaService, candidaturaService, usuarioService, entrevistaService);
             Window ownerStage = (Window) tab_candidaturas.getScene().getWindow();
             SceneSwitcher.newfloatingscene(root, tela, ownerStage);
 

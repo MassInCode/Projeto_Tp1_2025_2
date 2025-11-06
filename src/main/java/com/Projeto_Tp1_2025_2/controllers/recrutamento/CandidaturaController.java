@@ -59,6 +59,7 @@ public class CandidaturaController extends ApplicationController implements Tela
     UsuarioService usuarioService;
     VagaService vagaService;
     CandidaturaService candidaturaService;
+    EntrevistaService entrevistaService;
     List<Candidatura> allCandidaturas;
     private List<Vaga> allVagas;
 
@@ -72,6 +73,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         usuarioService = new UsuarioService();
         vagaService = new VagaService();
         candidaturaService = new CandidaturaService();
+        entrevistaService = new EntrevistaService();
 
         this.allCandidaturas = candidaturaService.getAllCandidaturas();
 
@@ -245,7 +247,7 @@ public class CandidaturaController extends ApplicationController implements Tela
             FXMLLoader loader = new FXMLLoader(resource);
             Parent root = loader.load();
             InfoCandidaturaController controller = loader.getController();
-            controller.initData(candidatoSelecionado, tela, vagaService, candidaturaService, usuarioService);
+            controller.initData(candidatoSelecionado, tela, vagaService, candidaturaService, usuarioService, entrevistaService);
             Window ownerStage = (Window) tab_vagas.getScene().getWindow();
             SceneSwitcher.newfloatingscene(root, tela + candidatoSelecionado.getNome(), ownerStage);
             carregarVagas();
