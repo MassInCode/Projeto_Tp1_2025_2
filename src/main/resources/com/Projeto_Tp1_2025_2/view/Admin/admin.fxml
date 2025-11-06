@@ -121,11 +121,11 @@
                               <Font name="System Bold" size="36.0" />
                            </font>
                         </Label>
-                        <Separator orientation="VERTICAL" prefHeight="40.0" />
+                        <Separator orientation="VERTICAL" prefHeight="40.0" visible="false" />
                         <Button fx:id="btn_candidato" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#alterarPerfil" prefHeight="30.0" prefWidth="200.0" text="Candidato" textFill="WHITE" />
                         <Button fx:id="btn_recrutador" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#alterarPerfil" prefHeight="30.0" prefWidth="200.0" text="Recrutador" textFill="WHITE" />
                         <Button fx:id="btn_gestor" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#alterarPerfil" prefHeight="30.0" prefWidth="200.0" text="Gestor" textFill="WHITE" />
-                        <Separator orientation="VERTICAL" prefHeight="20.0" />
+                        <Separator orientation="VERTICAL" prefHeight="20.0" visible="false" />
                         <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelar" prefHeight="30.0" prefWidth="200.0" styleClass="btn_cancelar" text="Cancelar" textFill="WHITE" />
                      </children>
                   </VBox>
@@ -151,7 +151,7 @@
                         <PasswordField fx:id="cf_senha" maxHeight="370.0" maxWidth="370.0" promptText="Senha" styleClass="lineedit" />
                         <PasswordField fx:id="cf_senha2" maxHeight="370.0" maxWidth="370.0" promptText="Confirme a senha" styleClass="lineedit" />
                         <ComboBox fx:id="cf_cargo_box" prefWidth="150.0" promptText="Cargo" />
-                        <Label fx:id="mensagem_erro" alignment="CENTER" contentDisplay="CENTER" prefHeight="33.0" prefWidth="306.0" textFill="RED">
+                        <Label fx:id="mensagem_erro" alignment="CENTER" contentDisplay="CENTER" prefHeight="33.0" prefWidth="370.0" textFill="RED">
                            <font>
                               <Font name="System Bold" size="13.0" />
                            </font>

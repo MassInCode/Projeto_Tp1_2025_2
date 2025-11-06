@@ -2,6 +2,7 @@ package com.Projeto_Tp1_2025_2.controllers.admin;
 
 import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
 import com.Projeto_Tp1_2025_2.models.Usuario;
+import com.Projeto_Tp1_2025_2.models.admin.Gestor;
 import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
 import com.Projeto_Tp1_2025_2.controllers.TelaController;
 
@@ -11,6 +12,9 @@ import com.Projeto_Tp1_2025_2.util.UsuarioService;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -110,7 +114,7 @@ public class LoginController {
             UsuarioService us = new UsuarioService();
             Usuario usuario = us.autenticar(ld_nome.getText(), ld_senha.getText());
 
-            entrar(usuario.getCargo());
+            entrar(usuario.getCargo(), usuario);
         } catch (AuthenticationException e){
             mensagem_erro.setManaged(true);
             mensagem_erro.setText(e.getMessage());
@@ -144,8 +148,25 @@ public class LoginController {
     }
 
     @FXML
-    private void entrar(String f) throws IOException {
+    private void entrar(String f, Usuario user) throws IOException {
         Stage stage = (Stage) btn_login_entrar.getScene().getWindow();
+
+        if (f.equals("GESTOR")) {
+            var resource = getClass().getResource(TelaController.telas_path.get("GESTOR"));
+            FXMLLoader loader = new FXMLLoader(resource);
+
+            Parent root = loader.load();
+            GestaoController controller = loader.getController();
+            Gestor gestor = new Gestor(user.getNome(), user.getSenha(), user.getCpf(), user.getEmail(), "GESTOR");
+            controller.initData(gestor);
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Gestão");
+            stage.show();
+
+            return;
+        }
 
         String caminhoDoFxml = TelaController.telas_path.get(f);
         System.out.println("Cargo para entrar: " + f);

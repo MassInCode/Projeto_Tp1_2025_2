@@ -25,4 +25,16 @@ public class Contratacao {
 
     public String getDataContratacao() {return dataContratacao;}
     public String getRegime() {return regime;}
+
+    public Candidato getCandidato() {
+        return candidato;
+    }
+
+    public Vaga getVaga() {
+        return vaga;
+    }
+
+    public boolean isAutorizado() {
+        return autorizado;
+    }
 }

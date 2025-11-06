@@ -70,7 +70,7 @@ public abstract class Usuario {
         this.cpf = cpf;
     }
 
-    private boolean validarCPF(String cpf) {
+    public boolean validarCPF(String cpf) {
         /*
         cpf = cpf.replaceAll("\\D", ""); // tira os . e -
 

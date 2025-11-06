@@ -1,5 +1,6 @@
     package com.Projeto_Tp1_2025_2.models.funcionario;
 
+    import com.Projeto_Tp1_2025_2.exceptions.InvalidCPF;
     import com.Projeto_Tp1_2025_2.models.Usuario;
     import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -78,7 +79,8 @@
             return status;
         }
 
-        public void editarDados(String nome, String email, String cargo, String departamento, boolean status) {
+        public void editarDados(String nome, String cpf, String email, String cargo, String departamento, boolean status) throws InvalidCPF {
+            this.setCpf(cpf);
             this.setNome(nome);
             this.setEmail(email);
             this.setCargo(cargo);

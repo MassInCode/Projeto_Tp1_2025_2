@@ -15,11 +15,11 @@
    <children>
       <AnchorPane layoutX="200.0" layoutY="100.0" prefHeight="240.0" prefWidth="480.0" styleClass="telaaction" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="21.0">
          <children>
-            <VBox alignment="CENTER" layoutX="32.0" layoutY="29.0" prefHeight="358.0" prefWidth="548.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <VBox alignment="CENTER" layoutX="32.0" layoutY="29.0" prefHeight="358.0" prefWidth="548.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label alignment="CENTER" prefHeight="69.0" prefWidth="485.0" text="Editar Funcionario">
                      <font>
-                        <Font size="48.0" />
+                        <Font size="36.0" />
                      </font>
                   </Label>
                   <VBox alignment="CENTER" prefHeight="189.0" prefWidth="454.0">
@@ -29,31 +29,42 @@
                               <Insets left="20.0" right="20.0" />
                            </VBox.margin>
                         </TextField>
-                        <Separator orientation="VERTICAL" prefHeight="10.0" />
+                        <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                        <TextField fx:id="ed_cpf" promptText="CPF" styleClass="lineedit">
+                           <VBox.margin>
+                              <Insets left="20.0" right="20.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                         <TextField fx:id="ed_email" promptText="Email" styleClass="lineedit">
                            <VBox.margin>
                               <Insets left="20.0" right="20.0" />
                            </VBox.margin>
                         </TextField>
-                        <Separator orientation="VERTICAL" prefHeight="10.0" />
+                        <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                         <TextField fx:id="ed_cargo" promptText="Perfil" styleClass="lineedit">
                            <VBox.margin>
                               <Insets left="20.0" right="20.0" />
                            </VBox.margin>
                         </TextField>
-                        <Separator orientation="VERTICAL" prefHeight="10.0" />
+                        <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                         <TextField fx:id="ed_departamento" promptText="Departamento" styleClass="lineedit">
                            <VBox.margin>
                               <Insets left="20.0" right="20.0" />
                            </VBox.margin>
                         </TextField>
-                        <Separator orientation="VERTICAL" prefHeight="10.0" />
+                        <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                         <ChoiceBox fx:id="ativamento" prefWidth="150.0" />
-                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                        <Label fx:id="error" minHeight="-Infinity" prefHeight="25.0" prefWidth="514.0" textFill="RED">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
                         <HBox alignment="CENTER">
                            <children>
                               <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#editarFuncionario" prefHeight="35.0" prefWidth="120.0" styleClass="btn_entrar" text="Salvar" textFill="WHITE" />
-                              <Separator prefWidth="20.0" />
+                              <Separator prefWidth="20.0" visible="false" />
                               <Button minHeight="-Infinity" mnemonicParsing="false" onAction="#fecharJanela" prefHeight="35.0" prefWidth="120.0" styleClass="btn_sair" text="Cancelar" textFill="WHITE" />
                            </children>
                         </HBox>

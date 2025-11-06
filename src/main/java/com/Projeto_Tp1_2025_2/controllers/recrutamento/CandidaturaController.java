@@ -125,7 +125,7 @@ public class CandidaturaController extends ApplicationController implements Tela
             rowMenu.getItems().addAll(editarItem, excluirItem);
 
             editarItem.setOnAction(e -> {
-                //editarVaga();
+                //editarVaga(vaga_atual);
             });
 
             excluirItem.setOnAction(e -> {

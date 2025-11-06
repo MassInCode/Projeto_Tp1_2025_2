@@ -3,6 +3,7 @@ package com.Projeto_Tp1_2025_2.controllers.admin;
 import com.Projeto_Tp1_2025_2.controllers.ApplicationController;
 import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
+import com.Projeto_Tp1_2025_2.models.admin.Gestor;
 import com.Projeto_Tp1_2025_2.models.recrutador.Contratacao;
 import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
@@ -16,10 +17,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +34,8 @@ public class GestaoController extends ApplicationController implements TelaContr
     ArrayList<Recrutador> recrutadores;
     private final ObservableList<Vaga> vagasBase = FXCollections.observableArrayList();
     private final Map<Integer, String> cacheRecrutadores = new HashMap<>();
+
+    RelatorioGestao relatorio;
 
     @FXML Button btn_sair;
     @FXML Button atribuirSelecao;
@@ -63,6 +67,8 @@ public class GestaoController extends ApplicationController implements TelaContr
     @FXML ComboBox<String> btn_filtrar;
     @FXML TextField barraPesquisar;
 
+    @FXML Button btn_gerarR;
+
     @FXML private TableColumn<Vaga, String> colunaCargo;
     @FXML private TableColumn<Vaga, String> colunaSalario;
     @FXML private TableColumn<Vaga, String> colunaRequisitos;
@@ -74,6 +80,11 @@ public class GestaoController extends ApplicationController implements TelaContr
     @FXML private TableColumn<Recrutador, String> colunaRNome;
     @FXML private TableColumn<Recrutador, String> colunaREmail;
     @FXML private TableColumn<Recrutador, String> colunaRVagas;
+
+    @FXML
+    public void initData(Gestor gestor) {
+        relatorio = new RelatorioGestao(gestor);
+    }
 
     @FXML
     public void initialize() {
@@ -109,16 +120,16 @@ public class GestaoController extends ApplicationController implements TelaContr
         colunaRegime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRegimeContratacao()));
         colunaDataAbertura.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataAbertura().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
         colunaRecrutador.setCellValueFactory(cellData -> {
-                System.out.println(cellData.getValue().getCargo());
                     int a = cellData.getValue().getRecrutadorId();
-                    System.out.println(a);
-                        return new SimpleStringProperty(cacheRecrutadores.getOrDefault(a, "Nenhum"));
+                    return new SimpleStringProperty(cacheRecrutadores.getOrDefault(a, "Nenhum"));
         });
 
         colunaRNome.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNome()));
         colunaREmail.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
         colunaRVagas.setCellValueFactory(cellData -> {
             StringBuilder builder = new StringBuilder();
+
+            System.out.println(cellData.getValue().getNome());
 
             for (Vaga v : cellData.getValue().getVagas()) {
                 builder.append(v.getCargo()).append(",");
@@ -174,6 +185,8 @@ public class GestaoController extends ApplicationController implements TelaContr
                     vagasBase.remove(vaga);
                     tabela_vagas.refresh();
                     db.deleteObject(vaga, "vagas");
+
+                    relatorio.removeVagas(vaga);
                 }
             });
 
@@ -214,7 +227,6 @@ public class GestaoController extends ApplicationController implements TelaContr
                     recrutadores.add(udb.convertMaptoObject(mapa, Recrutador.class));
                 }
             }
-            System.out.println(recrutadores);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -226,9 +238,7 @@ public class GestaoController extends ApplicationController implements TelaContr
             List<Map<String, Object>> dados = db.getData("vagas");
 
             for (Map<String, Object> mapa : dados) {
-                System.out.println("de cima: " + mapa.get("recrutadorId"));
                 vagasBase.add(db.convertMaptoObject(mapa, Vaga.class));
-                System.out.println("debaixo: " + db.convertMaptoObject(mapa, Vaga.class).getRecrutadorId());
 
             }
 
@@ -273,6 +283,7 @@ public class GestaoController extends ApplicationController implements TelaContr
             vagasBase.add(vaga);
             tabela_vagas.refresh();
 
+            relatorio.addVagas(vaga);
             this.cancelar();
         }
         catch (NumberFormatException e) {
@@ -284,8 +295,6 @@ public class GestaoController extends ApplicationController implements TelaContr
     @FXML
     public void abrirEdicao(TableRow<Vaga> row) {
         edicaoVagaJanela.setVisible(true);
-
-        System.out.println("chamando edicao de vagas");
 
         // coloca as informações já presentes
         ev_cargo.setText(row.getItem().getCargo());
@@ -322,7 +331,6 @@ public class GestaoController extends ApplicationController implements TelaContr
             Recrutador recrutador_selecionado = tabela_recrutadores.getSelectionModel().getSelectedItem();
 
             if (!row.getItem().atribuir(recrutador_selecionado.getId())) {
-                System.out.println("passou pela reatribuicao");
                 reatribuicao(row.getItem().getId()); // se a vaga ja tiver um recrutador, remove o outro que a tinha
             }
 
@@ -384,6 +392,26 @@ public class GestaoController extends ApplicationController implements TelaContr
 
         else {
             throw new BadFilter();
+        }
+    }
+
+    @FXML
+    private void gerarRelatorio() {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Escolher pasta para salvar o relatório");
+
+        Stage stage = (Stage) btn_filtrar.getScene().getWindow();
+
+        File pasta = directoryChooser.showDialog(stage);
+
+        if (pasta != null) {
+            String path = pasta.getAbsolutePath();
+
+            relatorio.gerar(path + "/relatorio.pdf");
+        }
+
+        else {
+            System.out.println("cancelou");
         }
     }
 
