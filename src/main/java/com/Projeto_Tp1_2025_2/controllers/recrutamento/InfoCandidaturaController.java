@@ -9,7 +9,11 @@ import com.Projeto_Tp1_2025_2.util.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Window;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -26,6 +30,7 @@ public class InfoCandidaturaController implements TelaController {
     @FXML private TableColumn<InfoCandidaturaViewModel, String> colCodigo;
     @FXML private TableColumn<InfoCandidaturaViewModel, String> colStatusVaga;
     @FXML private TableColumn<InfoCandidaturaViewModel, String> colStatusCand;
+    @FXML private AnchorPane tab_candidaturas;
 
 
     private Candidato candidato;
@@ -60,6 +65,7 @@ public class InfoCandidaturaController implements TelaController {
 
         carregarVagas();
         tabVagas.refresh();
+        criarContextMenuCandidato();
     }
 
 
@@ -80,7 +86,7 @@ public class InfoCandidaturaController implements TelaController {
 
 
 
-    /*private void criarContextMenuCandidato() throws IOException {
+    private void criarContextMenuCandidato() throws IOException {
 
         ContextMenu contextMenu = new ContextMenu();
         MenuItem editarStatusDeCandidatura =  new MenuItem("Editar Status de Candidatura");
@@ -93,18 +99,18 @@ public class InfoCandidaturaController implements TelaController {
 
             if(candidaturaSelecionada != null){
                 try {
-                    abrirModalDeEdicao(candidaturaSelecionada, "Editar Candidato: ", "/com/Projeto_Tp1_2025_2/view/Recrutamento/TelaEditarCandidato.fxml");
+                    abrirModalDeAgendamento(candidaturaSelecionada, "Editar Status Candidatura", "/com/Projeto_Tp1_2025_2/view/Recrutamento/TelinhaAux.fxml");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
 
         });
-        /*agendarEntrevista.setOnAction(event -> {
-            Candidato candidatoSelecionado = tabCandidatos.getSelectionModel().getSelectedItem();
-            if(candidatoSelecionado != null){
+        agendarEntrevista.setOnAction(event -> {
+            InfoCandidaturaViewModel candidaturaSelecionada = tabVagas.getSelectionModel().getSelectedItem();
+            if(candidaturaSelecionada != null){
                 try {
-                    excluirCandidato(candidatoSelecionado);
+                    abrirModalDeAgendamento(candidaturaSelecionada, "Agendamento", "/com/Projeto_Tp1_2025_2/view/Recrutamento/TelinhaAux.fxml");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -128,8 +134,31 @@ public class InfoCandidaturaController implements TelaController {
         });
     }
 
+    private void abrirModalDeAgendamento(InfoCandidaturaViewModel candidaturaSelecionada, String tela, String name) throws IOException {
+        try{
+            var resource = getClass().getResource(name);
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent root = loader.load();
+            TelinhaAuxController controller = loader.getController();
+            controller.initData(candidaturaSelecionada, tela, vagaService, candidaturaService, usuarioService);
+            Window ownerStage = (Window) tab_candidaturas.getScene().getWindow();
+            SceneSwitcher.newfloatingscene(root, tela, ownerStage);
 
-    private void abrirModalDeEdicao(Candidatura candidaturaSelecionada, String tela, String name) throws IOException {
+            /*
+            carregarVagas();
+            carregarCandidatos();
+            this.allCandidaturas = candidaturaService.getAllCandidaturas();
+            tabCandidatos.refresh();
+            tabelaRegistrarVagas.refresh();
+            */
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+    /*private void abrirModalDeEdicao(InfoCandidaturaViewModel candidaturaSelecionada, String tela, String name) throws IOException {
         try{
             var resource = getClass().getResource(name);
             FXMLLoader loader = new FXMLLoader(resource);

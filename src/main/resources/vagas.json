@@ -1,14 +1,4 @@
 {
   "id" : "2",
-  "vagas" : [ {
-    "requisitos" : "kaio",
-    "contador" : 1,
-    "regimeContratacao" : "isa",
-    "salarioBase" : 10.0,
-    "departamento" : "isa",
-    "id" : 1,
-    "cargo" : "isa",
-    "dataAbertura" : "01/01/0001",
-    "status" : "FECHADA"
-  } ]
+  "vagas" : [ ]
 }
