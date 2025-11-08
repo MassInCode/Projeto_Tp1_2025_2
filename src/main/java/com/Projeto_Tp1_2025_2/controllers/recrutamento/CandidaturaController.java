@@ -74,6 +74,7 @@ public class CandidaturaController extends ApplicationController implements Tela
     private List<Vaga> allVagas;
     private final ObservableList<Candidato> candidatosBase = FXCollections.observableArrayList();
     private final ObservableList<Vaga> vagasBase = FXCollections.observableArrayList();
+    private final ObservableList<AgendaViewModel> entrevistasBase = FXCollections.observableArrayList();
 
 
     @FXML
@@ -117,6 +118,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         btn_filtrar.setValue("Nome");
         search(tabCandidatos, barraPesquisar, btn_filtrar, this::filtro, candidatosBase);
         search(tabelaRegistrarVagas, barraPesquisar, btn_filtrar, this::filtro, vagasBase);
+        search(tabEntrevistas, barraPesquisar, btn_filtrar, this::filtro, entrevistasBase);
 
         nowVisible = tab_candidatos;
         nowVisible.setVisible(false);
@@ -149,8 +151,13 @@ public class CandidaturaController extends ApplicationController implements Tela
                 case "Status" -> vaga.getStatus().toString();
                 default -> vaga.getCargo();
             };
-        } else if (classe instanceof AgendaViewModel agenda) {
-            return agenda.getNomeCandidato();
+        }else if (classe instanceof AgendaViewModel agenda) {
+            // Lógica de filtro para Entrevistas
+            return switch (campo) {
+                case "Vaga" -> agenda.getCargoVaga();
+                case "Data" -> agenda.getDataFormatada();
+                default -> agenda.getNomeCandidato();
+            };
         }
 
         else {
@@ -472,7 +479,8 @@ public class CandidaturaController extends ApplicationController implements Tela
                 Candidato cand = (Candidato) usuarioService.getUsuarioPorId(c.getCandidatoId());
                 agenda.add(new AgendaViewModel(cand, v, e));
             }
-            tabEntrevistas.setItems(FXCollections.observableArrayList(agenda));
+            entrevistasBase.clear();
+            entrevistasBase.addAll(agenda);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -538,6 +546,11 @@ public class CandidaturaController extends ApplicationController implements Tela
 
         carregarEntrevistas();
         tabEntrevistas.refresh();
+
+        btn_filtrar.setItems(FXCollections.observableArrayList(
+                "Candidato", "Vaga", "Data"
+        ));
+        btn_filtrar.setValue("Candidato");
     }
     //=====================BOTOES=======================
 
