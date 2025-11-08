@@ -120,7 +120,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         carregarVagas();
         carregarEntrevistas();
         criarContextMenuCandidato();
-        //criarContextMenuVaga();
+        criarContextMenuEntrevistas();
     }
 
     public void initData(Usuario usuarioLogado) {
@@ -359,6 +359,60 @@ public class CandidaturaController extends ApplicationController implements Tela
                 System.out.println("Erro ao excluir Vaga");
             }
         }
+    }
+
+    private void criarContextMenuEntrevistas() {
+        ContextMenu contextMenu = new ContextMenu();
+
+        MenuItem excluirItem = new MenuItem("Excluir Entrevista");
+        MenuItem reagendarItem = new MenuItem("Reagendar Entrevista (Não implementado)");
+
+        excluirItem.setOnAction(event -> {
+            AgendaViewModel viewModelSelecionado = tabEntrevistas.getSelectionModel().getSelectedItem();
+            if (viewModelSelecionado == null) {
+                return;
+            }
+
+            Entrevista entrevistaParaExcluir = viewModelSelecionado.getEntrevista();
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Excluir Entrevista");
+            alert.setHeaderText("Tem certeza que deseja excluir esta entrevista?");
+            alert.setContentText("Candidato: " + viewModelSelecionado.getNomeCandidato() +
+                    "\nVaga: " + viewModelSelecionado.getCargoVaga() +
+                    "\nData: " + viewModelSelecionado.getDataFormatada());
+
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                try {
+                    entrevistaService.excluirEntrevista(entrevistaParaExcluir);
+
+                    carregarEntrevistas();
+                    tabEntrevistas.refresh();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        reagendarItem.setOnAction(event -> {
+            System.out.println("Lógica de reagendamento ainda não implementada.");
+        });
+
+        contextMenu.getItems().addAll(excluirItem, reagendarItem);
+        tabEntrevistas.setRowFactory(tv -> {
+            TableRow<AgendaViewModel> row = new TableRow<>();
+            row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+                if (isNowEmpty) {
+                    row.setContextMenu(null);
+                } else {
+                    row.setContextMenu(contextMenu);
+                }
+            });
+            return row;
+        });
     }
 
     //==============CONTEXT MENU DE CANDIDATOS(EDITAR E EXCLUIR)==============

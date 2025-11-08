@@ -30,4 +30,5 @@ public class AgendaViewModel {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return entrevista.getDataEntrevista().format(formatter);
     }
+    public Entrevista getEntrevista() {return this.entrevista;}
 }

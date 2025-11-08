@@ -54,4 +54,8 @@ public class EntrevistaService {
         return agendaRecrutador;
     }
 
+    public void excluirEntrevista(Entrevista entrevista) throws IOException {
+        dbEntrevistas.deleteObject(entrevista, "entrevistas");
+    }
+
 }
