@@ -111,5 +111,15 @@ public class UsuarioService {
         return db.editObject(usuario, "usuarios");
     }
 
+    public Usuario getUsuarioPorId(int id) throws IOException {
+        List<Usuario> allUsuarios = getAllUsuarios(); //
+        for (Usuario u : allUsuarios) {
+            if (u.getId() == id) {
+                return u;
+            }
+        }
+        return null;
+    }
+
 
 }

@@ -22,9 +22,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.StringConverter;
-
+import com.Projeto_Tp1_2025_2.models.candidatura.StatusCandidatura;
+import javafx.stage.Stage;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,6 +40,8 @@ public class TelinhaAuxController {
     @FXML private AnchorPane apEditarStatusCandidatura;
     @FXML private ChoiceBox<Usuario> cbAvaliador;
     @FXML private Label lblNome;
+
+    @FXML private ChoiceBox<StatusCandidatura> cbStatusCandidatura;
 
     Database db;
     InfoCandidaturaViewModel candidatura;
@@ -58,7 +62,8 @@ public class TelinhaAuxController {
             apAgendarEntrevista.setVisible(true);
             carregarNomesRecrutadores();
         } else if(tela.equals("Editar Status Candidatura")){
-            apEditarStatusCandidatura.setVisible(true);
+            apEditarStatusCandidatura.setVisible(true); //
+            carregarStatusCandidatura();
         }
 
         try{
@@ -68,15 +73,13 @@ public class TelinhaAuxController {
         }
     }
 
-
     private void carregarNomesRecrutadores() throws IOException {
-
         List<Usuario> recrutadoresAtivos = new ArrayList<>();
         try{
             List<Usuario> allUsuarios = usuarioService.getAllUsuarios();
 
             for(Usuario user : allUsuarios){
-                if(user.getCargo().equals("RECRUTADOR")){
+                if("RECRUTADOR".equals(user.getCargo())){
                     recrutadoresAtivos.add(user);
                 }
             }
@@ -85,7 +88,6 @@ public class TelinhaAuxController {
         }
         ObservableList<Usuario> listaObservavel = FXCollections.observableArrayList(recrutadoresAtivos);
         cbAvaliador.setItems(listaObservavel);
-
         cbAvaliador.setConverter(new StringConverter<Usuario>() {
             @Override
             public String toString(Usuario usuario) {
@@ -110,8 +112,35 @@ public class TelinhaAuxController {
 
     }
 
-    @FXML protected void onClickAgendarEntrevista(ActionEvent event) throws IOException {
+    // =================================================================
+    // =========== NOVOS MÉTODOS PARA EDITAR STATUS ====================
+    // =================================================================
 
+    private void carregarStatusCandidatura() {
+        cbStatusCandidatura.setItems(FXCollections.observableArrayList(StatusCandidatura.values()));
+        cbStatusCandidatura.setValue(this.candidatura.getStatusCandidatura());
+    }
+
+    @FXML
+    protected void onClickEditarStatus(ActionEvent event) {
+        try {
+            StatusCandidatura novoStatus = cbStatusCandidatura.getValue();
+            if (novoStatus == null) return;
+            Candidatura candidaturaParaAtualizar = this.candidatura.getCandidatura();
+
+            candidaturaParaAtualizar.atualizarStatus(novoStatus);
+
+            candidaturaService.atualizarCandidatura(candidaturaParaAtualizar);
+
+            onClickCancelar(event);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    protected void onClickAgendarEntrevista(ActionEvent event) throws IOException {
         LocalDate dataSelecionada = dpCalendario.getValue();
         Usuario recrutadorSelecionado = cbAvaliador.getValue();
 
@@ -119,10 +148,12 @@ public class TelinhaAuxController {
             entrevistaService.agendarEntrevista(this.candidatura.getCandidatura().getId(), recrutadorSelecionado.getId(), dataSelecionada);
         }
 
-
+        onClickCancelar(event);
     }
 
-
-
-
+    @FXML
+    protected void onClickCancelar(ActionEvent event) {
+        Stage stage = (Stage) apEditarStatusCandidatura.getScene().getWindow();
+        stage.close();
+    }
 }

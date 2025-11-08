@@ -1,5 +1,6 @@
 package com.Projeto_Tp1_2025_2.controllers.admin;
 
+import com.Projeto_Tp1_2025_2.controllers.recrutamento.CandidaturaController;
 import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
 import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.admin.Gestor;
@@ -163,6 +164,25 @@ public class LoginController {
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("Gestão");
+            stage.show();
+
+            return;
+        }
+
+        if (f.equals("RECRUTADOR")) {
+            String caminhoDoFxml = TelaController.telas_path.get(f);
+            var resource = getClass().getResource(caminhoDoFxml);
+            FXMLLoader loader = new FXMLLoader(resource);
+
+            Parent root = loader.load();
+
+            CandidaturaController controller = loader.getController();
+
+            controller.initData(user);
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Recrutamento e Candidatura");
             stage.show();
 
             return;

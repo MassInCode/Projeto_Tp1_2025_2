@@ -10,7 +10,7 @@
 
 <AnchorPane prefHeight="500.0" prefWidth="500.0" styleClass="telaaction" stylesheets="@../Login/login.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.recrutamento.TelinhaAuxController">
    <children>
-      <AnchorPane fx:id="apAgendarEntrevista" prefHeight="200.0" prefWidth="200.0">
+      <AnchorPane fx:id="apAgendarEntrevista" prefHeight="200.0" prefWidth="200.0" visible="false">
          <children>
             <VBox alignment="CENTER" prefHeight="500.0" prefWidth="490.0">
                <children>
@@ -60,13 +60,13 @@
                   <HBox prefHeight="56.0" prefWidth="490.0">
                      <children>
                         <Separator prefWidth="50.0" visible="false" />
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Editar" textFill="WHITE">
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickEditarStatus" prefHeight="35.0" prefWidth="165.0" text="Editar" textFill="WHITE">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Button>
                         <Separator prefWidth="80.0" visible="false" />
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" text="Cancelar" textFill="WHITE">
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickCancelar" prefHeight="35.0" prefWidth="165.0" text="Cancelar" textFill="WHITE">
                            <font>
                               <Font size="14.0" />
                            </font>

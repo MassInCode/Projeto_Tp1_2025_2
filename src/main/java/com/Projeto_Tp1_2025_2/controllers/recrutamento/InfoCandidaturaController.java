@@ -144,15 +144,12 @@ public class InfoCandidaturaController implements TelaController {
             TelinhaAuxController controller = loader.getController();
             controller.initData(candidaturaSelecionada, tela, vagaService, candidaturaService, usuarioService, entrevistaService);
             Window ownerStage = (Window) tab_candidaturas.getScene().getWindow();
+
             SceneSwitcher.newfloatingscene(root, tela, ownerStage);
 
-            /*
             carregarVagas();
-            carregarCandidatos();
-            this.allCandidaturas = candidaturaService.getAllCandidaturas();
-            tabCandidatos.refresh();
-            tabelaRegistrarVagas.refresh();
-            */
+            tabVagas.refresh();
+
         } catch(IOException e){
             e.printStackTrace();
         }

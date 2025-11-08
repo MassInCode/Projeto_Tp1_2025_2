@@ -6,6 +6,8 @@ import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
 import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
+import com.Projeto_Tp1_2025_2.models.recrutador.AgendaViewModel;
+import com.Projeto_Tp1_2025_2.models.recrutador.Entrevista;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
 import com.Projeto_Tp1_2025_2.util.*;
 import javafx.beans.binding.Bindings;
@@ -18,6 +20,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Window;
+
+import javax.swing.text.TabableView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,19 +33,20 @@ public class CandidaturaController extends ApplicationController implements Tela
     @FXML private Button btn_sair;
     @FXML private AnchorPane tab_vagas;
     @FXML private AnchorPane tab_candidatos;
-    @FXML private AnchorPane tab_RegistrarVagas;
+    //@FXML private AnchorPane tab_RegistrarVagas;
     @FXML private AnchorPane tab_RegistrarCandidato;
+    @FXML private AnchorPane tab_entrevistas;
     @FXML private TableView<Candidato> tabCandidatos;
     @FXML private TableColumn<Candidato, String> colNome;
     @FXML private TableColumn<Candidato, String> colCpf;
     @FXML private TableColumn<Candidato, String> colEmail;
     @FXML private TableColumn<Candidato, String> colFormacao;
-    @FXML private Label error_message;
-    @FXML private TextField txtCargo;
-    @FXML private TextField txtSalario;
-    @FXML private TextField txtDepartamento;
-    @FXML private TextField txtRequisitos;
-    @FXML private ChoiceBox<String> choiceRegime;
+    //@FXML private Label error_message;
+    //@FXML private TextField txtCargo;
+    //@FXML private TextField txtSalario;
+    //@FXML private TextField txtDepartamento;
+    //@FXML private TextField txtRequisitos;
+    //@FXML private ChoiceBox<String> choiceRegime;
     @FXML private TableView<Vaga> tabelaRegistrarVagas;
     @FXML private TableColumn<Vaga, String> colVaga;
     @FXML private TableColumn<Vaga, String> colDepartamento;
@@ -54,6 +59,12 @@ public class CandidaturaController extends ApplicationController implements Tela
     @FXML private PasswordField ld_senha_cadastro;
     @FXML private TextField ld_formacao_cadastro;
     @FXML private Label mensagem_erro2;
+    @FXML private TableView<AgendaViewModel> tabEntrevistas;
+    @FXML private TableColumn<AgendaViewModel, String> colCandidato;
+    @FXML private TableColumn<AgendaViewModel, String> colVagaEntrevistas;
+    @FXML private TableColumn<AgendaViewModel, String> colDataEntrevista;
+
+
 
     private AnchorPane nowVisible;
     UsuarioService usuarioService;
@@ -61,14 +72,15 @@ public class CandidaturaController extends ApplicationController implements Tela
     CandidaturaService candidaturaService;
     EntrevistaService entrevistaService;
     List<Candidatura> allCandidaturas;
+    private Usuario usuarioLogado;
     private List<Vaga> allVagas;
 
 
     @FXML
     public void initialize() throws IOException {
 
-        choiceRegime.setItems(FXCollections.observableArrayList("CLT", "PJ", "ESTAGIO"));
-        choiceRegime.setValue("CLT");
+        //choiceRegime.setItems(FXCollections.observableArrayList("CLT", "PJ", "ESTAGIO"));
+        //choiceRegime.setValue("CLT");
 
         usuarioService = new UsuarioService();
         vagaService = new VagaService();
@@ -89,19 +101,30 @@ public class CandidaturaController extends ApplicationController implements Tela
         colStatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus().toString()));
 
 
-        //  ==============CARREGA A TABELA DE CANDIDATOS==============
+        //==============CARREGA A TABELA DE CANDIDATOS==============
         colNome.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNome()));
         colCpf.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCpf()));
         colEmail.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
         colFormacao.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFormacao()));
 
+        //==============CARREGA A TABELA DE ENTREVISTAS==============
+        colCandidato.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNomeCandidato()));
+        colVagaEntrevistas.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCargoVaga()));
+        colDataEntrevista.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataFormatada()));
 
-        nowVisible = tab_RegistrarVagas;
+
+        nowVisible = tab_candidatos;
         nowVisible.setVisible(false);
         carregarCandidatos();
         carregarVagas();
+        carregarEntrevistas();
         criarContextMenuCandidato();
-        criarContextMenuVaga();
+        //criarContextMenuVaga();
+    }
+
+    public void initData(Usuario usuarioLogado) {
+        this.usuarioLogado = usuarioLogado;
+        System.out.println("Recrutador " + this.usuarioLogado.getNome() + " logou com sucesso.");
     }
 
 
@@ -354,6 +377,28 @@ public class CandidaturaController extends ApplicationController implements Tela
         }
 
     }
+
+    private void carregarEntrevistas() {
+        if (usuarioLogado == null) {
+            System.out.println("Erro: Não há recrutador logado para buscar entrevistas.");
+            return;
+        }
+        List<AgendaViewModel> agenda = new ArrayList<>();
+        try {
+            int recrutadorId = usuarioLogado.getId();
+            List<Entrevista> minhasEntrevistas = entrevistaService.getEntrevistasPorRecrutador(recrutadorId); //
+            for (Entrevista e : minhasEntrevistas) {
+                Candidatura c = candidaturaService.getCandidaturaPorId(e.getCandidaturaId());
+                if (c == null) continue;
+                Vaga v = vagaService.getVagaPorId(c.getVagaId());
+                Candidato cand = (Candidato) usuarioService.getUsuarioPorId(c.getCandidatoId());
+                agenda.add(new AgendaViewModel(cand, v, e));
+            }
+            tabEntrevistas.setItems(FXCollections.observableArrayList(agenda));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     //==============CARREGA DADOS DAS TABELAS==============
 
 
@@ -378,13 +423,13 @@ public class CandidaturaController extends ApplicationController implements Tela
         nowVisible = tab_candidatos;
     }
 
-    @FXML private void btn_RegistrarVaga(ActionEvent event) throws IOException {
+    /*@FXML private void btn_RegistrarVaga(ActionEvent event) throws IOException {
         if(nowVisible != tab_RegistrarVagas){
             nowVisible.setVisible(false);
         }
         tab_RegistrarVagas.setVisible(true);
         nowVisible = tab_RegistrarVagas;
-    }
+    }*/
 
     @FXML private void btn_RegistrarCandidato(ActionEvent event) throws IOException {
         if(nowVisible != tab_RegistrarCandidato){
@@ -394,12 +439,23 @@ public class CandidaturaController extends ApplicationController implements Tela
         nowVisible = tab_RegistrarCandidato;
         limparCampos();
     }
+
+    @FXML protected void btn_ListarEntrevistas(ActionEvent event){
+        if (nowVisible != tab_entrevistas && nowVisible != null) {
+            nowVisible.setVisible(false);
+        }
+        tab_entrevistas.setVisible(true);
+        nowVisible = tab_entrevistas;
+
+        carregarEntrevistas();
+        tabEntrevistas.refresh();
+    }
     //=====================BOTOES=======================
 
 
 
     //==============ON CLICKS==============
-    @FXML protected void onClickRegistrarVaga(ActionEvent event) throws IOException {
+    /*@FXML protected void onClickRegistrarVaga(ActionEvent event) throws IOException {
         try{
             vagaService.registrar(txtCargo.getText(), txtSalario.getText(), txtRequisitos.getText(), choiceRegime.getValue(), txtDepartamento.getText());
             limparCampos();
@@ -407,7 +463,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         } catch(ValidationException | IOException e){
             error_message.setText(e.getMessage());
         }
-    }
+    }*/
 
     @FXML private void onClickSair(ActionEvent event) throws IOException {
         SceneSwitcher.sceneswitcher(event, "Login", telas_path.get("LOGIN"));
@@ -433,10 +489,6 @@ public class CandidaturaController extends ApplicationController implements Tela
         this.btn_RegistrarCandidato(event);
     }
 
-    @FXML protected void btn_ListarEntrevistas(ActionEvent event){
-        return;
-    }
-
     @FXML protected void onClickAbrirRegistrarEntrevista(ActionEvent event){
         return;
     }
@@ -446,11 +498,11 @@ public class CandidaturaController extends ApplicationController implements Tela
 
     //==============HELPERS==============
     void limparCampos(){
-        txtCargo.setText("");
-        txtSalario.setText("");
-        txtRequisitos.setText("");
-        txtDepartamento.setText("");
-        choiceRegime.setValue("CLT");
+        //txtCargo.setText("");
+        //txtSalario.setText("");
+        //txtRequisitos.setText("");
+        //txtDepartamento.setText("");
+        //choiceRegime.setValue("CLT");
         ld_formacao_cadastro.setText("");
         ld_senha_cadastro.setText("");
         ld_cpf_cadastro.setText("");

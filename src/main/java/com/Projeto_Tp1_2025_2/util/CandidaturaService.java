@@ -78,4 +78,19 @@ public class CandidaturaService {
         return vagas;
     }
 
+    public Candidatura getCandidaturaPorId(int id) throws IOException {
+        List<Candidatura> allCandidaturas = getAllCandidaturas(); //
+        for (Candidatura c : allCandidaturas) {
+            if (c.getId() == id) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+
+    public void atualizarCandidatura(Candidatura candidatura) throws IOException {
+        dbCandidaturas.editObject(candidatura, "candidaturas");
+    }
+
 }

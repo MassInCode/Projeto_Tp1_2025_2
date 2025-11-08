@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
@@ -17,7 +22,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="anchorpane" stylesheets="@../Admin/admin.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.recrutamento.CandidaturaController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="anchorpane" stylesheets="@../Admin/admin.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.recrutamento.CandidaturaController">
     <children>
         <AnchorPane layoutX="26.0" layoutY="21.0" prefHeight="678.0" prefWidth="1228.0" styleClass="telaaction" stylesheets="@../Admin/admin.css" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="21.0">
             <children>
@@ -26,7 +31,6 @@
                   <VBox fx:id="tool_box" styleClass="tool-bar">
                      <children>
                                 <Button mnemonicParsing="false" onAction="#btn_vagas" prefHeight="35.0" prefWidth="165.0" text="Listar Vagas" textFill="WHITE" />
-                        <Button mnemonicParsing="false" onAction="#btn_RegistrarVaga" prefHeight="35.0" prefWidth="165.0" text="Registrar Vagas" textFill="WHITE" />
                                 <Button mnemonicParsing="false" onAction="#btn_candidatos" prefHeight="35.0" prefWidth="165.0" text="Listar Candidatos" textFill="WHITE" />
                         <Button mnemonicParsing="false" onAction="#btn_RegistrarCandidato" prefHeight="35.0" prefWidth="165.0" text="Registrar Candidato" textFill="WHITE" />
                         <Button mnemonicParsing="false" onAction="#btn_ListarEntrevistas" prefHeight="35.0" prefWidth="165.0" text="Listar Entrevistas" textFill="WHITE" />
@@ -40,9 +44,9 @@
                                 <Separator orientation="VERTICAL" prefHeight="5.0" visible="false" />
                                 <HBox>
                                     <children>
-                                        <TextField prefHeight="30.0" prefWidth="1000.0" promptText="Buscar" styleClass="lineedit" />
+                                        <TextField fx:id="barraPesquisar" prefHeight="30.0" prefWidth="850.0" promptText="Buscar" styleClass="lineedit" />
                                         <Separator prefWidth="40.0" visible="false" />
-                                        <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="130.0" text="Procurar" textFill="WHITE" />
+                                        <ComboBox fx:id="btn_filtrar" prefHeight="30.0" prefWidth="150.0" />
                                     </children>
                                 </HBox>
                                 <Separator orientation="VERTICAL" prefHeight="15.0" visible="false" />
@@ -83,73 +87,6 @@
                                                 </TableView>
                                             </children>
                                         </AnchorPane>
-                              <AnchorPane fx:id="tab_RegistrarVagas" prefHeight="639.0" prefWidth="1031.0" visible="false">
-                                 <children>
-                                    <VBox alignment="CENTER" layoutX="29.0" layoutY="95.0" prefHeight="450.0" prefWidth="316.0">
-                                       <children>
-                                          <Label alignment="CENTER" prefHeight="71.0" prefWidth="354.0" text="Vaga" textFill="#2f2a4f">
-                                             <font>
-                                                <Font name="Arial Black" size="48.0" />
-                                             </font>
-                                          </Label>
-                                          <Label alignment="TOP_CENTER" prefHeight="32.0" prefWidth="246.0" text="Insira as informações">
-                                             <font>
-                                                <Font name="Arial" size="20.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                    </VBox>
-                                    <VBox alignment="CENTER" layoutX="571.0" layoutY="130.0" maxHeight="-Infinity" prefHeight="286.0" prefWidth="357.0">
-                                       <children>
-                                          <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
-                                          <HBox alignment="CENTER">
-                                             <children>
-                                                <Label minWidth="-Infinity" prefWidth="150.0" text="Regime de Contratação">
-                                                   <font>
-                                                      <Font name="Arial Bold" size="13.0" />
-                                                   </font>
-                                                   <HBox.margin>
-                                                      <Insets left="20.0" />
-                                                   </HBox.margin>
-                                                </Label>
-                                                <Separator prefWidth="100.0" visible="false" />
-                                                <ChoiceBox fx:id="choiceRegime" prefWidth="150.0">
-                                                   <HBox.margin>
-                                                      <Insets right="20.0" />
-                                                   </HBox.margin>
-                                                </ChoiceBox>
-                                             </children>
-                                             <VBox.margin>
-                                                <Insets />
-                                             </VBox.margin>
-                                          </HBox>
-                                          <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
-                                          <TextField fx:id="txtCargo" minHeight="-Infinity" prefHeight="30.0" promptText="Cargo" styleClass="lineedit" />
-                                          <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
-                                          <TextField fx:id="txtSalario" minHeight="-Infinity" prefHeight="30.0" promptText="Salário" styleClass="lineedit" />
-                                          <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
-                                          <TextField fx:id="txtDepartamento" minHeight="-Infinity" prefHeight="30.0" promptText="Departamento" styleClass="lineedit" />
-                                          <Separator fx:id="separator_formacao" orientation="VERTICAL" prefHeight="200.0" visible="false" />
-                                          <TextField fx:id="txtRequisitos" minHeight="-Infinity" prefHeight="30.0" promptText="Requisitos" styleClass="lineedit" />
-                                          <Label fx:id="error_message" />
-                                          <TextField fx:id="ld_formacao_cadastro" minHeight="-Infinity" prefHeight="30.0" promptText="Formação" styleClass="lineedit" visible="false" />
-                                          <Separator minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="20.0" visible="false" />
-                                          <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
-                                          <Label fx:id="mensagem_erro2" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="355.0" textFill="#e41111">
-                                             <font>
-                                                <Font name="System Bold" size="12.0" />
-                                             </font>
-                                          </Label>
-                                          <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="66.0" prefWidth="200.0">
-                                             <children>
-                                                <Button mnemonicParsing="false" onAction="#onClickRegistrarVaga" prefHeight="40.0" prefWidth="120.0" styleClass="btn_entrar" text="Registrar" textFill="WHITE" />
-                                                <Separator prefWidth="40.0" visible="false" />
-                                             </children>
-                                          </HBox>
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </AnchorPane>
                               <AnchorPane fx:id="tab_RegistrarCandidato" prefHeight="639.0" prefWidth="1037.0" visible="false">
                                  <children>
                                     <VBox alignment="CENTER" layoutX="6.0" layoutY="150.0" prefHeight="268.0" prefWidth="433.0">
@@ -209,7 +146,7 @@
                                        <columns>
                                           <TableColumn fx:id="colCandidato" editable="false" minWidth="-Infinity" prefWidth="347.0" resizable="false" text="Candidato" />
                                           <TableColumn fx:id="colVagaEntrevistas" editable="false" minWidth="-Infinity" prefWidth="328.0" resizable="false" text="Vaga" />
-                                          <TableColumn fx:id="colData" editable="false" minWidth="-Infinity" prefWidth="404.0" resizable="false" text="Data" />
+                                          <TableColumn fx:id="colDataEntrevista" editable="false" minWidth="-Infinity" prefWidth="404.0" resizable="false" text="Data" />
                                        </columns>
                                        <contextMenu>
                                           <ContextMenu>

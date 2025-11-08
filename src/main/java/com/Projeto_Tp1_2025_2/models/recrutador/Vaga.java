@@ -1,5 +1,6 @@
 package com.Projeto_Tp1_2025_2.models.recrutador;
 
+import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.util.Database;
 
 import java.io.IOException;
@@ -28,11 +29,9 @@ public class Vaga {
     private String requisitos;
     private String regimeContratacao;
     private String departamento;
-    //private List<Candidatura> candidaturas;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") // essa annotation serve para o localdate ser apropriadamente alocado na database
     private LocalDate dataAbertura;
     private StatusVaga status;
-
     private int recrutadorId;
 
 
