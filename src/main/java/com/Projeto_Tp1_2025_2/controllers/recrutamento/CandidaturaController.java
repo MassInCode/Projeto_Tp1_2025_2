@@ -60,6 +60,7 @@ public class CandidaturaController extends ApplicationController implements Tela
     @FXML private TableColumn<AgendaViewModel, String> colCandidato;
     @FXML private TableColumn<AgendaViewModel, String> colVagaEntrevistas;
     @FXML private TableColumn<AgendaViewModel, String> colDataEntrevista;
+    @FXML private TableColumn<AgendaViewModel, String> colHoraEntrevista;
 
 
 

@@ -3,6 +3,7 @@ package com.Projeto_Tp1_2025_2.util;
 import com.Projeto_Tp1_2025_2.models.recrutador.Entrevista;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,7 @@ public class EntrevistaService {
     }
 
 
-    public void agendarEntrevista(int candidaturaId, int recrutadorId, LocalDate data) throws IOException {
+    public void agendarEntrevista(int candidaturaId, int recrutadorId, LocalDateTime data) throws IOException {
         Entrevista entrevista = new Entrevista(candidaturaId, recrutadorId, data);
         dbEntrevistas.addObject(entrevista, ENTREVISTAS_KEY);
         dbEntrevistas.setActualId(entrevista.getId());

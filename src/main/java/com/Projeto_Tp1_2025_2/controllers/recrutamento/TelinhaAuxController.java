@@ -29,9 +29,13 @@ import com.Projeto_Tp1_2025_2.models.candidatura.StatusCandidatura;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
+import java.util.stream.Collectors;
 
 
 public class TelinhaAuxController {
@@ -40,6 +44,8 @@ public class TelinhaAuxController {
     @FXML private AnchorPane apEditarStatusCandidatura;
     @FXML private ChoiceBox<Usuario> cbAvaliador;
     @FXML private Label lblNome;
+    @FXML private ChoiceBox<String> cbHora;
+    @FXML private ChoiceBox<String> cbMinuto;
 
     @FXML private ChoiceBox<StatusCandidatura> cbStatusCandidatura;
 
@@ -61,6 +67,7 @@ public class TelinhaAuxController {
         if(tela.equals("Agendamento")){
             apAgendarEntrevista.setVisible(true);
             carregarNomesRecrutadores();
+            carregarHorarios();
         } else if(tela.equals("Editar Status Candidatura")){
             apEditarStatusCandidatura.setVisible(true); //
             carregarStatusCandidatura();
@@ -112,6 +119,19 @@ public class TelinhaAuxController {
 
     }
 
+
+    private void carregarHorarios() {
+        ObservableList<String> horas = FXCollections.observableArrayList(
+                IntStream.rangeClosed(8, 17).mapToObj(h -> String.format("%02d", h)).collect(Collectors.toList()));
+        cbHora.setItems(horas);
+        cbHora.setValue("09");
+
+        ObservableList<String> minutos = FXCollections.observableArrayList("00", "15", "30", "45");
+        cbMinuto.setItems(minutos);
+        cbMinuto.setValue("00");
+    }
+
+
     // =================================================================
     // =========== NOVOS MÉTODOS PARA EDITAR STATUS ====================
     // =================================================================
@@ -139,21 +159,40 @@ public class TelinhaAuxController {
         }
     }
 
-    @FXML
-    protected void onClickAgendarEntrevista(ActionEvent event) throws IOException {
+    @FXML protected void onClickAgendarEntrevista(ActionEvent event) throws IOException {
+
         LocalDate dataSelecionada = dpCalendario.getValue();
         Usuario recrutadorSelecionado = cbAvaliador.getValue();
+        String horaSelecionada = cbHora.getValue();
+        String minutoSelecionado = cbMinuto.getValue();
 
-        if(dataSelecionada != null &&  recrutadorSelecionado != null){
-            entrevistaService.agendarEntrevista(this.candidatura.getCandidatura().getId(), recrutadorSelecionado.getId(), dataSelecionada);
+        if(dataSelecionada == null || recrutadorSelecionado == null || horaSelecionada == null || minutoSelecionado == null){
+            lblNome.setText("Erro: Preencha todos os campos.");
+            lblNome.setStyle("-fx-text-fill: red;");
+            return;
         }
+        try {
+            int hora = Integer.parseInt(horaSelecionada);
+            int minuto = Integer.parseInt(minutoSelecionado);
+            LocalTime horaDaEntrevista = LocalTime.of(hora, minuto);
+            LocalDateTime dataHoraCompleta = LocalDateTime.of(dataSelecionada, horaDaEntrevista);
+            entrevistaService.agendarEntrevista(
+                    this.candidatura.getCandidatura().getId(),
+                    recrutadorSelecionado.getId(),
+                    dataHoraCompleta
+            );
+            onClickCancelar(event);
 
-        onClickCancelar(event);
+        } catch (Exception e) {
+            e.printStackTrace();
+            lblNome.setText("Erro ao agendar.");
+            lblNome.setStyle("-fx-text-fill: red;");
+        }
     }
 
     @FXML
     protected void onClickCancelar(ActionEvent event) {
-        Stage stage = (Stage) apEditarStatusCandidatura.getScene().getWindow();
+        Stage stage = (Stage) apAgendarEntrevista.getScene().getWindow();
         stage.close();
     }
 }
