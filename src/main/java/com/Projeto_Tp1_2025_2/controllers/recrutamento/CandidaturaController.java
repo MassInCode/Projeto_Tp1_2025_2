@@ -13,6 +13,7 @@ import com.Projeto_Tp1_2025_2.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,12 +42,8 @@ public class CandidaturaController extends ApplicationController implements Tela
     @FXML private TableColumn<Candidato, String> colCpf;
     @FXML private TableColumn<Candidato, String> colEmail;
     @FXML private TableColumn<Candidato, String> colFormacao;
-    //@FXML private Label error_message;
-    //@FXML private TextField txtCargo;
-    //@FXML private TextField txtSalario;
-    //@FXML private TextField txtDepartamento;
-    //@FXML private TextField txtRequisitos;
-    //@FXML private ChoiceBox<String> choiceRegime;
+    @FXML private TextField barraPesquisar;
+    @FXML private ComboBox<String> btn_filtrar;
     @FXML private TableView<Vaga> tabelaRegistrarVagas;
     @FXML private TableColumn<Vaga, String> colVaga;
     @FXML private TableColumn<Vaga, String> colDepartamento;
@@ -74,6 +71,7 @@ public class CandidaturaController extends ApplicationController implements Tela
     List<Candidatura> allCandidaturas;
     private Usuario usuarioLogado;
     private List<Vaga> allVagas;
+    private final ObservableList<Candidato> candidatosBase = FXCollections.observableArrayList();
 
 
     @FXML
@@ -112,6 +110,9 @@ public class CandidaturaController extends ApplicationController implements Tela
         colVagaEntrevistas.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCargoVaga()));
         colDataEntrevista.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataFormatada()));
 
+        btn_filtrar.setItems(FXCollections.observableArrayList("Nome", "CPF", "Email", "Formação"));
+        btn_filtrar.setValue("Nome");
+        search(tabCandidatos, barraPesquisar, btn_filtrar, this::filtro, candidatosBase);
 
         nowVisible = tab_candidatos;
         nowVisible.setVisible(false);
@@ -131,8 +132,23 @@ public class CandidaturaController extends ApplicationController implements Tela
 
     @FXML
     public <T> String filtro(String campo, T classe) throws BadFilter {
+        if (classe instanceof Candidato candidato) {
+            return switch (campo) {
+                case "CPF" -> candidato.getCpf();
+                case "Email" -> candidato.getEmail();
+                case "Formação" -> candidato.getFormacao();
+                default -> candidato.getNome();
+            };
+        } else if (classe instanceof Vaga vaga) {
+            return vaga.getCargo();
 
-        return "fodase";
+        } else if (classe instanceof AgendaViewModel agenda) {
+            return agenda.getNomeCandidato();
+        }
+
+        else {
+            throw new BadFilter();
+        }
     }
 
     //==============CONTEXT MENU DE VAGAS(EDITAR E EXCLUIR)==============
@@ -360,8 +376,8 @@ public class CandidaturaController extends ApplicationController implements Tela
                     candidatos.add((Candidato) u);
                 }
             }
-
-            tabCandidatos.setItems(FXCollections.observableArrayList(candidatos));
+            candidatosBase.clear();
+            candidatosBase.addAll(candidatos);
         } catch (IOException e){
             e.printStackTrace();
         }
