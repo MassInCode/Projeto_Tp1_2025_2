@@ -3,6 +3,7 @@ package com.Projeto_Tp1_2025_2.models.recrutador;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatter;
 
 public class AgendaViewModel {
 
@@ -27,8 +28,18 @@ public class AgendaViewModel {
         if (entrevista == null || entrevista.getDataEntrevista() == null) {
             return "N/D";
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return entrevista.getDataEntrevista().format(formatter);
+        // Agora lê um LocalDateTime e formata só a data
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return entrevista.getDataEntrevista().format(dateFormatter);
     }
     public Entrevista getEntrevista() {return this.entrevista;}
+    public String getHoraFormatada() {
+        if (entrevista == null || entrevista.getDataEntrevista() == null) {
+            return "N/D";
+        }
+        // Lê o mesmo LocalDateTime e formata só a hora
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        return entrevista.getDataEntrevista().format(timeFormatter);
+    }
+
 }

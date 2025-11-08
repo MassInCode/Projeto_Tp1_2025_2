@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 public class Entrevista {
 
@@ -14,7 +16,7 @@ public class Entrevista {
     private int candidaturaId;
     private int recrutadorId;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime dataEntrevista;
     private double nota;
 
@@ -71,7 +73,7 @@ public class Entrevista {
     public LocalDateTime getDataEntrevista() {
         return dataEntrevista;
     }
-    public void setDataEntrevista(LocalDateTime dataEntrevista) {
+    public void setDataEntrevista(LocalDateTime  dataEntrevista) {
         this.dataEntrevista = dataEntrevista;
     }
     public double getNota() {

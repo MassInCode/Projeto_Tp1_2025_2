@@ -135,14 +135,14 @@
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="tab_entrevistas" layoutX="10.0" layoutY="10.0" prefHeight="639.0" prefWidth="1031.0">
+                              <AnchorPane fx:id="tab_entrevistas" layoutX="10.0" layoutY="10.0" prefHeight="639.0" prefWidth="1031.0" visible="false">
                                  <children>
                                     <TableView fx:id="tabEntrevistas" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="618.0" prefWidth="1031.0">
                                        <columns>
                                           <TableColumn fx:id="colCandidato" editable="false" minWidth="-Infinity" prefWidth="280.0" resizable="false" text="Candidato" />
                                           <TableColumn fx:id="colVagaEntrevistas" editable="false" minWidth="-Infinity" prefWidth="339.0" resizable="false" text="Vaga" />
                                           <TableColumn fx:id="colDataEntrevista" editable="false" minWidth="-Infinity" prefWidth="213.0" resizable="false" text="Data" />
-                                          <TableColumn fx:id="colHoraEntrevista" editable="false" minWidth="-Infinity" prefWidth="179.0" resizable="false" text="Vaga" />
+                                          <TableColumn fx:id="colHoraEntrevista" editable="false" minWidth="-Infinity" prefWidth="179.0" resizable="false" text="Horario" />
                                        </columns>
                                        <contextMenu>
                                           <ContextMenu>
