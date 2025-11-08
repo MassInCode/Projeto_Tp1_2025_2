@@ -20,8 +20,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import com.Projeto_Tp1_2025_2.controllers.ApplicationController;
+import javafx.collections.ObservableList;
+import java.time.format.DateTimeFormatter;
 
-public class InfoCandidaturaController implements TelaController {
+public class InfoCandidaturaController extends ApplicationController implements TelaController{
 
     @FXML private TableView<InfoCandidaturaViewModel> tabVagas;
     @FXML private TableColumn<InfoCandidaturaViewModel, String> colVaga;
@@ -31,6 +34,8 @@ public class InfoCandidaturaController implements TelaController {
     @FXML private TableColumn<InfoCandidaturaViewModel, String> colStatusVaga;
     @FXML private TableColumn<InfoCandidaturaViewModel, String> colStatusCand;
     @FXML private AnchorPane tab_candidaturas;
+    @FXML private TextField barraPesquisar;
+    @FXML private ComboBox<String> btn_filtrar;
 
 
     private Candidato candidato;
@@ -40,6 +45,8 @@ public class InfoCandidaturaController implements TelaController {
     CandidaturaService candidaturaService;
     EntrevistaService entrevistaService;
     List<Vaga> vagas;
+    private final ObservableList<InfoCandidaturaViewModel> candidaturasBase = FXCollections.observableArrayList();
+
 
     //RECEBE AS INFORMAÇÕES DA TELA QUE CHAMOU ELE
     @FXML public void initData(Candidato candidatoSelecionado, String tela, VagaService vs, CandidaturaService cs, UsuarioService us, EntrevistaService es) throws IOException {
@@ -65,6 +72,10 @@ public class InfoCandidaturaController implements TelaController {
             colStatusCand.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatusCandidatura().toString()));
         }
 
+        btn_filtrar.setItems(FXCollections.observableArrayList("Vaga", "Departamento", "Data de Candidatura", "Status da Vaga", "Status do Candidato"));
+        btn_filtrar.setValue("Vaga");
+        search(tabVagas, barraPesquisar, btn_filtrar, this::filtro, candidaturasBase);
+
         carregarVagas();
         tabVagas.refresh();
         criarContextMenuCandidato();
@@ -80,7 +91,8 @@ public class InfoCandidaturaController implements TelaController {
                 Vaga v = vagaService.getVagaPorId(vagaid);
                 candidaturasViewModel.add(new InfoCandidaturaViewModel(v, c));
             }
-            tabVagas.setItems(FXCollections.observableList(candidaturasViewModel));
+            candidaturasBase.clear();
+            candidaturasBase.addAll(candidaturasViewModel);
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -179,7 +191,20 @@ public class InfoCandidaturaController implements TelaController {
 
     @Override
     public <T> String filtro(String campo, T classe) throws BadFilter {
-        return "";
+        if (classe instanceof InfoCandidaturaViewModel model) {
+            return switch (campo) {
+                case "Departamento" -> model.getDepartamentoVaga();
+                case "Data de Candidatura" -> {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    yield model.getDataVaga().format(formatter);
+                }
+                case "Status da Vaga" -> model.getStatusVaga().toString();
+                case "Status do Candidato" -> model.getStatusCandidatura().toString();
+                default -> model.getCargoVaga();
+            };
+        } else {
+            throw new BadFilter();
+        }
     }
 
 }
