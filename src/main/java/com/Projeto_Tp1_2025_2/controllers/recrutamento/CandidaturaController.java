@@ -73,6 +73,7 @@ public class CandidaturaController extends ApplicationController implements Tela
     private Usuario usuarioLogado;
     private List<Vaga> allVagas;
     private final ObservableList<Candidato> candidatosBase = FXCollections.observableArrayList();
+    private final ObservableList<Vaga> vagasBase = FXCollections.observableArrayList();
 
 
     @FXML
@@ -115,6 +116,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         btn_filtrar.setItems(FXCollections.observableArrayList("Nome", "CPF", "Email", "Formação"));
         btn_filtrar.setValue("Nome");
         search(tabCandidatos, barraPesquisar, btn_filtrar, this::filtro, candidatosBase);
+        search(tabelaRegistrarVagas, barraPesquisar, btn_filtrar, this::filtro, vagasBase);
 
         nowVisible = tab_candidatos;
         nowVisible.setVisible(false);
@@ -142,8 +144,11 @@ public class CandidaturaController extends ApplicationController implements Tela
                 default -> candidato.getNome();
             };
         } else if (classe instanceof Vaga vaga) {
-            return vaga.getCargo();
-
+            return switch (campo) {
+                case "Departamento" -> vaga.getDepartamento();
+                case "Status" -> vaga.getStatus().toString();
+                default -> vaga.getCargo();
+            };
         } else if (classe instanceof AgendaViewModel agenda) {
             return agenda.getNomeCandidato();
         }
@@ -443,7 +448,8 @@ public class CandidaturaController extends ApplicationController implements Tela
 
         try{
             List<Vaga> vagas = vagaService.getAllVagas();
-            tabelaRegistrarVagas.setItems(FXCollections.observableArrayList(vagas));
+            vagasBase.clear();
+            vagasBase.addAll(vagas);
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -484,6 +490,12 @@ public class CandidaturaController extends ApplicationController implements Tela
         }
         tab_vagas.setVisible(true);
         nowVisible = tab_vagas;
+
+        btn_filtrar.setItems(FXCollections.observableArrayList(
+                "Cargo", "Departamento", "Status"
+        ));
+        btn_filtrar.setValue("Cargo");
+        // ==========================
     }
 
     @FXML private void btn_candidatos(ActionEvent event) throws IOException {
@@ -493,6 +505,11 @@ public class CandidaturaController extends ApplicationController implements Tela
         carregarCandidatos();
         tab_candidatos.setVisible(true);
         nowVisible = tab_candidatos;
+
+        btn_filtrar.setItems(FXCollections.observableArrayList(
+                "Nome", "CPF", "Email", "Formação"
+        ));
+        btn_filtrar.setValue("Nome");
     }
 
     /*@FXML private void btn_RegistrarVaga(ActionEvent event) throws IOException {
