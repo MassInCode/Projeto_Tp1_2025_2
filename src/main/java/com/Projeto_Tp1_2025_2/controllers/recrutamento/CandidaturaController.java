@@ -25,6 +25,7 @@ import javafx.stage.Window;
 
 import javax.swing.text.TabableView;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -62,6 +63,15 @@ public class CandidaturaController extends ApplicationController implements Tela
     @FXML private TableColumn<AgendaViewModel, String> colVagaEntrevistas;
     @FXML private TableColumn<AgendaViewModel, String> colDataEntrevista;
     @FXML private TableColumn<AgendaViewModel, String> colHoraEntrevista;
+    @FXML private AnchorPane tab_listarCandidaturas;
+    @FXML private TableView<InfoCandidaturaViewModel> tabTodasCandidaturas;
+    @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodasVaga;
+    @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodasDepartamento;
+    @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodasDataCand;
+    @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodasCodigo;
+    @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodasStatusVaga;
+    @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodasStatusCand;
+    @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodosNomes;
 
 
 
@@ -76,6 +86,7 @@ public class CandidaturaController extends ApplicationController implements Tela
     private final ObservableList<Candidato> candidatosBase = FXCollections.observableArrayList();
     private final ObservableList<Vaga> vagasBase = FXCollections.observableArrayList();
     private final ObservableList<AgendaViewModel> entrevistasBase = FXCollections.observableArrayList();
+    private final ObservableList<InfoCandidaturaViewModel> todasCandidaturasBase = FXCollections.observableArrayList();
 
 
     @FXML
@@ -115,14 +126,26 @@ public class CandidaturaController extends ApplicationController implements Tela
         colDataEntrevista.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataFormatada()));
         colHoraEntrevista.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHoraFormatada()));
 
+        colTodasVaga.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCargoVaga()));
+        colTodasDepartamento.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDepartamentoVaga()));
+        colTodasDataCand.setCellValueFactory(cellData -> new SimpleStringProperty(
+                cellData.getValue().getDataVaga().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+        ));
+        colTodasCodigo.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getIdVaga())));
+        colTodasStatusVaga.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatusVaga().toString()));
+        colTodasStatusCand.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatusCandidatura().toString()));
+        colTodosNomes.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNomeCandidato()));
+
         btn_filtrar.setItems(FXCollections.observableArrayList("Nome", "CPF", "Email", "Formação"));
         btn_filtrar.setValue("Nome");
         search(tabCandidatos, barraPesquisar, btn_filtrar, this::filtro, candidatosBase);
         search(tabelaRegistrarVagas, barraPesquisar, btn_filtrar, this::filtro, vagasBase);
         search(tabEntrevistas, barraPesquisar, btn_filtrar, this::filtro, entrevistasBase);
+        search(tabTodasCandidaturas, barraPesquisar, btn_filtrar, this::filtro, todasCandidaturasBase);
 
         nowVisible = tab_candidatos;
         nowVisible.setVisible(false);
+        carregarTodasCandidaturas();
         carregarCandidatos();
         carregarVagas();
         carregarEntrevistas();
@@ -153,11 +176,18 @@ public class CandidaturaController extends ApplicationController implements Tela
                 default -> vaga.getCargo();
             };
         }else if (classe instanceof AgendaViewModel agenda) {
-            // Lógica de filtro para Entrevistas
             return switch (campo) {
                 case "Vaga" -> agenda.getCargoVaga();
                 case "Data" -> agenda.getDataFormatada();
                 default -> agenda.getNomeCandidato();
+            };
+        } else if (classe instanceof InfoCandidaturaViewModel model) {
+            return switch (campo) {
+                case "Vaga" -> model.getCargoVaga();
+                case "Departamento" -> model.getDepartamentoVaga();
+                case "Status da Vaga" -> model.getStatusVaga().toString();
+                case "Status do Candidato" -> model.getStatusCandidatura().toString();
+                default -> model.getNomeCandidato();
             };
         }
 
@@ -517,6 +547,26 @@ public class CandidaturaController extends ApplicationController implements Tela
             e.printStackTrace();
         }
     }
+
+    private void carregarTodasCandidaturas() {
+        try {
+            List<InfoCandidaturaViewModel> listaViewModel = new ArrayList<>();
+
+            List<Candidatura> todasCandidaturas = candidaturaService.getAllCandidaturas();
+
+            for (Candidatura c : todasCandidaturas) {
+                Vaga v = vagaService.getVagaPorId(c.getVagaId());
+                Candidato cand = (Candidato) usuarioService.getUsuarioPorId(c.getCandidatoId());
+                listaViewModel.add(new InfoCandidaturaViewModel(cand, v, c));
+            }
+
+            todasCandidaturasBase.clear();
+            todasCandidaturasBase.addAll(listaViewModel);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     //==============CARREGA DADOS DAS TABELAS==============
 
 
@@ -582,6 +632,19 @@ public class CandidaturaController extends ApplicationController implements Tela
         btn_filtrar.setItems(FXCollections.observableArrayList(
                 "Candidato", "Vaga", "Data"
         ));
+        btn_filtrar.setValue("Candidato");
+    }
+
+    @FXML protected void btn_ListarCandidaturas(ActionEvent event) {
+        if (nowVisible != tab_listarCandidaturas && nowVisible != null) {
+            nowVisible.setVisible(false);
+        }
+        tab_listarCandidaturas.setVisible(true);
+        nowVisible = tab_listarCandidaturas;
+        carregarTodasCandidaturas();
+        tabTodasCandidaturas.refresh();
+
+        btn_filtrar.setItems(FXCollections.observableArrayList("Candidato", "Vaga", "Departamento", "Status da Vaga", "Status do Candidato"));
         btn_filtrar.setValue("Candidato");
     }
     //=====================BOTOES=======================

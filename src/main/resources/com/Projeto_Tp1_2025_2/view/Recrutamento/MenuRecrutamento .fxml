@@ -29,7 +29,8 @@
                                 <Button mnemonicParsing="false" onAction="#btn_candidatos" prefHeight="35.0" prefWidth="165.0" text="Listar Candidatos" textFill="WHITE" />
                         <Button mnemonicParsing="false" onAction="#btn_RegistrarCandidato" prefHeight="35.0" prefWidth="165.0" text="Registrar Candidato" textFill="WHITE" />
                         <Button mnemonicParsing="false" onAction="#btn_ListarEntrevistas" prefHeight="35.0" prefWidth="165.0" text="Listar Entrevistas" textFill="WHITE" />
-                        <Region prefHeight="455.0" prefWidth="165.0" />
+                        <Button mnemonicParsing="false" onAction="#btn_ListarCandidaturas" prefHeight="35.0" prefWidth="165.0" text="Listar Candidaturas" textFill="WHITE" />
+                        <Region prefHeight="382.0" prefWidth="128.0" />
                                 <Button fx:id="btn_sair" mnemonicParsing="false" onAction="#onClickSair" prefHeight="35.0" prefWidth="165.0" text="Sair" textFill="WHITE" />
                      </children>
                   </VBox>
@@ -135,7 +136,7 @@
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="tab_entrevistas" layoutX="10.0" layoutY="10.0" prefHeight="639.0" prefWidth="1031.0">
+                              <AnchorPane fx:id="tab_entrevistas" layoutX="10.0" layoutY="10.0" prefHeight="639.0" prefWidth="1031.0" visible="false">
                                  <children>
                                     <TableView fx:id="tabEntrevistas" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="618.0" prefWidth="1031.0">
                                        <columns>
@@ -152,6 +153,24 @@
                                              </items>
                                           </ContextMenu>
                                        </contextMenu>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane fx:id="tab_listarCandidaturas" prefHeight="649.0" prefWidth="1041.0" visible="false">
+                                 <children>
+                                    <TableView fx:id="tabTodasCandidaturas" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="626.0" prefWidth="1052.0">
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                       <columns>
+                                          <TableColumn fx:id="colTodosNomes" editable="false" minWidth="-Infinity" prefWidth="173.0" resizable="false" text="Candidato" />
+                                          <TableColumn fx:id="colTodasVaga" editable="false" minWidth="-Infinity" prefWidth="136.0" resizable="false" text="Vaga" />
+                                          <TableColumn fx:id="colTodasDepartamento" editable="false" minWidth="-Infinity" prefWidth="143.0" resizable="false" text="Departamento" />
+                                          <TableColumn fx:id="colTodasDataCand" editable="false" minWidth="-Infinity" prefWidth="145.0" resizable="false" text="Data de Candidatura" />
+                                          <TableColumn fx:id="colTodasCodigo" editable="false" minWidth="-Infinity" prefWidth="118.0" resizable="false" text="Codigo da Vaga" />
+                                          <TableColumn fx:id="colTodasStatusVaga" editable="false" minWidth="-Infinity" prefWidth="153.0" resizable="false" text="Status da Vaga" />
+                                          <TableColumn fx:id="colTodasStatusCand" editable="false" minWidth="-Infinity" prefWidth="178.0" resizable="false" text="Status do Candidato" />
+                                       </columns>
                                     </TableView>
                                  </children>
                               </AnchorPane>

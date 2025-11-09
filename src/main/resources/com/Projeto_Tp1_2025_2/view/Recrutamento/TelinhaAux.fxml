@@ -12,7 +12,7 @@
 
 <AnchorPane prefHeight="500.0" prefWidth="500.0" styleClass="telaaction" stylesheets="@../Login/login.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.recrutamento.TelinhaAuxController">
    <children>
-      <AnchorPane fx:id="apAgendarEntrevista" prefHeight="200.0" prefWidth="200.0">
+      <AnchorPane fx:id="apAgendarEntrevista" prefHeight="200.0" prefWidth="200.0" visible="false">
          <children>
              <VBox alignment="CENTER" prefHeight="500.0" prefWidth="490.0">
                  <children>

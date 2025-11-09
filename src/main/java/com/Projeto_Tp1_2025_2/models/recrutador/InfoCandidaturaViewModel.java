@@ -1,6 +1,7 @@
 package com.Projeto_Tp1_2025_2.models.recrutador;
 
 import com.Projeto_Tp1_2025_2.models.Usuario;
+import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
 import com.Projeto_Tp1_2025_2.models.candidatura.StatusCandidatura;
 
@@ -17,7 +18,11 @@ public class InfoCandidaturaViewModel {
         this.candidatura = candidatura;
     }
 
-
+    public InfoCandidaturaViewModel(Candidato candidato, Vaga vaga, Candidatura candidatura) {
+        this.usuario = candidato;
+        this.vaga = vaga;
+        this.candidatura = candidatura;
+    }
 
     public String getCargoVaga(){
         return this.vaga.getCargo();
@@ -38,5 +43,8 @@ public class InfoCandidaturaViewModel {
         return this.candidatura.getDataCandidatura();
     }
     public Candidatura getCandidatura(){return this.candidatura;}
+    public String getNomeCandidato() {
+        return (usuario != null) ? usuario.getNome() : "Candidato não encontrado";
+    }
 
 }
