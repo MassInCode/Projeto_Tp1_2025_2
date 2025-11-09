@@ -38,6 +38,8 @@ public class InfoCandidaturaController extends ApplicationController implements 
     @FXML private AnchorPane tab_candidaturas;
     @FXML private TextField barraPesquisar;
     @FXML private ComboBox<String> btn_filtrar;
+    @FXML private AnchorPane tabVisualiarPerfil;
+    @FXML private AnchorPane tabCandidaturasPorCandidato;
 
 
     private Candidato candidato;
@@ -72,6 +74,8 @@ public class InfoCandidaturaController extends ApplicationController implements 
             colCodigo.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getIdVaga())));
             colStatusVaga.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatusVaga().toString()));
             colStatusCand.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatusCandidatura().toString()));
+            tabCandidaturasPorCandidato.setVisible(true);
+
         }
 
         btn_filtrar.setItems(FXCollections.observableArrayList("Vaga", "Departamento", "Data de Candidatura", "Status da Vaga", "Status do Candidato"));

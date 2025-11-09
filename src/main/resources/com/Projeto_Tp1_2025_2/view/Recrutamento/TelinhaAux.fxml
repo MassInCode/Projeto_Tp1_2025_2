@@ -5,6 +5,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -91,6 +92,41 @@
                   </HBox>
                </children>
             </VBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="apVisualizarPerfil" prefHeight="511.0" prefWidth="500.0" visible="false">
+         <children>
+            <TextField fx:id="txtNomeCad" editable="false" layoutX="110.0" layoutY="93.0" minHeight="-Infinity" prefHeight="30.0" prefWidth="280.0" styleClass="lineedit" />
+            <TextField fx:id="txtEmailCad" editable="false" layoutX="110.0" layoutY="164.0" minHeight="-Infinity" prefHeight="30.0" prefWidth="280.0" styleClass="lineedit" />
+            <TextField fx:id="txtCpfCad" editable="false" layoutX="110.0" layoutY="241.0" minHeight="-Infinity" prefHeight="30.0" prefWidth="280.0" styleClass="lineedit" />
+            <TextField fx:id="txtFormacaoCad" editable="false" layoutX="110.0" layoutY="322.0" minHeight="-Infinity" prefHeight="30.0" prefWidth="280.0" styleClass="lineedit" />
+            <TextField fx:id="txtNumeroCandidaturasCad" editable="false" layoutX="110.0" layoutY="392.0" minHeight="-Infinity" prefHeight="30.0" prefWidth="280.0" styleClass="lineedit" />
+            <Button layoutX="186.0" layoutY="443.0" mnemonicParsing="false" onAction="#onClickFecharPerfil" prefHeight="40.0" prefWidth="120.0" styleClass="btn_entrar" text="Fechar" textFill="WHITE" />
+            <Label layoutX="226.0" layoutY="72.0" text="Nome">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="232.0" layoutY="143.0" text="Email">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="238.0" layoutY="220.0" text="CPF">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="218.0" layoutY="301.0" text="Formação">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="167.0" layoutY="371.0" text="Numero de Candidaturas">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </children>

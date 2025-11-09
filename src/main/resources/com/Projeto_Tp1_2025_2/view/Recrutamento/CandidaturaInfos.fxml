@@ -14,7 +14,7 @@
    <children>
       <AnchorPane fx:id="tab_candidaturas" layoutX="26.0" layoutY="21.0" prefHeight="678.0" prefWidth="1228.0" styleClass="telaaction" stylesheets="@../Admin/admin.css" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="21.0">
          <children>
-            <AnchorPane prefHeight="678.0" prefWidth="1228.0">
+            <AnchorPane fx:id="tabCandidaturasPorCandidato" prefHeight="678.0" prefWidth="1228.0" visible="false">
                <children>
                   <TableView fx:id="tabVagas" layoutY="49.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="631.0" prefWidth="1228.0">
                      <columnResizePolicy>

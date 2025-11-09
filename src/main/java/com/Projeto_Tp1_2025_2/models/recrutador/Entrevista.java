@@ -1,4 +1,4 @@
-package com.Projeto_Tp1_2025_2.models.recrutador; // Ou o pacote de modelo que preferir
+package com.Projeto_Tp1_2025_2.models.recrutador;
 
 import com.Projeto_Tp1_2025_2.util.Database;
 import com.fasterxml.jackson.annotation.JsonFormat;

@@ -251,6 +251,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         MenuItem excluirItem =  new MenuItem("Excluir Candidato");
         MenuItem registrarCandidatura = new MenuItem("Registrar Candidatura");
         MenuItem showAllCandidaturas = new MenuItem("Mostrar Candidaturas");
+        MenuItem verPerfilItem = new MenuItem("Visualizar Perfil");
 
         //==============ITENS==============
         editarItem.setOnAction(event -> {
@@ -295,10 +296,19 @@ public class CandidaturaController extends ApplicationController implements Tela
                 }
             }
         });
+        verPerfilItem.setOnAction(event -> {
+            Candidato candidatoSelecionado = tabCandidatos.getSelectionModel().getSelectedItem();
+            if(candidatoSelecionado != null){
+                try{
+                    abrirModalPerfil(candidatoSelecionado, "Perfil", "/com/Projeto_Tp1_2025_2/view/Recrutamento/TelinhaAux.fxml");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
         //==============ITENS==============
 
-        contextMenu.getItems().addAll(editarItem, excluirItem,  registrarCandidatura, showAllCandidaturas);
-
+        contextMenu.getItems().addAll(verPerfilItem, showAllCandidaturas, new SeparatorMenuItem(), editarItem, registrarCandidatura, new SeparatorMenuItem(), excluirItem);
         tabCandidatos.setRowFactory(tv -> {
             TableRow<Candidato> row = new TableRow<>();
 
@@ -309,6 +319,17 @@ public class CandidaturaController extends ApplicationController implements Tela
                     row.setContextMenu(contextMenu);
                 }
             });
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty()) ) {
+                    Candidato candidatoSelecionado = row.getItem();
+                    try {
+                        abrirModalPerfil(candidatoSelecionado, "Perfil", "/com/Projeto_Tp1_2025_2/view/Recrutamento/TelinhaAux.fxml");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+
             return row;
         });
     }
@@ -339,8 +360,14 @@ public class CandidaturaController extends ApplicationController implements Tela
             Parent root = loader.load();
             InfoCandidaturaController controller = loader.getController();
             controller.initData(candidatoSelecionado, tela, vagaService, candidaturaService, usuarioService, entrevistaService);
+            Stage stage = new Stage();
+            stage.setTitle(tela);
+            stage.setScene(new Scene(root));
             Window ownerStage = (Window) tab_vagas.getScene().getWindow();
-            SceneSwitcher.newfloatingscene(root, tela + candidatoSelecionado.getNome(), ownerStage);
+            stage.initOwner(ownerStage);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
             carregarVagas();
             carregarCandidatos();
             this.allCandidaturas = candidaturaService.getAllCandidaturas();
@@ -371,6 +398,29 @@ public class CandidaturaController extends ApplicationController implements Tela
             tabEntrevistas.refresh();
             carregarTodasCandidaturas();
             tabTodasCandidaturas.refresh();
+
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void abrirModalPerfil(Candidato candidatoSelecionado, String tela, String name) throws IOException {
+        try{
+            var resource = getClass().getResource(name);
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent root = loader.load();
+            TelinhaAuxController controller = loader.getController();
+
+            controller.initData(candidatoSelecionado, tela, vagaService, candidaturaService, usuarioService, entrevistaService);
+
+            Stage stage = new Stage();
+            stage.setTitle(tela + candidatoSelecionado.getNome());
+            stage.setScene(new Scene(root));
+            Window ownerStage = (Window) tab_candidatos.getScene().getWindow();
+            stage.initOwner(ownerStage);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            stage.showAndWait();
 
         } catch(IOException e){
             e.printStackTrace();

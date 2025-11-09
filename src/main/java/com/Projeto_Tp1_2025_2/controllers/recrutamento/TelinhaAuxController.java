@@ -46,6 +46,12 @@ public class TelinhaAuxController {
     @FXML private Button btnAgendar;
     @FXML private Label lblTitulo;
     @FXML private ChoiceBox<StatusCandidatura> cbStatusCandidatura;
+    @FXML private AnchorPane apVisualizarPerfil;
+    @FXML private TextField txtNomeCad;
+    @FXML private TextField txtEmailCad;
+    @FXML private TextField txtCpfCad;
+    @FXML private TextField txtFormacaoCad;
+    @FXML private TextField txtNumeroCandidaturasCad;
 
     Database db;
     InfoCandidaturaViewModel candidatura;
@@ -87,6 +93,14 @@ public class TelinhaAuxController {
         }
     }
 
+    @FXML public void initData(Candidato candidato, String tela, VagaService vs, CandidaturaService cs, UsuarioService us, EntrevistaService es) throws IOException {
+        this.candidaturaService = cs;
+        if(tela.equals("Perfil")){
+            apVisualizarPerfil.setVisible(true);
+            carregarDadosPerfil(candidato);
+        }
+    }
+
     private void carregarNomesRecrutadores() throws IOException {
         List<Usuario> recrutadoresAtivos = new ArrayList<>();
         try{
@@ -125,6 +139,22 @@ public class TelinhaAuxController {
 
 
     }
+
+
+    private void carregarDadosPerfil(Candidato candidato) {
+        txtNomeCad.setText(candidato.getNome());
+        txtEmailCad.setText(candidato.getEmail());
+        txtCpfCad.setText(candidato.getCpf());
+        txtFormacaoCad.setText(candidato.getFormacao());
+        try {
+            List<Candidatura> candidaturas = candidaturaService.getAllCandidaturasPorCandidato(candidato);
+            txtNumeroCandidaturasCad.setText(String.valueOf(candidaturas.size()));
+        } catch (IOException e) {
+            txtNumeroCandidaturasCad.setText("Erro ao carregar");
+            e.printStackTrace();
+        }
+    }
+
 
     private void preencherCamposParaReagendar() {
         if (this.entrevistaParaEditar == null) return;
@@ -250,6 +280,11 @@ public class TelinhaAuxController {
         }
     }
 
+    @FXML
+    protected void onClickFecharPerfil(ActionEvent event) {
+        Stage stage = (Stage) apVisualizarPerfil.getScene().getWindow();
+        stage.close();
+    }
 
     @FXML
     protected void onClickCancelar(ActionEvent event) {
