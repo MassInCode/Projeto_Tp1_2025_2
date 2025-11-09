@@ -70,4 +70,17 @@ public class VagaService {
         }
         return db.deleteObject(vaga, "vagas");
     }
+
+    public boolean editarVaga(Vaga vaga, String cargo, double salarioBase, String requisitos,
+                              String departamento, String regimeContratacao) {
+        try {
+            vaga.editarVaga(cargo, salarioBase, requisitos, departamento, regimeContratacao);
+            db.editObject(vaga, "vagas");
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="anchorpane" stylesheets="@../Admin/admin.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.recrutamento.CandidaturaController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="anchorpane" stylesheets="@../Admin/admin.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.recrutamento.CandidaturaController">
     <children>
         <AnchorPane layoutX="26.0" layoutY="21.0" prefHeight="678.0" prefWidth="1228.0" styleClass="telaaction" stylesheets="@../Admin/admin.css" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="21.0">
             <children>
@@ -196,13 +196,18 @@
                         <TextField fx:id="ev_cargo" maxWidth="370.0" minWidth="200.0" prefWidth="20.0" promptText="Cargo" styleClass="lineedit" />
                         <TextField fx:id="ev_salario" maxWidth="370.0" promptText="Salário" styleClass="lineedit" />
                         <TextField fx:id="ev_requisitos" maxWidth="370.0" promptText="Requisitos" styleClass="lineedit" />
-                        <TextField fx:id="ev_regime" maxHeight="370.0" maxWidth="370.0" promptText="Regime" styleClass="lineedit" />
+                        <TextField fx:id="ev_departamento" maxHeight="370.0" maxWidth="370.0" promptText="Regime" styleClass="lineedit" />
                         <TextField fx:id="ev_regime" maxHeight="370.0" maxWidth="370.0" promptText="Departamento" styleClass="lineedit" />
+                        <Label fx:id="ev_error" prefHeight="35.0" prefWidth="311.0" textFill="#ee0000">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Button fx:id="btn_ev_salvar" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="120.0" styleClass="btn_confirmar" text="Salvar" textFill="WHITE" />
                               <Separator prefWidth="30.0" visible="false" />
-                              <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="120.0" styleClass="btn_cancelar" text="Cancelar" textFill="WHITE" />
+                              <Button fx:id="btn_ev_cancelar" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="120.0" styleClass="btn_cancelar" text="Cancelar" textFill="WHITE" />
                            </children>
                         </HBox>
                      </children>

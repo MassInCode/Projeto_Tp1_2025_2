@@ -77,6 +77,16 @@ public class CandidaturaController extends ApplicationController implements Tela
     @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodasStatusCand;
     @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodosNomes;
 
+    @FXML AnchorPane tab_editarVagas;
+    @FXML TextField ev_cargo;
+    @FXML TextField ev_salario;
+    @FXML TextField ev_requisitos;
+    @FXML TextField ev_departamento;
+    @FXML TextField ev_regime;
+    @FXML Button btn_ev_salvar;
+    @FXML Button btn_ev_cancelar;
+    @FXML Label ev_error;
+
 
 
     private AnchorPane nowVisible;
@@ -157,6 +167,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         criarContextMenuCandidato();
         criarContextMenuEntrevistas();
         criarContextMenuTodasCandidaturas();
+        criarContextMenuVaga();
     }
 
     public void initData(Usuario usuarioLogado) {
@@ -177,8 +188,10 @@ public class CandidaturaController extends ApplicationController implements Tela
             };
         } else if (classe instanceof Vaga vaga) {
             return switch (campo) {
+                case "Salário" -> String.valueOf(vaga.getSalarioBase());
                 case "Departamento" -> vaga.getDepartamento();
                 case "Status" -> vaga.getStatus().toString();
+                case "Data de Abertura" -> vaga.getDataAbertura().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 default -> vaga.getCargo();
             };
         }else if (classe instanceof AgendaViewModel agenda) {
@@ -216,7 +229,8 @@ public class CandidaturaController extends ApplicationController implements Tela
             rowMenu.getItems().addAll(editarItem, excluirItem);
 
             editarItem.setOnAction(e -> {
-                //editarVaga(vaga_atual);
+                Vaga vagaSelecionada = tabelaRegistrarVagas.getSelectionModel().getSelectedItem();
+                editarVaga(vagaSelecionada);
             });
 
             excluirItem.setOnAction(e -> {
@@ -240,6 +254,50 @@ public class CandidaturaController extends ApplicationController implements Tela
 
             return row;
         });
+    }
+
+    @FXML
+    private void editarVaga(Vaga vagaSelecionada) {
+
+        tab_editarVagas.setVisible(true);
+
+        ev_cargo.setText(vagaSelecionada.getCargo());
+        ev_salario.setText(String.valueOf(vagaSelecionada.getSalarioBase()));
+        ev_requisitos.setText(vagaSelecionada.getRequisitos());
+        ev_departamento.setText(vagaSelecionada.getDepartamento());
+        ev_regime.setText(vagaSelecionada.getRegimeContratacao());
+
+        btn_ev_salvar.setOnAction(e -> {
+            try {
+                double salario = Double.parseDouble(ev_salario.getText());
+                boolean sucesso = vagaService.editarVaga(vagaSelecionada, ev_cargo.getText(), salario, ev_requisitos.getText(), ev_departamento.getText(), ev_regime.getText());
+
+                if (sucesso) {
+                    tabelaRegistrarVagas.refresh();
+                    cancelar();
+                }
+            } catch (NumberFormatException f) {
+                ev_error.setManaged(true);
+                ev_error.setText("Salário deve ser um número real válido.");
+            }
+        });
+
+        btn_ev_cancelar.setOnAction(e -> {
+            tab_editarVagas.setVisible(false);
+        });
+
+    }
+
+    private void cancelar() {
+        ev_cargo.setText("");
+        ev_salario.setText("");
+        ev_requisitos.setText("");
+        ev_departamento.setText("");
+        ev_regime.setText("");
+        ev_error.setText("");
+        ev_error.setManaged(false);
+
+        tab_editarVagas.setVisible(false);
     }
 
     //==============CONTEXT MENU DE CANDIDATOS(EDITAR E EXCLUIR)==============
