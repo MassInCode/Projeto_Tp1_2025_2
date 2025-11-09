@@ -3,6 +3,7 @@ import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
+import com.Projeto_Tp1_2025_2.models.candidatura.StatusCandidatura;
 import com.Projeto_Tp1_2025_2.models.recrutador.InfoCandidaturaViewModel;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
 import com.Projeto_Tp1_2025_2.util.*;
@@ -23,6 +24,7 @@ import java.util.List;
 import com.Projeto_Tp1_2025_2.controllers.ApplicationController;
 import javafx.collections.ObservableList;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 public class InfoCandidaturaController extends ApplicationController implements TelaController{
 
@@ -105,6 +107,7 @@ public class InfoCandidaturaController extends ApplicationController implements 
         ContextMenu contextMenu = new ContextMenu();
         MenuItem editarStatusDeCandidatura =  new MenuItem("Editar Status de Candidatura");
         MenuItem agendarEntrevista =  new MenuItem("Agendar Entrevista");
+        MenuItem excluirItem = new MenuItem("Excluir Candidatura");
 
         //==============ITENS==============
         editarStatusDeCandidatura.setOnAction(event -> {
@@ -130,9 +133,44 @@ public class InfoCandidaturaController extends ApplicationController implements 
                 }
             }
         });
+        excluirItem.setOnAction(event -> {
+            InfoCandidaturaViewModel viewModel = tabVagas.getSelectionModel().getSelectedItem();
+            if (viewModel == null) return;
+
+            Candidatura candidaturaParaExcluir = viewModel.getCandidatura();
+
+            if (candidaturaParaExcluir.getStatus() != StatusCandidatura.PENDENTE) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Ação Bloqueada");
+                alert.setHeaderText("Não é possível excluir esta candidatura.");
+                alert.setContentText("Apenas candidaturas com o status 'PENDENTE' podem ser excluídas.");
+                alert.showAndWait();
+                return;
+            }
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Excluir Candidatura");
+            alert.setHeaderText("Tem certeza que deseja excluir esta candidatura?");
+            alert.setContentText("Vaga: " + viewModel.getCargoVaga() + "\nStatus: " + viewModel.getStatusCandidatura());
+
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                try {
+                    candidaturaService.excluirCandidatura(candidaturaParaExcluir);
+
+                    // Atualiza a tabela dinamicamente
+                    carregarVagas();
+                    tabVagas.refresh();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         //==============ITENS==============
 
-        contextMenu.getItems().addAll(editarStatusDeCandidatura, agendarEntrevista);
+        contextMenu.getItems().addAll(editarStatusDeCandidatura, agendarEntrevista,  new SeparatorMenuItem(), excluirItem);
 
         tabVagas.setRowFactory(tv -> {
             TableRow<InfoCandidaturaViewModel> row = new TableRow<>();
