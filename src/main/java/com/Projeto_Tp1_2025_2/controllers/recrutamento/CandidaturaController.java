@@ -33,6 +33,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javafx.scene.control.TextInputDialog;
 
 
 public class CandidaturaController extends ApplicationController implements TelaController {
@@ -66,6 +67,7 @@ public class CandidaturaController extends ApplicationController implements Tela
     @FXML private TableColumn<AgendaViewModel, String> colVagaEntrevistas;
     @FXML private TableColumn<AgendaViewModel, String> colDataEntrevista;
     @FXML private TableColumn<AgendaViewModel, String> colHoraEntrevista;
+    @FXML private TableColumn<AgendaViewModel, String> colNotaEntrevista;
     @FXML private AnchorPane tab_listarCandidaturas;
     @FXML private TableView<InfoCandidaturaViewModel> tabTodasCandidaturas;
     @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodasVaga;
@@ -128,6 +130,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         colVagaEntrevistas.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCargoVaga()));
         colDataEntrevista.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataFormatada()));
         colHoraEntrevista.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHoraFormatada()));
+        colNotaEntrevista.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNotaFormatada()));
 
         colTodasVaga.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCargoVaga()));
         colTodasDepartamento.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDepartamentoVaga()));
@@ -441,6 +444,7 @@ public class CandidaturaController extends ApplicationController implements Tela
 
         MenuItem excluirItem = new MenuItem("Excluir Entrevista");
         MenuItem reagendarItem = new MenuItem("Reagendar Entrevista");
+        MenuItem atribuirNotaItem = new MenuItem("Atribuir Nota");
 
         excluirItem.setOnAction(event -> {
             AgendaViewModel viewModelSelecionado = tabEntrevistas.getSelectionModel().getSelectedItem();
@@ -487,7 +491,47 @@ public class CandidaturaController extends ApplicationController implements Tela
             }
         });
 
-        contextMenu.getItems().addAll(excluirItem, reagendarItem);
+        atribuirNotaItem.setOnAction(event -> {
+            AgendaViewModel viewModel = tabEntrevistas.getSelectionModel().getSelectedItem();
+            if (viewModel == null) return;
+
+            Entrevista entrevista = viewModel.getEntrevista();
+
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Atribuir Nota");
+            dialog.setHeaderText("Atribuir nota para: " + viewModel.getNomeCandidato());
+            dialog.setContentText("Por favor, insira a nota (ex: 8.5):");
+
+            if (entrevista.getNota() != -1.0) {
+                dialog.getEditor().setText(String.valueOf(entrevista.getNota()));
+            }
+
+            Optional<String> result = dialog.showAndWait();
+
+            if (result.isPresent()) {
+                try {
+                    double novaNota = Double.parseDouble(result.get().replace(",", ".")); // Aceita 8.5 ou 8,5
+
+                    entrevista.setNota(novaNota);
+
+                    entrevistaService.atualizarEntrevista(entrevista);
+
+                    carregarEntrevistas();
+                    tabEntrevistas.refresh();
+
+                } catch (NumberFormatException e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Erro de Formato");
+                    alert.setHeaderText("Valor inválido.");
+                    alert.setContentText("Por favor, insira apenas números (ex: 8.5).");
+                    alert.showAndWait();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        contextMenu.getItems().addAll(reagendarItem, atribuirNotaItem, new SeparatorMenuItem(), excluirItem);
         tabEntrevistas.setRowFactory(tv -> {
             TableRow<AgendaViewModel> row = new TableRow<>();
             row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {

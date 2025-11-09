@@ -41,5 +41,11 @@ public class AgendaViewModel {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         return entrevista.getDataEntrevista().format(timeFormatter);
     }
+    public String getNotaFormatada() {
+        if (entrevista == null || entrevista.getNota() == -1.0) {
+            return "-";
+        }
+        return String.format("%.1f", entrevista.getNota());
+    }
 
 }
