@@ -79,6 +79,23 @@ public class UsuarioService {
         int id = user.getId();
         db.setActualId(++id);
     }
+
+    //==============SOBRECARGA DE REGISTRAR CANDIDATO==============
+    public void registrar(String nome, String email, String cpf, String formacao, String cargo) throws IOException, ValidationException { // candidato. houve uma alteração nos parâmetros para o overload funcionar
+
+        if(email.isEmpty() || nome.isEmpty() || cpf.isEmpty()){
+            throw new ValidationException("Campos Obrigatorios Vazios.");
+        }
+        if(db.searchMap("usuarios", "cpf", cpf, "nome", nome) != null){
+            throw new ValidationException("Cpf ou nome ja cadastrados.");
+        }
+
+        Usuario user = criarUsuarioPorCargo(nome, email, cpf, null, cargo, formacao);
+        db.addObject(user, "usuarios");
+        int id = user.getId();
+        db.setActualId(++id);
+    }
+
     //==============REGISTRAR==============
 
     private Usuario criarUsuarioPorCargo(String nome, String email, String cpf, String senha, String cargo, String formacao) throws IOException, ValidationException, FileNotFoundException {

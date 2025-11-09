@@ -59,7 +59,6 @@ public class CandidaturaController extends ApplicationController implements Tela
     @FXML private TextField ld_nome_cadastro;
     @FXML private TextField ld_email_cadastro;
     @FXML private TextField ld_cpf_cadastro;
-    @FXML private PasswordField ld_senha_cadastro;
     @FXML private TextField ld_formacao_cadastro;
     @FXML private Label mensagem_erro2;
     @FXML private TableView<AgendaViewModel> tabEntrevistas;
@@ -341,8 +340,17 @@ public class CandidaturaController extends ApplicationController implements Tela
             Parent root = loader.load();
             EditarController controller = loader.getController();
             controller.initData(candidatoSelecionado, tela, vagaService, candidaturaService, usuarioService);
+
+            Stage stage = new Stage();
+            stage.setTitle(tela + candidatoSelecionado.getNome());
+            stage.setScene(new Scene(root));
+
             Window ownerStage = (Window) tab_vagas.getScene().getWindow();
-            SceneSwitcher.newfloatingscene(root, tela + candidatoSelecionado.getNome(), ownerStage);
+            stage.initOwner(ownerStage);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            stage.showAndWait();
+
             carregarVagas();
             carregarCandidatos();
             this.allCandidaturas = candidaturaService.getAllCandidaturas();
@@ -394,10 +402,13 @@ public class CandidaturaController extends ApplicationController implements Tela
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
+            this.allCandidaturas = candidaturaService.getAllCandidaturas();
             carregarEntrevistas();
             tabEntrevistas.refresh();
             carregarTodasCandidaturas();
             tabTodasCandidaturas.refresh();
+            carregarVagas();
+            tabelaRegistrarVagas.refresh();
 
         } catch(IOException e){
             e.printStackTrace();
@@ -651,6 +662,11 @@ public class CandidaturaController extends ApplicationController implements Tela
                     candidaturaService.excluirCandidatura(candidaturaParaExcluir);
                     carregarTodasCandidaturas();
                     tabTodasCandidaturas.refresh();
+                    carregarVagas();
+                    carregarCandidatos();
+                    this.allCandidaturas = candidaturaService.getAllCandidaturas();
+                    tabCandidatos.refresh();
+                    tabelaRegistrarVagas.refresh();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -853,7 +869,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         mensagem_erro2.getStyleClass().removeAll("label-sucesso", "label-erro");
 
         try{
-            usuarioService.registrar(ld_nome_cadastro.getText(), ld_email_cadastro.getText(), ld_cpf_cadastro.getText(), ld_senha_cadastro.getText(), ld_senha_cadastro.getText(), ld_formacao_cadastro.getText(), "CANDIDATO"); // mesma senha para acertar o overload correto
+            usuarioService.registrar(ld_nome_cadastro.getText(), ld_email_cadastro.getText(), ld_cpf_cadastro.getText(), ld_formacao_cadastro.getText(), "CANDIDATO"); // mesma senha para acertar o overload correto
             limparCampos();
             mensagem_erro2.setStyle("-fx-text-fill: green;");
             mensagem_erro2.setText("Cadastro registrado com sucesso.");
@@ -882,7 +898,6 @@ public class CandidaturaController extends ApplicationController implements Tela
         //txtDepartamento.setText("");
         //choiceRegime.setValue("CLT");
         ld_formacao_cadastro.setText("");
-        ld_senha_cadastro.setText("");
         ld_cpf_cadastro.setText("");
         ld_nome_cadastro.setText("");
         ld_email_cadastro.setText("");
