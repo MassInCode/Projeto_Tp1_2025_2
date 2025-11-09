@@ -154,7 +154,7 @@ public class InfoCandidaturaController extends ApplicationController implements 
             FXMLLoader loader = new FXMLLoader(resource);
             Parent root = loader.load();
             TelinhaAuxController controller = loader.getController();
-            controller.initData(candidaturaSelecionada, tela, vagaService, candidaturaService, usuarioService, entrevistaService);
+            controller.initData(candidaturaSelecionada, null, tela, vagaService, candidaturaService, usuarioService, entrevistaService);
             Window ownerStage = (Window) tab_candidaturas.getScene().getWindow();
 
             SceneSwitcher.newfloatingscene(root, tela, ownerStage);

@@ -8,6 +8,7 @@ import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
 import com.Projeto_Tp1_2025_2.models.recrutador.AgendaViewModel;
 import com.Projeto_Tp1_2025_2.models.recrutador.Entrevista;
+import com.Projeto_Tp1_2025_2.models.recrutador.InfoCandidaturaViewModel;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
 import com.Projeto_Tp1_2025_2.util.*;
 import javafx.beans.binding.Bindings;
@@ -313,6 +314,26 @@ public class CandidaturaController extends ApplicationController implements Tela
         }
     }
 
+    private void abrirModalAgendamento(InfoCandidaturaViewModel viewModel, Entrevista entrevista, String tela) throws IOException {
+        try{
+            var resource = getClass().getResource("/com/Projeto_Tp1_2025_2/view/Recrutamento/TelinhaAux.fxml"); //
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent root = loader.load();
+            TelinhaAuxController controller = loader.getController();
+
+            controller.initData(viewModel, entrevista, tela, vagaService, candidaturaService, usuarioService, entrevistaService);
+
+            Window ownerStage = (Window) tab_candidatos.getScene().getWindow();
+            SceneSwitcher.newfloatingscene(root, tela, ownerStage);
+
+            carregarEntrevistas();
+            tabEntrevistas.refresh();
+
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
     @FXML private void excluirCandidato(Candidato candidatoSelecionado) throws IOException {
         if(candidatoSelecionado == null){
             System.out.println("Nenhum candidato selecionado para excluir.");
@@ -379,7 +400,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         ContextMenu contextMenu = new ContextMenu();
 
         MenuItem excluirItem = new MenuItem("Excluir Entrevista");
-        MenuItem reagendarItem = new MenuItem("Reagendar Entrevista (Não implementado)");
+        MenuItem reagendarItem = new MenuItem("Reagendar Entrevista");
 
         excluirItem.setOnAction(event -> {
             AgendaViewModel viewModelSelecionado = tabEntrevistas.getSelectionModel().getSelectedItem();
@@ -412,7 +433,18 @@ public class CandidaturaController extends ApplicationController implements Tela
         });
 
         reagendarItem.setOnAction(event -> {
-            System.out.println("Lógica de reagendamento ainda não implementada.");
+            AgendaViewModel viewModel = tabEntrevistas.getSelectionModel().getSelectedItem();
+            if (viewModel == null) return;
+
+            try {
+                Entrevista entrevista = viewModel.getEntrevista();
+                Vaga vaga = vagaService.getVagaPorId(candidaturaService.getCandidaturaPorId(entrevista.getCandidaturaId()).getVagaId()); // Um pouco complexo, mas pega a Vaga
+                Candidatura candidatura = candidaturaService.getCandidaturaPorId(entrevista.getCandidaturaId());
+                InfoCandidaturaViewModel compatViewModel = new InfoCandidaturaViewModel(vaga, candidatura);
+                abrirModalAgendamento(compatViewModel, entrevista, "Reagendamento");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
 
         contextMenu.getItems().addAll(excluirItem, reagendarItem);

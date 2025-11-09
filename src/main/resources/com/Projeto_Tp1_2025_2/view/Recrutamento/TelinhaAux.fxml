@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="500.0" prefWidth="500.0" styleClass="telaaction" stylesheets="@../Login/login.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.recrutamento.TelinhaAuxController">
+<AnchorPane prefHeight="500.0" prefWidth="500.0" styleClass="telaaction" stylesheets="@../Login/login.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.recrutamento.TelinhaAuxController">
    <children>
-      <AnchorPane fx:id="apAgendarEntrevista" prefHeight="200.0" prefWidth="200.0" visible="false">
+      <AnchorPane fx:id="apAgendarEntrevista" prefHeight="200.0" prefWidth="200.0">
          <children>
              <VBox alignment="CENTER" prefHeight="500.0" prefWidth="490.0">
                  <children>
-                     <Label alignment="CENTER" contentDisplay="TOP" prefHeight="73.0" prefWidth="466.0" text="Agendar Entrevista">
+                     <Label fx:id="lblTitulo" alignment="CENTER" contentDisplay="TOP" prefHeight="73.0" prefWidth="466.0" text="Agendar Entrevista">
                          <font>
                              <Font name="System Bold" size="36.0" />
                          </font>
@@ -42,7 +44,7 @@
                      <HBox prefHeight="56.0" prefWidth="490.0">
                          <children>
                              <Separator prefWidth="50.0" visible="false" />
-                             <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickAgendarEntrevista" prefHeight="35.0" prefWidth="165.0" text="Agendar" textFill="WHITE">
+                             <Button fx:id="btnAgendar" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickAgendarEntrevista" prefHeight="35.0" prefWidth="165.0" text="Agendar" textFill="WHITE">
                                  <font>
                                      <Font size="14.0" />
                                  </font>

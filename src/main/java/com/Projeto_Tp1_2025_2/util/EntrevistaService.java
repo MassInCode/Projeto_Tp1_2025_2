@@ -59,4 +59,8 @@ public class EntrevistaService {
         dbEntrevistas.deleteObject(entrevista, "entrevistas");
     }
 
+    public void atualizarEntrevista(Entrevista entrevista) throws IOException {
+        dbEntrevistas.editObject(entrevista, ENTREVISTAS_KEY);
+    }
+
 }

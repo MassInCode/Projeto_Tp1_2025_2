@@ -7,10 +7,7 @@ import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
 import com.Projeto_Tp1_2025_2.models.candidatura.StatusCandidatura;
-import com.Projeto_Tp1_2025_2.models.recrutador.InfoCandidaturaViewModel;
-import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
-import com.Projeto_Tp1_2025_2.models.recrutador.StatusVaga;
-import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
+import com.Projeto_Tp1_2025_2.models.recrutador.*;
 import com.Projeto_Tp1_2025_2.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
@@ -46,7 +43,8 @@ public class TelinhaAuxController {
     @FXML private Label lblNome;
     @FXML private ChoiceBox<String> cbHora;
     @FXML private ChoiceBox<String> cbMinuto;
-
+    @FXML private Button btnAgendar;
+    @FXML private Label lblTitulo;
     @FXML private ChoiceBox<StatusCandidatura> cbStatusCandidatura;
 
     Database db;
@@ -55,10 +53,12 @@ public class TelinhaAuxController {
     CandidaturaService candidaturaService;
     UsuarioService usuarioService;
     EntrevistaService entrevistaService;
+    private Entrevista entrevistaParaEditar;
 
-    @FXML public void initData(InfoCandidaturaViewModel candidaturaSelecionada, String tela, VagaService vs, CandidaturaService cs, UsuarioService us, EntrevistaService es) throws IOException {
+    @FXML public void initData(InfoCandidaturaViewModel candidaturaSelecionada, Entrevista entrevista, String tela, VagaService vs, CandidaturaService cs, UsuarioService us, EntrevistaService es) throws IOException {
 
         this.candidatura = candidaturaSelecionada;
+        this.entrevistaParaEditar = entrevista;
         vagaService = vs;
         candidaturaService = cs;
         usuarioService = us;
@@ -71,6 +71,13 @@ public class TelinhaAuxController {
         } else if(tela.equals("Editar Status Candidatura")){
             apEditarStatusCandidatura.setVisible(true); //
             carregarStatusCandidatura();
+        } else if (tela.equals("Reagendamento")) {
+            apAgendarEntrevista.setVisible(true);
+            lblTitulo.setText("Reagendar Entrevista");
+            btnAgendar.setText("Salvar");
+            carregarNomesRecrutadores();
+            carregarHorarios();
+            preencherCamposParaReagendar(); // <-- Preenche os dados existentes
         }
 
         try{
@@ -119,6 +126,25 @@ public class TelinhaAuxController {
 
     }
 
+    private void preencherCamposParaReagendar() {
+        if (this.entrevistaParaEditar == null) return;
+
+        LocalDateTime dataHora = this.entrevistaParaEditar.getDataEntrevista();
+
+        dpCalendario.setValue(dataHora.toLocalDate());
+        cbHora.setValue(String.format("%02d", dataHora.getHour()));
+        cbMinuto.setValue(String.format("%02d", dataHora.getMinute()));
+
+        try {
+            Usuario avaliador = usuarioService.getUsuarioPorId(this.entrevistaParaEditar.getRecrutadorId());
+            if (avaliador != null) {
+                cbAvaliador.setValue(avaliador);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void carregarHorarios() {
         ObservableList<String> horas = FXCollections.observableArrayList(
@@ -161,6 +187,11 @@ public class TelinhaAuxController {
 
     @FXML protected void onClickAgendarEntrevista(ActionEvent event) throws IOException {
 
+        if (this.entrevistaParaEditar != null) {
+            salvarReagendamento(event);
+            return;
+        }
+
         LocalDate dataSelecionada = dpCalendario.getValue();
         Usuario recrutadorSelecionado = cbAvaliador.getValue();
         String horaSelecionada = cbHora.getValue();
@@ -189,6 +220,36 @@ public class TelinhaAuxController {
             lblNome.setStyle("-fx-text-fill: red;");
         }
     }
+
+
+    private void salvarReagendamento(ActionEvent event) {
+        LocalDate dataSelecionada = dpCalendario.getValue();
+        Usuario recrutadorSelecionado = cbAvaliador.getValue();
+        String horaSelecionada = cbHora.getValue();
+        String minutoSelecionado = cbMinuto.getValue();
+
+        if(dataSelecionada == null || recrutadorSelecionado == null || horaSelecionada == null || minutoSelecionado == null){
+            lblNome.setText("Erro: Preencha todos os campos.");
+            return;
+        }
+
+        try {
+            LocalTime horaDaEntrevista = LocalTime.of(Integer.parseInt(horaSelecionada), Integer.parseInt(minutoSelecionado));
+            LocalDateTime dataHoraCompleta = LocalDateTime.of(dataSelecionada, horaDaEntrevista);
+
+            this.entrevistaParaEditar.setDataEntrevista(dataHoraCompleta);
+            this.entrevistaParaEditar.setRecrutadorId(recrutadorSelecionado.getId());
+
+            entrevistaService.atualizarEntrevista(this.entrevistaParaEditar);
+
+            onClickCancelar(event);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            lblNome.setText("Erro ao salvar.");
+        }
+    }
+
 
     @FXML
     protected void onClickCancelar(ActionEvent event) {
