@@ -19,8 +19,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import javax.swing.text.TabableView;
@@ -36,7 +39,6 @@ public class CandidaturaController extends ApplicationController implements Tela
     @FXML private Button btn_sair;
     @FXML private AnchorPane tab_vagas;
     @FXML private AnchorPane tab_candidatos;
-    //@FXML private AnchorPane tab_RegistrarVagas;
     @FXML private AnchorPane tab_RegistrarCandidato;
     @FXML private AnchorPane tab_entrevistas;
     @FXML private TableView<Candidato> tabCandidatos;
@@ -151,6 +153,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         carregarEntrevistas();
         criarContextMenuCandidato();
         criarContextMenuEntrevistas();
+        criarContextMenuTodasCandidaturas();
     }
 
     public void initData(Usuario usuarioLogado) {
@@ -352,12 +355,18 @@ public class CandidaturaController extends ApplicationController implements Tela
             TelinhaAuxController controller = loader.getController();
 
             controller.initData(viewModel, entrevista, tela, vagaService, candidaturaService, usuarioService, entrevistaService);
-
+            Stage stage = new Stage();
+            stage.setTitle(tela);
+            stage.setScene(new Scene(root));
             Window ownerStage = (Window) tab_candidatos.getScene().getWindow();
-            SceneSwitcher.newfloatingscene(root, tela, ownerStage);
+            stage.initOwner(ownerStage);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
 
             carregarEntrevistas();
             tabEntrevistas.refresh();
+            carregarTodasCandidaturas();
+            tabTodasCandidaturas.refresh();
 
         } catch(IOException e){
             e.printStackTrace();
@@ -480,6 +489,47 @@ public class CandidaturaController extends ApplicationController implements Tela
         contextMenu.getItems().addAll(excluirItem, reagendarItem);
         tabEntrevistas.setRowFactory(tv -> {
             TableRow<AgendaViewModel> row = new TableRow<>();
+            row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+                if (isNowEmpty) {
+                    row.setContextMenu(null);
+                } else {
+                    row.setContextMenu(contextMenu);
+                }
+            });
+            return row;
+        });
+    }
+
+    private void criarContextMenuTodasCandidaturas() {
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem editarStatusItem = new MenuItem("Editar Status de Candidatura");
+        MenuItem agendarItem = new MenuItem("Agendar Entrevista");
+
+        editarStatusItem.setOnAction(event -> {
+            InfoCandidaturaViewModel viewModel = tabTodasCandidaturas.getSelectionModel().getSelectedItem(); //
+            if (viewModel == null) return;
+
+            try {
+                abrirModalAgendamento(viewModel, null, "Editar Status Candidatura"); //
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        agendarItem.setOnAction(event -> {
+            InfoCandidaturaViewModel viewModel = tabTodasCandidaturas.getSelectionModel().getSelectedItem();
+            if (viewModel == null) return;
+            try {
+                abrirModalAgendamento(viewModel, null, "Agendamento"); //
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        contextMenu.getItems().addAll(editarStatusItem, agendarItem);
+
+        tabTodasCandidaturas.setRowFactory(tv -> {
+            TableRow<InfoCandidaturaViewModel> row = new TableRow<>();
             row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
                 if (isNowEmpty) {
                     row.setContextMenu(null);
