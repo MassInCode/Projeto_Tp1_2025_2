@@ -3,6 +3,7 @@ package com.Projeto_Tp1_2025_2.controllers.admin;
 import com.Projeto_Tp1_2025_2.controllers.ApplicationController;
 import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
+import com.Projeto_Tp1_2025_2.models.admin.Administrador;
 import com.Projeto_Tp1_2025_2.models.admin.Gestor;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.recrutador.Contratacao;
@@ -41,6 +42,9 @@ public class GestaoController extends ApplicationController implements TelaContr
     private final Map<Integer, String> cacheRecrutadores = new HashMap<>();
 
     RelatorioGestao relatorio;
+
+    Administrador admin;
+    Gestor gestor;
 
     @FXML Button btn_sair;
     @FXML Button atribuirSelecao;
@@ -95,7 +99,13 @@ public class GestaoController extends ApplicationController implements TelaContr
     @FXML
     public void initData(Gestor gestor) {
         relatorio = new RelatorioGestao(gestor);
+        this.gestor = gestor;
         System.out.println("Instanciando relatório");
+    }
+
+    @FXML
+    public void initData2(Administrador admin) {
+        this.admin = admin;
     }
 
     @FXML
@@ -305,15 +315,6 @@ public class GestaoController extends ApplicationController implements TelaContr
     }
 
     @FXML
-    private void exporterma(ActionEvent event) throws IOException {
-        janelaSobreposta.setVisible(true);
-    }
-    @FXML
-    private void gerarf(ActionEvent event) throws IOException {
-
-    }
-
-    @FXML
     private void criarVaga() {
         try {
             Vaga vaga = new Vaga(cv_cargo.getText(), Double.parseDouble(cv_salario.getText()), cv_requisitos.getText(), cv_departamento.getText(), cv_regime.getText(), LocalDate.now(), StatusVaga.ATIVO);
@@ -467,6 +468,34 @@ public class GestaoController extends ApplicationController implements TelaContr
     }
 
     @FXML
+    private void gerarFolhadpag() throws IOException {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Escolher pasta para salvar o relatório");
+
+        Stage stage = (Stage) btn_filtrar.getScene().getWindow();
+
+        File pasta = directoryChooser.showDialog(stage);
+        FolhaPagamento folha;
+        if (gestor == null) {
+            folha = new FolhaPagamento(admin);
+        }
+        else
+        {
+            folha = new  FolhaPagamento(gestor);
+        }
+
+
+        if (pasta != null) {
+            String path = pasta.getAbsolutePath();
+
+            folha.gerar(path + "/folhadepagamento.pdf");
+        }
+
+        else {
+            System.out.println("cancelou");
+        }
+    }
+    @FXML
     private void cancelar() {
         cv_cargo.setText("");
         cv_salario.setText("");
@@ -513,6 +542,12 @@ public class GestaoController extends ApplicationController implements TelaContr
 
         search(tabela_pedidos, barraPesquisar, btn_filtrar, this::filtro, contratacoesBase);
 
+        tabela_vagas.setVisible(false);
+        tabela_pedidos.setVisible(true);
+    }
+
+    @FXML
+    private void abrirRegrasSal() {
         tabela_vagas.setVisible(false);
         tabela_pedidos.setVisible(true);
     }

@@ -3,6 +3,7 @@ package com.Projeto_Tp1_2025_2.controllers.admin;
 import com.Projeto_Tp1_2025_2.controllers.recrutamento.CandidaturaController;
 import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
 import com.Projeto_Tp1_2025_2.models.Usuario;
+import com.Projeto_Tp1_2025_2.models.admin.Administrador;
 import com.Projeto_Tp1_2025_2.models.admin.Gestor;
 import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
 import com.Projeto_Tp1_2025_2.controllers.TelaController;
