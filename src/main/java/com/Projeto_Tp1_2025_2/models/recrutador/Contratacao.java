@@ -9,32 +9,39 @@ import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
 import java.time.LocalDate;
 
 public class Contratacao {
-    private Candidato candidato;
-    private Vaga vaga;
-    private String dataContratacao;
-    private String regime;
-    private boolean autorizado;
+    private Recrutador recrutador;
+    private Entrevista entrevista;
+    private LocalDate dataPedido;
+    private String status; // "Pendente", "Aprovado", "Recusado"
 
-    public Contratacao(Candidato candidato, Vaga vaga, String dataContratacao, String regime) {
-        this.candidato = candidato;
-        this.vaga = vaga;
-        this.dataContratacao = dataContratacao;
-        this.regime = regime;
-        this.autorizado = false;
+    public Contratacao(Recrutador recrutador, Entrevista entrevista, LocalDate dataPedido) {
+        this.recrutador = recrutador;
+        this.entrevista = entrevista;
+        this.dataPedido = dataPedido;
+        this.status = "Pendente";
     }
 
-    public String getDataContratacao() {return dataContratacao;}
-    public String getRegime() {return regime;}
-
-    public Candidato getCandidato() {
-        return candidato;
+    public Recrutador getRecrutador() {
+        return recrutador;
     }
 
-    public Vaga getVaga() {
-        return vaga;
+    public void setRecrutador(Recrutador recrutador) {
+        this.recrutador = recrutador;
     }
 
-    public boolean isAutorizado() {
-        return autorizado;
+    public Entrevista getEntrevista() {
+        return entrevista;
+    }
+
+    public void setEntrevista(Entrevista entrevista) {
+        this.entrevista = entrevista;
+    }
+
+    public LocalDate getDataPedido() {
+        return dataPedido;
+    }
+
+    public void setDataPedido(LocalDate dataPedido) {
+        this.dataPedido = dataPedido;
     }
 }

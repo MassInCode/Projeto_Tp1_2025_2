@@ -128,14 +128,14 @@ public class RelatorioGestao {
            tabelaPedidos.setWidthPercentage(100);
            adicionarCabecalhoTabela(tabelaPedidos, "Candidato", "Vaga", "Status", "Data Contratação");
 
-           for (Contratacao c : pedidos) {
+           /*for (Contratacao c : pedidos) {
                tabelaPedidos.addCell(celulaTexto(c.getCandidato().getNome()));
                tabelaPedidos.addCell(celulaTexto(c.getVaga().getCargo()));
                tabelaPedidos.addCell(celulaTexto((c.isAutorizado()) ? "Autorizado" : "Não autorizado"));
                tabelaPedidos.addCell(celulaTexto(c.getDataContratacao() != null ?
                        c.getDataContratacao() : "-"));
            }
-           doc.add(tabelaPedidos);
+           doc.add(tabelaPedidos);*/
 
            // rodape
            Paragraph rodape = new Paragraph(

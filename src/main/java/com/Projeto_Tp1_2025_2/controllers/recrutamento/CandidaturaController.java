@@ -7,10 +7,7 @@ import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
 import com.Projeto_Tp1_2025_2.models.candidatura.StatusCandidatura;
-import com.Projeto_Tp1_2025_2.models.recrutador.AgendaViewModel;
-import com.Projeto_Tp1_2025_2.models.recrutador.Entrevista;
-import com.Projeto_Tp1_2025_2.models.recrutador.InfoCandidaturaViewModel;
-import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
+import com.Projeto_Tp1_2025_2.models.recrutador.*;
 import com.Projeto_Tp1_2025_2.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
@@ -29,14 +26,18 @@ import javafx.stage.Window;
 
 import javax.swing.text.TabableView;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javafx.scene.control.TextInputDialog;
 
 
 public class CandidaturaController extends ApplicationController implements TelaController {
+
+    Database db, dbRecrutadores;
 
     @FXML private Button btn_sair;
     @FXML private AnchorPane tab_vagas;
@@ -106,6 +107,18 @@ public class CandidaturaController extends ApplicationController implements Tela
     @FXML
     public void initialize() throws IOException {
 
+        try {
+            db = new Database(db_paths.get(DATABASES.PEDIDOS));
+            dbRecrutadores = new Database(db_paths.get(DATABASES.USUARIOS));
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Erro ao registrar pedido");
+            alert.setContentText("Ocorreu um erro ao salvar o pedido de contratação.");
+            alert.showAndWait();
+        }
+
         //choiceRegime.setItems(FXCollections.observableArrayList("CLT", "PJ", "ESTAGIO"));
         //choiceRegime.setValue("CLT");
 
@@ -168,6 +181,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         criarContextMenuEntrevistas();
         criarContextMenuTodasCandidaturas();
         criarContextMenuVaga();
+        criarContextMenuPedidosContratacao();
     }
 
     public void initData(Usuario usuarioLogado) {
@@ -225,8 +239,10 @@ public class CandidaturaController extends ApplicationController implements Tela
 
             MenuItem editarItem = new MenuItem("Editar vaga");
             MenuItem excluirItem = new MenuItem("Excluir vaga");
+            MenuItem solicitarContratacao = new MenuItem("Solicitar Contratação");
+            //solicitarContratacao.setOnAction(e -> realizarPedidoDeContratação(candidaturaSelecionada));
 
-            rowMenu.getItems().addAll(editarItem, excluirItem);
+            rowMenu.getItems().addAll(editarItem, excluirItem, solicitarContratacao);
 
             editarItem.setOnAction(e -> {
                 Vaga vagaSelecionada = tabelaRegistrarVagas.getSelectionModel().getSelectedItem();
@@ -244,6 +260,18 @@ public class CandidaturaController extends ApplicationController implements Tela
                 }
             });
 
+            solicitarContratacao.setOnAction(e -> {
+                Entrevista entrevistaSelecioanda = tabEntrevistas.getSelectionModel().getSelectedItem().getEntrevista();
+                if (entrevistaSelecioanda != null) {
+                    realizarPedidoDeContratacao(entrevistaSelecioanda);
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setHeaderText(null);
+                    alert.setContentText("Selecione uma entrevista antes de solicitar a contratação!");
+                    alert.showAndWait();
+                }
+            });
+
             row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
                 if(isNowEmpty){
                     row.setContextMenu(null);
@@ -254,6 +282,73 @@ public class CandidaturaController extends ApplicationController implements Tela
 
             return row;
         });
+    }
+
+    private void criarContextMenuPedidosContratacao() {
+        tabEntrevistas.setRowFactory(tv -> {
+            TableRow<AgendaViewModel> row = new TableRow<>(); // row especifica
+            ContextMenu rowMenu = new ContextMenu();
+
+            MenuItem solicitarContratacao = new MenuItem("Solicitar Contratação");
+
+            rowMenu.getItems().addAll(solicitarContratacao);
+
+            solicitarContratacao.setOnAction(e -> {
+                Entrevista entrevistaSelecioanda = tabEntrevistas.getSelectionModel().getSelectedItem().getEntrevista();
+                if (entrevistaSelecioanda != null) {
+                    realizarPedidoDeContratacao(entrevistaSelecioanda);
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setHeaderText(null);
+                    alert.setContentText("Selecione uma entrevista antes de solicitar a contratação!");
+                    alert.showAndWait();
+                }
+            });
+
+            row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+                if(isNowEmpty){
+                    row.setContextMenu(null);
+                } else{
+                    row.setContextMenu(rowMenu);
+                }
+            });
+
+            return row;
+        });
+    }
+
+    private void realizarPedidoDeContratacao(Entrevista entrevista) {
+        //isAprovado tem q implementar usando a nota
+        if (!entrevista.isAprovada()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText(null);
+            alert.setContentText("Somente candidatos aprovados podem ser contratados!");
+            alert.showAndWait();
+            return;
+        }
+
+
+        try {
+            for(var mapa : db.getData("pedidos")){
+                if(db.convertMaptoObject((Map<String, Object>) mapa.get("entrevista"), Entrevista.class).getId() == entrevista.getId()){
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setHeaderText(null);
+                    alert.setContentText("Já foi realizado um pedido a essa entrevista.");
+                    alert.showAndWait();
+                    return;
+                }
+            }
+
+            Recrutador recrutador = (Recrutador) dbRecrutadores.searchUsuario("usuarios", "id", String.valueOf(entrevista.getRecrutadorId()));
+            Contratacao contratacao = new Contratacao(recrutador, entrevista, LocalDate.now());
+            db.addObject(contratacao, "pedidos");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Erro ao registrar pedido");
+            alert.setContentText("Ocorreu um erro ao salvar o pedido de contratação.");
+            alert.showAndWait();
+        }
     }
 
     @FXML

@@ -82,4 +82,7 @@ public class Entrevista {
     public void setNota(double nota) {
         this.nota = nota;
     }
+    public boolean isAprovada() {
+        return true;
+    }
 }
