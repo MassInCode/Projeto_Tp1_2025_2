@@ -1,4 +1,34 @@
 {
-  "id" : "0",
-  "usuarios" : []
+  "id" : "3",
+  "usuarios" : [ {
+    "regime" : "NULL",
+    "nome" : "a",
+    "vale_alimentacao" : 0.0,
+    "senha" : "Aa1",
+    "dataContratacao" : "10/11/2025",
+    "contador" : 1,
+    "vale_trasporte" : 0.0,
+    "cpf" : "a",
+    "departamento" : "NULL",
+    "id" : 0,
+    "salariobruto" : 0.0,
+    "cargo" : "ADMIN",
+    "email" : "a",
+    "status" : true
+  }, {
+    "regime" : "NULL",
+    "nome" : "b",
+    "vale_alimentacao" : 0.0,
+    "senha" : "Bb1",
+    "dataContratacao" : "10/11/2025",
+    "contador" : 3,
+    "vale_trasporte" : 0.0,
+    "cpf" : "b",
+    "departamento" : "NULL",
+    "id" : 2,
+    "salariobruto" : 0.0,
+    "cargo" : "GESTOR",
+    "email" : "b",
+    "status" : true
+  } ]
 }
