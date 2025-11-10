@@ -67,11 +67,11 @@
                               </TableView>
                               <TableView fx:id="tabela_pedidos" layoutX="23.0" layoutY="23.0" prefHeight="654.0" prefWidth="966.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <columns>
-                                    <TableColumn prefWidth="231.0" text="Candidato" />
-                                    <TableColumn prefWidth="204.0" text="Vaga" />
-                                    <TableColumn prefWidth="143.0" text="Data Contratação" />
-                                    <TableColumn prefWidth="204.0" text="Regime" />
-                                    <TableColumn prefWidth="170.0" text="Autorizado" />
+                                    <TableColumn fx:id="colunaCandidato" prefWidth="231.0" text="Candidato" />
+                                    <TableColumn fx:id="colunaVaga" prefWidth="204.0" text="Vaga" />
+                                    <TableColumn fx:id="colunaData" prefWidth="143.0" text="Data Contratação" />
+                                    <TableColumn fx:id="colunaPRegime" prefWidth="204.0" text="Regime" />
+                                    <TableColumn fx:id="colunaAutorizado" prefWidth="170.0" text="Autorizado" />
                                  </columns>
                               </TableView>
                            </children>
