@@ -24,17 +24,19 @@ public class Contratacao {
     }
 
     private int id;
+    private String regime;
     private Recrutador recrutador;
     private Entrevista entrevista;
     private LocalDate dataPedido;
     private String status; // "Pendente", "Aprovado", "Recusado"
 
-    public Contratacao(Recrutador recrutador, Entrevista entrevista, LocalDate dataPedido) {
+    public Contratacao(Recrutador recrutador, Entrevista entrevista, LocalDate dataPedido, String regime) {
         this.recrutador = recrutador;
         this.entrevista = entrevista;
         this.dataPedido = dataPedido;
         this.status = "Pendente";
         this.id = contador++;
+        this.regime = regime;
     }
 
     // ISA OU ENZO: LEMBRAR DE, QUANDO CRIAR O PEDIDO, SETAR O ID ATUAL
@@ -44,12 +46,13 @@ public class Contratacao {
         db.setActualId(++id);
      */
 
-    public Contratacao(int id, Recrutador recrutador, Entrevista entrevista, LocalDate dataPedido) {
+    public Contratacao(int id, Recrutador recrutador, Entrevista entrevista, LocalDate dataPedido, String regime) {
         this.recrutador = recrutador;
         this.entrevista = entrevista;
         this.dataPedido = dataPedido;
         this.status = "Pendente";
         this.id = id;
+        this.regime = regime;
     }
 
     public Recrutador getRecrutador() {

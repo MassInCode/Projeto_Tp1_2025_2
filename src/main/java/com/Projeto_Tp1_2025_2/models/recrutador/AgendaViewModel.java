@@ -21,6 +21,9 @@ public class AgendaViewModel {
     public String getNomeCandidato() {
         return (candidato != null) ? candidato.getNome() : "Candidato não encontrado";
     }
+    public String getRegimeVaga() {
+        return (vaga != null) ? vaga.getRegimeContratacao() : "Vaga não encontrada";
+    }
     public String getCargoVaga() {
         return (vaga != null) ? vaga.getCargo() : "Vaga não encontrada";
     }

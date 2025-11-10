@@ -150,13 +150,13 @@ public class GestaoController extends ApplicationController implements TelaContr
 
             return new SimpleStringProperty(builder.toString());
         });
-
+/*
         colunaCandidato.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCandidato().getNome()));
         colunaVaga.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getVaga().getCargo()));
         colunaData.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataContratacao()));
         colunaPRegime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRegime()));
         colunaAutorizado.setCellValueFactory(cellData -> new SimpleStringProperty((cellData.getValue().isAutorizado()) ? "Autorizado" : "Não autorizado"));
-
+*/
         // ------------- Carregamento de Dados -------------
         carregarDados();
         loadRecrutadores();
@@ -286,10 +286,10 @@ public class GestaoController extends ApplicationController implements TelaContr
             for (Map<String, Object> mapa : dados2) {
                 Candidato candidato = pdb.convertMaptoObject((Map<String, Object>) mapa.get("candidato"), Candidato.class);
                 Vaga vaga = pdb.convertMaptoObject((Map<String, Object>) mapa.get("vaga"), Vaga.class);
-
+                /*
                 contratacoesBase.add(new Contratacao(
                         candidato, vaga, mapa.get("dataContratacao").toString(), mapa.get("regime").toString()
-                ));
+                ));*/
             }
 
             tabela_pedidos.setItems(contratacoesBase);
@@ -428,14 +428,14 @@ public class GestaoController extends ApplicationController implements TelaContr
             };
         }
 
-        else if (classe instanceof Contratacao pedido) {
+        /*else if (classe instanceof Contratacao pedido) {
             return switch (campo) {
                 case "Vaga" -> pedido.getVaga().getCargo();
                 case "Data Contratação" -> pedido.getDataContratacao();
                 case "Regime" -> pedido.getRegime();
                 default -> pedido.getCandidato().getNome();
             };
-        }
+        }*/
 
         else {
             throw new BadFilter();

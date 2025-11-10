@@ -260,18 +260,6 @@ public class CandidaturaController extends ApplicationController implements Tela
                 }
             });
 
-            solicitarContratacao.setOnAction(e -> {
-                Entrevista entrevistaSelecioanda = tabEntrevistas.getSelectionModel().getSelectedItem().getEntrevista();
-                if (entrevistaSelecioanda != null) {
-                    realizarPedidoDeContratacao(entrevistaSelecioanda);
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setHeaderText(null);
-                    alert.setContentText("Selecione uma entrevista antes de solicitar a contratação!");
-                    alert.showAndWait();
-                }
-            });
-
             row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
                 if(isNowEmpty){
                     row.setContextMenu(null);
@@ -294,7 +282,7 @@ public class CandidaturaController extends ApplicationController implements Tela
             rowMenu.getItems().addAll(solicitarContratacao);
 
             solicitarContratacao.setOnAction(e -> {
-                Entrevista entrevistaSelecioanda = tabEntrevistas.getSelectionModel().getSelectedItem().getEntrevista();
+                var entrevistaSelecioanda = tabEntrevistas.getSelectionModel().getSelectedItem();
                 if (entrevistaSelecioanda != null) {
                     realizarPedidoDeContratacao(entrevistaSelecioanda);
                 } else {
@@ -317,9 +305,9 @@ public class CandidaturaController extends ApplicationController implements Tela
         });
     }
 
-    private void realizarPedidoDeContratacao(Entrevista entrevista) {
+    private void realizarPedidoDeContratacao(AgendaViewModel entrevista) {
         //isAprovado tem q implementar usando a nota
-        if (!entrevista.isAprovada()) {
+        if (!entrevista.getEntrevista().isAprovada()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText(null);
             alert.setContentText("Somente candidatos aprovados podem ser contratados!");
@@ -330,7 +318,7 @@ public class CandidaturaController extends ApplicationController implements Tela
 
         try {
             for(var mapa : db.getData("pedidos")){
-                if(db.convertMaptoObject((Map<String, Object>) mapa.get("entrevista"), Entrevista.class).getId() == entrevista.getId()){
+                if(db.convertMaptoObject((Map<String, Object>) mapa.get("entrevista"), Entrevista.class).getId() == entrevista.getEntrevista().getId()){
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setHeaderText(null);
                     alert.setContentText("Já foi realizado um pedido a essa entrevista.");
@@ -339,9 +327,11 @@ public class CandidaturaController extends ApplicationController implements Tela
                 }
             }
 
-            Recrutador recrutador = (Recrutador) dbRecrutadores.searchUsuario("usuarios", "id", String.valueOf(entrevista.getRecrutadorId()));
-            Contratacao contratacao = new Contratacao(recrutador, entrevista, LocalDate.now());
+            Recrutador recrutador = (Recrutador) dbRecrutadores.searchUsuario("usuarios", "id", String.valueOf(entrevista.getEntrevista().getRecrutadorId()));
+            Contratacao contratacao = new Contratacao(recrutador, entrevista.getEntrevista(), LocalDate.now(), entrevista.getRegimeVaga());
             db.addObject(contratacao, "pedidos");
+            int id = contratacao.getId();
+            db.setActualId(++id);
         } catch (Exception e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
