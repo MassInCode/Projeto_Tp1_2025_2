@@ -1,6 +1,8 @@
 package com.Projeto_Tp1_2025_2.controllers.recrutamento;
 
+import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
+import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
 import com.Projeto_Tp1_2025_2.models.recrutador.StatusVaga;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
 import com.Projeto_Tp1_2025_2.util.*;
@@ -38,15 +40,17 @@ public class EditarController {
     VagaService vagaService;
     CandidaturaService candidaturaService;
     List<Vaga> vagasAtivas = new ArrayList<>();
+    private Usuario usuarioLogado;
 
 
     //RECEBE AS INFORMAÇÕES DA TELA QUE CHAMOU ELE
-    @FXML public void initData(Candidato candidatoSelecionado, String tela, VagaService vs, CandidaturaService cs, UsuarioService us) throws IOException {
+    @FXML public void initData(Candidato candidatoSelecionado, Usuario usuarioLogado, String tela, VagaService vs, CandidaturaService cs, UsuarioService us) throws IOException {
 
         this.candidato = candidatoSelecionado;
         vagaService = vs;
         candidaturaService = cs;
         usuarioService = us;
+        this.usuarioLogado = usuarioLogado;
 
         if(tela.equals("Registrar Candidatura: ")){
             carregarNomesVagas();
@@ -72,22 +76,29 @@ public class EditarController {
 
     //CARREGA AS VAGAS NA CHOICE BOX
     private void carregarNomesVagas() throws IOException {
+        // Proteção para garantir que o initData já correu
+        if (usuarioLogado == null) {
+            System.err.println("Erro: usuarioLogado é nulo. Não é possível carregar vagas.");
+            return;
+        }
 
-        List<Vaga> vagasAtivas = new ArrayList<>();
+        List<Vaga> vagasAtivasDoRecrutador = new ArrayList<>();
         try{
-            List<Vaga> allVagas = vagaService.getAllVagas();
+            int recrutadorId = this.usuarioLogado.getId();
 
-            for(Vaga vaga : allVagas){
-                if(vaga.getStatus() == StatusVaga.ATIVO){
-                    vagasAtivas.add(vaga);
+            List<Vaga> todasAsVagas = vagaService.getAllVagas();
+
+            for(Vaga vaga : todasAsVagas){
+
+                if(vaga.getRecrutadorId() == recrutadorId && vaga.getStatus() == StatusVaga.ATIVO){
+                    vagasAtivasDoRecrutador.add(vaga);
                 }
             }
         } catch (IOException e){
             e.printStackTrace();
         }
 
-
-        ObservableList<Vaga> listaObservavel = FXCollections.observableArrayList(vagasAtivas);
+        ObservableList<Vaga> listaObservavel = FXCollections.observableArrayList(vagasAtivasDoRecrutador);
         cbNomesVagas.setItems(listaObservavel);
 
         cbNomesVagas.setConverter(new StringConverter<Vaga>() {

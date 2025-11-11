@@ -18,7 +18,7 @@ public class InfoCandidaturaViewModel {
         this.candidatura = candidatura;
     }
 
-    public InfoCandidaturaViewModel(Candidato candidato, Vaga vaga, Candidatura candidatura) {
+    public InfoCandidaturaViewModel(Usuario candidato, Vaga vaga, Candidatura candidatura) {
         this.usuario = candidato;
         this.vaga = vaga;
         this.candidatura = candidatura;

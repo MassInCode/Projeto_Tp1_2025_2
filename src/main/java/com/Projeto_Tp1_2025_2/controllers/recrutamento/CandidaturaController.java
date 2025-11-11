@@ -183,10 +183,7 @@ public class CandidaturaController extends ApplicationController implements Tela
 
         nowVisible = tab_candidatos;
         nowVisible.setVisible(false);
-        carregarTodasCandidaturas();
-        carregarCandidatos();
-        carregarVagas();
-        carregarEntrevistas();
+
         criarContextMenuCandidato();
         criarContextMenuEntrevistas();
         criarContextMenuTodasCandidaturas();
@@ -196,6 +193,16 @@ public class CandidaturaController extends ApplicationController implements Tela
     public void initData(Usuario usuarioLogado) {
         this.usuarioLogado = usuarioLogado;
         System.out.println("Recrutador " + this.usuarioLogado.getNome() + " logou com sucesso.");
+
+        try {
+            this.allCandidaturas = candidaturaService.getAllCandidaturas(); // Atualiza a lista principal
+            carregarTodasCandidaturas();
+            carregarCandidatos();
+            carregarVagas();
+            carregarEntrevistas();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -458,8 +465,7 @@ public class CandidaturaController extends ApplicationController implements Tela
             FXMLLoader loader = new FXMLLoader(resource);
             Parent root = loader.load();
             EditarController controller = loader.getController();
-            controller.initData(candidatoSelecionado, tela, vagaService, candidaturaService, usuarioService);
-
+            controller.initData(candidatoSelecionado, this.usuarioLogado, tela, vagaService, candidaturaService, usuarioService);
             Stage stage = new Stage();
             stage.setTitle(tela + candidatoSelecionado.getNome());
             stage.setScene(new Scene(root));
@@ -486,7 +492,7 @@ public class CandidaturaController extends ApplicationController implements Tela
             FXMLLoader loader = new FXMLLoader(resource);
             Parent root = loader.load();
             InfoCandidaturaController controller = loader.getController();
-            controller.initData(candidatoSelecionado, tela, vagaService, candidaturaService, usuarioService, entrevistaService);
+            controller.initData(candidatoSelecionado, this.usuarioLogado, tela, vagaService, candidaturaService, usuarioService, entrevistaService);
             Stage stage = new Stage();
             stage.setTitle(tela);
             stage.setScene(new Scene(root));
@@ -872,14 +878,15 @@ public class CandidaturaController extends ApplicationController implements Tela
     //==============CARREGA DADOS DAS TABELAS==============
     private void carregarCandidatos() throws IOException {
         try{
-            //List<Usuario> allUsuarios = db.getAllUsuarios("usuarios");
             List<Usuario> allUsuarios = usuarioService.getAllUsuarios();
             List<Candidato> candidatos = new ArrayList<>();
+
             for(Usuario u : allUsuarios){
                 if(u instanceof Candidato){
                     candidatos.add((Candidato) u);
                 }
             }
+
             candidatosBase.clear();
             candidatosBase.addAll(candidatos);
         } catch (IOException e){
@@ -888,15 +895,10 @@ public class CandidaturaController extends ApplicationController implements Tela
     }
 
     private void carregarVagas() throws IOException {
-
-        try{
-            List<Vaga> vagas = vagaService.getAllVagas();
-            vagasBase.clear();
-            vagasBase.addAll(vagas);
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-
+        Recrutador recrutadorLogado = (Recrutador) usuarioLogado;
+        List<Vaga> minhasVagas = recrutadorLogado.getVagas();
+        vagasBase.clear();
+        vagasBase.addAll(minhasVagas);
     }
 
     private void carregarEntrevistas() {
@@ -923,15 +925,26 @@ public class CandidaturaController extends ApplicationController implements Tela
     }
 
     private void carregarTodasCandidaturas() {
+        if (usuarioLogado == null) return;
+
         try {
             List<InfoCandidaturaViewModel> listaViewModel = new ArrayList<>();
+            Recrutador recrutadorLogado = (Recrutador) usuarioLogado;
+            List<Vaga> minhasVagas = recrutadorLogado.getVagas();
+
+            java.util.Set<Integer> minhasVagaIds = new java.util.HashSet<>();
+            for (Vaga v : minhasVagas) {
+                minhasVagaIds.add(v.getId());
+            }
 
             List<Candidatura> todasCandidaturas = candidaturaService.getAllCandidaturas();
 
             for (Candidatura c : todasCandidaturas) {
-                Vaga v = vagaService.getVagaPorId(c.getVagaId());
-                Candidato cand = (Candidato) usuarioService.getUsuarioPorId(c.getCandidatoId());
-                listaViewModel.add(new InfoCandidaturaViewModel(cand, v, c));
+                if (minhasVagaIds.contains(c.getVagaId())) {
+                    Vaga v = vagaService.getVagaPorId(c.getVagaId());
+                    Usuario cand = usuarioService.getUsuarioPorId(c.getCandidatoId());
+                    listaViewModel.add(new InfoCandidaturaViewModel(cand, v, c));
+                }
             }
 
             todasCandidaturasBase.clear();
