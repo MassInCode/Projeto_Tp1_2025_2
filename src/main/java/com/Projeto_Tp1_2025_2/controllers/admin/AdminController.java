@@ -6,6 +6,7 @@ import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
 import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
 import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
+import com.Projeto_Tp1_2025_2.models.funcionario.RegrasSalario;
 import com.Projeto_Tp1_2025_2.util.Database;
 import com.Projeto_Tp1_2025_2.util.SceneSwitcher;
 import com.Projeto_Tp1_2025_2.util.UsuarioService;
@@ -33,15 +34,38 @@ public class AdminController extends ApplicationController implements TelaContro
     Database db;
     private final ObservableList<Funcionario> funcionariosBase = FXCollections.observableArrayList();
 
+    RegrasSalario regras = RegrasSalario.carregar();
+
+    //interface Regras salario
+    // CLT
+    @FXML private TextField txtValeAlimentacaoCLT;
+    @FXML private CheckBox chkValeAlimentacaoCLT;
+    @FXML private TextField txtValeTransporteCLT;
+    @FXML private CheckBox chkValeTransporteCLT;
+    @FXML private TextField txtImpostoCLT;
+
+    // PJ
+    @FXML private TextField txtBonusPJ;
+    @FXML private CheckBox chkBonusPJ;
+
+    // Estagiário
+    @FXML private TextField txtBolsaEstagiario;
+    @FXML private CheckBox chkValeTransporteEst;
+    @FXML private CheckBox chkValeAlimentacaoEst;
+
+    // Botões
+    @FXML private Button btnCancelarRS;
+    @FXML private Button btnSalvarRS;
+
     @FXML private AnchorPane janelaSobreposta;
     @FXML private AnchorPane selecaoJanela;
     @FXML private AnchorPane cadastrarJanela;
+    @FXML private AnchorPane regrasJanela;
 
     @FXML private Button btn_sair;
     @FXML private Button btn_gestor;
 
     @FXML private TableView<Funcionario> tabelaFuncionarios;
-    @FXML private TableView<?> tabelaSalarios;
 
     @FXML private TextField barraBuscar;
     @FXML private ComboBox<String> btn_filtrar;
@@ -302,20 +326,81 @@ public class AdminController extends ApplicationController implements TelaContro
     private void exporterma(ActionEvent event) throws IOException {
         janelaSobreposta.setVisible(true);
     }
-    @FXML
-    private void gerarf(ActionEvent event) throws IOException {
 
+    @FXML
+    private void cancelarRS(ActionEvent event) {
+        regrasJanela.setVisible(false);
+    }
+
+    @FXML
+    private void salvarRS(ActionEvent event) {
+        try {
+            // Lê os valores dos campos numéricos
+            double valeAlimentacaoCLT = Double.parseDouble(txtValeAlimentacaoCLT.getText());
+            double valeTransporteCLT = Double.parseDouble(txtValeTransporteCLT.getText());
+            double impostoCLT = Double.parseDouble(txtImpostoCLT.getText());
+            double bonusPJ = Double.parseDouble(txtBonusPJ.getText());
+            double bolsaEst = Double.parseDouble(txtBolsaEstagiario.getText());
+
+            // Atualiza valores CLT
+            regras.setValeAlimento(valeAlimentacaoCLT);
+            regras.setValeTransport(valeTransporteCLT);
+            regras.setImpostos(impostoCLT);
+            regras.setValealiCLT(chkValeAlimentacaoCLT.isSelected());
+            regras.setValetransCLT(chkValeTransporteCLT.isSelected());
+
+            // Atualiza valores PJ
+            regras.setBonus_PJ(bonusPJ);
+            regras.setBonusPJ(chkBonusPJ.isSelected());
+
+            // Atualiza valores Estagiário
+            regras.setBolsaFixa(bolsaEst);
+            regras.setValetransEST(chkValeTransporteEst.isSelected());
+            regras.setValealiEST(chkValeAlimentacaoEst.isSelected());
+
+            System.out.println("Regras atualizadas com sucesso:");
+            System.out.println("  CLT - VA: " + regras.getValeAlimento() + " | Ativo: " + regras.isValealiCLT());
+            System.out.println("  CLT - VT: " + regras.getValeTransport() + " | Ativo: " + regras.isValetransCLT());
+            System.out.println("  Impostos: " + regras.getImpostos());
+            System.out.println("  PJ - Bônus: " + regras.getBonus_PJ() + " | Ativo: " + regras.isBonusPJ());
+            System.out.println("  Estagiário - Bolsa: " + regras.getBolsaFixa());
+            System.out.println("  Estagiário - VA: " + regras.isValealiEST() + " | VT: " + regras.isValetransEST());
+
+            // Fecha a janela
+            regrasJanela.setVisible(false);
+
+        } catch (NumberFormatException e) {
+            System.err.println("Erro: valor inválido em um dos campos numéricos!");
+        }
     }
 
     @FXML
     private void regras() {
-        tabelaFuncionarios.setVisible(false);
-        tabelaSalarios.setVisible(true);
+        regrasJanela.setVisible(true);
+
+        // CLT
+        txtValeAlimentacaoCLT.setText(String.valueOf(regras.getValeAlimento()));
+        chkValeAlimentacaoCLT.setSelected(regras.isValealiCLT());
+
+        txtValeTransporteCLT.setText(String.valueOf(regras.getValeTransport()));
+        chkValeTransporteCLT.setSelected(regras.isValetransCLT());
+
+        txtImpostoCLT.setText(String.valueOf(regras.getImpostos()));
+
+        // PJ
+        txtBonusPJ.setText(String.valueOf(regras.getBonus_PJ()));
+        chkBonusPJ.setSelected(regras.isBonusPJ());
+
+        // Estagiário
+        txtBolsaEstagiario.setText(String.valueOf(regras.getBolsaFixa()));
+        chkValeTransporteEst.setSelected(regras.isValetransEST());
+        chkValeAlimentacaoEst.setSelected(regras.isValealiEST());
+
     }
+
 
     @FXML
     private void cadastrar() {
-        tabelaSalarios.setVisible(false);
         tabelaFuncionarios.setVisible(true);
     }
 

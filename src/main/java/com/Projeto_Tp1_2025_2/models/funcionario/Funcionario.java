@@ -11,15 +11,14 @@
 
     public class Funcionario extends Usuario{
         private double salariobruto;
-        private double vale_trasporte;
-        private double vale_alimentacao;
+        private double salarioliquido;
         private boolean status;
 
         // essa annotation serve para o localdate ser apropriadamente alocado na database
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
         private LocalDate dataContratacao;
 
-        private String regime;
+        private Regime regime;
         private String departamento;
         private String cargoContratado;
 
@@ -28,7 +27,7 @@
             this.salariobruto = salario;
             this.status = status;
             this.dataContratacao = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
-            this.regime = regime;
+            this.regime = descobrirRegime(regime);
             this.departamento = departamento;
             this.cargoContratado = cargo;
         }
@@ -43,7 +42,7 @@
             this.salariobruto = salario;
             this.status = status;
             this.dataContratacao = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
-            this.regime = regime;
+            this.regime = descobrirRegime(regime);
             this.departamento = departamento;
             this.cargoContratado = cargo;
         }
@@ -53,7 +52,7 @@
             this.salariobruto = 0.0;
             this.status = false;
             this.dataContratacao = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
-            this.regime = "NULL";
+            this.regime = Regime.FORADEREGIME;
             this.departamento = "NULL";
             this.cargoContratado = cargo;
         }
@@ -63,7 +62,7 @@
             this.salariobruto = 0.0;
             this.status = false;
             this.dataContratacao = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
-            this.regime = "NULL";
+            this.regime = Regime.FORADEREGIME;
             this.departamento = "NULL";
             this.cargoContratado = user.getCargo();
         }
@@ -75,19 +74,13 @@
             this.salariobruto = salariobruto;
             this.status = true;
             this.dataContratacao = LocalDate.now();
-            this.regime = regime;
+            this.regime = descobrirRegime(regime);
             this.departamento = departamento;
             this.cargoContratado = cargoContratado;
         }
 
         public double getSalariobruto() {
             return salariobruto;
-        }
-        public double getVale_alimentacao() {
-            return vale_alimentacao;
-        }
-        public double getVale_trasporte() {
-            return vale_trasporte;
         }
         public String getDataContratacao() {
             return dataContratacao.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -105,8 +98,14 @@
             this.departamento = departamento;
             this.status = status;
         }
+        public Regime descobrirRegime(String regime)
+        {
+            if (regime.equals("CLT")) return Regime.CLT;
+            else if (regime.equals("PJ")) {return Regime.PJ;}
+            else {return Regime.ESTAGIARIO;}
+        }
 
-        public String getRegime() {
+        public Regime getRegime() {
             return regime;
         }
 

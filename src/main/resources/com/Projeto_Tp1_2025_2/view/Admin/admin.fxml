@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="anchorpane" stylesheets="@admin.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.admin.AdminController">
     <children>
@@ -60,19 +60,6 @@
                                             <TableColumn fx:id="colunaStatus" prefWidth="150.0" text="Status" />
                                         </columns>
                                     </TableView>
-
-                                    <!-- Tabela de Regras Salariais -->
-                                    <TableView fx:id="tabelaSalarios" prefHeight="618.0" prefWidth="930.0" visible="false">
-                                        <columns>
-                                            <TableColumn prefWidth="180.0" text="Nome" />
-                                            <TableColumn prefWidth="150.0" text="Salário" />
-                                            <TableColumn prefWidth="100.0" text="Bônus" />
-                                            <TableColumn prefWidth="100.0" text="Alimentação" />
-                                            <TableColumn prefWidth="100.0" text="Transporte" />
-                                            <TableColumn prefWidth="150.0" text="Cargo" />
-                                            <TableColumn prefWidth="150.0" text="Tipo Contratação" />
-                                        </columns>
-                                    </TableView>
                                 </StackPane>
 
                             </children>
@@ -81,34 +68,6 @@
                     </children>
                 </HBox>
             </children>
-        </AnchorPane>
-
-        <AnchorPane fx:id="janelaSobreposta" style="-fx-background-color: rgba(0,0,0,0.5);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <StackPane alignment="CENTER" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                <VBox alignment="CENTER" prefHeight="300" prefWidth="500" style="-fx-background-color: null; -fx-padding: 20; -fx-background-radius: 10;">
-                    <Pane prefHeight="200.0" prefWidth="895.0">
-                        <children>
-                            <Pane layoutX="495.0" layoutY="-69.0" prefHeight="339.0" prefWidth="250.0" style="-fx-background-color: white;" stylesheets="@admin.css">
-                                <children>
-                                    <Label layoutX="23.0" layoutY="26.0" prefHeight="68.0" prefWidth="205.0" style="-fx-font-size: 18px;" text="Tamo exportando, tamo exportando" />
-                                    <Button layoutX="73.0" layoutY="250.0" onAction="#fecharJanela" prefHeight="55.0" prefWidth="105.0" text="EXPORTAR" />
-                                    <CheckBox layoutX="70.0" layoutY="188.0" mnemonicParsing="false" text="Eu sou um robo?" />
-                                    <MenuButton layoutX="55.0" layoutY="119.0" mnemonicParsing="false" text="Onde que eu coloco">
-                                        <items>
-                                            <MenuItem mnemonicParsing="false" text="Action 1" />
-                                            <MenuItem mnemonicParsing="false" text="Action 2" />
-                                        </items>
-                                    </MenuButton>
-                                    <Button layoutX="223.0" layoutY="2.0" mnemonicParsing="false" onAction="#fecharJanela" prefHeight="25.0" prefWidth="24.0" style="-fx-background-color: red;" text="X" />
-                                </children>
-                                <effect>
-                                    <Blend />
-                                </effect>
-                            </Pane>
-                        </children>
-                    </Pane>
-                </VBox>
-            </StackPane>
         </AnchorPane>
       <AnchorPane fx:id="selecaoJanela" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: rgba(0,0,0,0.5);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -164,6 +123,147 @@
                               <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelar" prefHeight="35.0" prefWidth="120.0" styleClass="btn_cancelar" text="Cancelar" textFill="WHITE" />
                            </children>
                         </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="regrasJanela" layoutX="10.0" layoutY="10.0" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: rgba(0,0,0,0.5);" visible="false">
+         <children>
+            <AnchorPane layoutX="392.0" layoutY="152.0" prefHeight="480.0" prefWidth="495.0" styleClass="telaaction">
+               <children>
+                  <VBox alignment="CENTER" layoutX="174.0" layoutY="63.0" prefHeight="411.0" prefWidth="478.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label text="Regras Salarias">
+                           <font>
+                              <Font name="System Bold" size="36.0" />
+                           </font>
+                        </Label>
+                        <HBox prefHeight="0.0" prefWidth="478.0">
+                           <children>
+                              <Pane prefHeight="200.0" prefWidth="200.0" />
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" height="1.0" stroke="TRANSPARENT" strokeType="INSIDE" width="225.0" />
+                              <Pane prefHeight="200.0" prefWidth="200.0" />
+                           </children>
+                        </HBox>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Regras CLT" />
+                        <HBox prefHeight="4.0" prefWidth="478.0">
+                           <children>
+                              <Pane prefHeight="98.0" prefWidth="140.0" />
+                              <VBox prefHeight="70.0" prefWidth="230.0">
+                                 <children>
+                                    <HBox alignment="CENTER" prefHeight="18.0" prefWidth="220.0">
+                                       <children>
+                                          <Label prefHeight="24.0" prefWidth="103.0" text="Vale-Alimentação" />
+                                          <TextField fx:id="txtValeAlimentacaoCLT" prefHeight="26.0" prefWidth="58.0" />
+                                          <Label prefHeight="18.0" prefWidth="19.0" />
+                                          <CheckBox fx:id="chkValeAlimentacaoCLT" mnemonicParsing="false" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="18.0" prefWidth="220.0">
+                                       <children>
+                                          <Label prefHeight="24.0" prefWidth="103.0" text="Vale-Transporte" />
+                                          <TextField fx:id="txtValeTransporteCLT" prefHeight="18.0" prefWidth="58.0" />
+                                          <Label prefHeight="18.0" prefWidth="19.0" />
+                                          <CheckBox fx:id="chkValeTransporteCLT" mnemonicParsing="false" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="18.0" prefWidth="220.0">
+                                       <children>
+                                          <Label prefHeight="24.0" prefWidth="171.0" text="Porcentagem de Impostos" />
+                                          <TextField fx:id="txtImpostoCLT" prefHeight="26.0" prefWidth="29.0" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <Pane prefHeight="98.0" prefWidth="140.0" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="0.0" prefWidth="478.0">
+                           <children>
+                              <Pane prefHeight="200.0" prefWidth="200.0" />
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" height="1.0" stroke="TRANSPARENT" strokeType="INSIDE" width="225.0" />
+                              <Pane prefHeight="200.0" prefWidth="200.0" />
+                           </children>
+                        </HBox>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Regras PJ" wrappingWidth="50.1796875" />
+                        <HBox prefHeight="4.0" prefWidth="478.0">
+                           <children>
+                              <Pane prefHeight="98.0" prefWidth="140.0" />
+                              <VBox prefHeight="70.0" prefWidth="230.0">
+                                 <children>
+                                    <HBox alignment="CENTER" prefHeight="18.0" prefWidth="220.0">
+                                       <children>
+                                          <Label prefHeight="24.0" prefWidth="59.0" text="Bônus" />
+                                          <TextField fx:id="txtBonusPJ" prefHeight="26.0" prefWidth="58.0" />
+                                          <Label prefHeight="18.0" prefWidth="19.0" />
+                                          <CheckBox fx:id="chkBonusPJ" mnemonicParsing="false" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <Pane prefHeight="98.0" prefWidth="140.0" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="0.0" prefWidth="478.0">
+                           <children>
+                              <Pane prefHeight="200.0" prefWidth="200.0" />
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" height="1.0" stroke="TRANSPARENT" strokeType="INSIDE" width="225.0" />
+                              <Pane prefHeight="200.0" prefWidth="200.0" />
+                           </children>
+                        </HBox>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Regras Estágiario" />
+                        <HBox prefHeight="4.0" prefWidth="478.0">
+                           <children>
+                              <Pane prefHeight="98.0" prefWidth="140.0" />
+                              <VBox prefHeight="70.0" prefWidth="230.0">
+                                 <children>
+                                    <HBox alignment="CENTER" prefHeight="18.0" prefWidth="220.0">
+                                       <children>
+                                          <Label prefHeight="24.0" prefWidth="88.0" text="Salário Fixo" />
+                                          <TextField fx:id="txtBolsaEstagiario" prefHeight="26.0" prefWidth="58.0" />
+                                          <Label prefHeight="18.0" prefWidth="19.0" />
+                                       </children>
+                                    </HBox>
+                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="5.0" stroke="#4f464600" strokeType="INSIDE" width="230.0" />
+                                    <HBox alignment="CENTER" prefHeight="10.0" prefWidth="220.0">
+                                       <children>
+                                          <Label prefHeight="18.0" prefWidth="107.0" text="V.Transporte" />
+                                          <CheckBox fx:id="chkValeTransporteEst" mnemonicParsing="false" />
+                                          <Label prefHeight="18.0" prefWidth="35.0" />
+                                          <Label prefHeight="24.0" prefWidth="103.0" text="V.Alimentação" />
+                                          <CheckBox fx:id="chkValeAlimentacaoEst" mnemonicParsing="false" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <Pane prefHeight="98.0" prefWidth="140.0" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="0.0" prefWidth="478.0">
+                           <children>
+                              <Pane prefHeight="200.0" prefWidth="200.0" />
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" height="1.0" stroke="TRANSPARENT" strokeType="INSIDE" width="225.0" />
+                              <Pane prefHeight="200.0" prefWidth="200.0" />
+                           </children>
+                        </HBox>
+
+                        <HBox alignment="CENTER" prefHeight="33.0" prefWidth="478.0">
+                           <children>
+                              <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelarRS" prefHeight="30.0" prefWidth="90.0" styleClass="btn_cancelar" text="Cancelar" textFill="WHITE">
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#salvarRS" prefHeight="30.0" prefWidth="90.0" styleClass="btn_cancelar" text="Salvar" textFill="WHITE">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                        </HBox>
+
                      </children>
                   </VBox>
                </children>

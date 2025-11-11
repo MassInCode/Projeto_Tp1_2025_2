@@ -1,4 +1,19 @@
 {
-  "id" : "0",
-  "usuarios" : []
+  "id" : "9",
+  "usuarios" : [ {
+    "regime" : "FORADEREGIME",
+    "nome" : "a",
+    "senha" : "Cdf29072005",
+    "dataContratacao" : "11/11/2025",
+    "contador" : 9,
+    "cargoContratado" : null,
+    "cpf" : "13677940648",
+    "departamento" : "NULL",
+    "salarioliquido" : 0.0,
+    "id" : 8,
+    "salariobruto" : 0.0,
+    "cargo" : "GESTOR",
+    "email" : "a",
+    "status" : true
+  } ]
 }

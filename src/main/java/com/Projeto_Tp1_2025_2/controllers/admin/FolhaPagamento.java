@@ -4,9 +4,7 @@ import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.admin.Administrador;
 import com.Projeto_Tp1_2025_2.models.admin.Gestor;
 import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
-import com.Projeto_Tp1_2025_2.models.recrutador.Contratacao;
-import com.Projeto_Tp1_2025_2.models.recrutador.StatusVaga;
-import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
+import com.Projeto_Tp1_2025_2.models.funcionario.RegrasSalario;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -25,10 +23,17 @@ public class FolhaPagamento {
     private static final BaseColor AZUL = new BaseColor(41, 128, 185);
     private static final BaseColor CINZA = new BaseColor(240, 240, 240);
 
+    // 🔹 Fontes menores para caber mais conteúdo
+    private static final Font FONT_TITULO = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD, AZUL);
+    private static final Font FONT_SUBTITULO = new Font(Font.FontFamily.HELVETICA, 11, Font.NORMAL, BaseColor.DARK_GRAY);
+    private static final Font FONT_TEXTO = new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL, BaseColor.BLACK);
+    private static final Font FONT_HEADER = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD, BaseColor.WHITE);
+    private static final Font FONT_CELULA = new Font(Font.FontFamily.HELVETICA, 8, Font.NORMAL, BaseColor.BLACK);
+
+    RegrasSalario regras = RegrasSalario.carregar();
     private final Gestor gestor;
     private final Administrador admin;
     private final String data_criacao;
-
 
     public FolhaPagamento(Gestor gestor) {
         this.gestor = gestor;
@@ -43,137 +48,155 @@ public class FolhaPagamento {
     }
 
     public void gerar(String path) throws IOException {
-
         ArrayList<Funcionario> ativos = lerFuncionarios("src/main/resources/usuarios_login.json");
 
-        Document doc = new Document(PageSize.A4, 50, 50, 60, 60);
+        Document doc = new Document(PageSize.A4, 40, 40, 50, 50);
 
         try {
             PdfWriter.getInstance(doc, new FileOutputStream(path));
             doc.open();
 
-            // cabecalho
-            Font tituloFont = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD, AZUL);
-            Font subtituloFont = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL, BaseColor.DARK_GRAY);
-            Font textoFont = new Font(Font.FontFamily.HELVETICA, 11, Font.NORMAL, BaseColor.BLACK);
-
-            Paragraph titulo = new Paragraph("Folha de Pagamento", tituloFont);
+            // Cabeçalho
+            Paragraph titulo = new Paragraph("Folha de Pagamento", FONT_TITULO);
             titulo.setAlignment(Element.ALIGN_CENTER);
             titulo.setSpacingAfter(5);
 
             Paragraph subtitulo;
             if (gestor == null) {
-                subtitulo = new Paragraph(
-                        "Admin: " + admin.getNome() +
-                                " | Data: " + data_criacao,
-                        subtituloFont
-                );
+                subtitulo = new Paragraph("Admin: " + admin.getNome() + " | Data: " + data_criacao, FONT_SUBTITULO);
+            } else {
+                subtitulo = new Paragraph("Gestor: " + gestor.getNome() + " | Data: " + data_criacao, FONT_SUBTITULO);
             }
-            else
-            {
-                subtitulo = new Paragraph(
-                        "Gestor: " + gestor.getNome() +
-                                " | Data: " + data_criacao,
-                        subtituloFont
-                );
-            }
-
             subtitulo.setAlignment(Element.ALIGN_CENTER);
-            subtitulo.setSpacingAfter(20);
+            subtitulo.setSpacingAfter(15);
 
             doc.add(titulo);
             doc.add(subtitulo);
 
-            // resumo
+            // Resumo
             PdfPTable resumo = new PdfPTable(2);
             resumo.setWidthPercentage(100);
-            resumo.setSpacingAfter(15);
-            resumo.getDefaultCell().setPadding(8);
+            resumo.setSpacingAfter(10);
+            resumo.getDefaultCell().setPadding(5);
+            adicionarLinhaResumo(resumo, "Total de Funcionários", String.valueOf(ativos.size()));
 
-            adicionarLinhaResumo(resumo, "Total de Funcionarios", String.valueOf(ativos.size()));
-
-            doc.add(criarTituloSecao("Referente ao mês:" + LocalDate.now().getMonth()));
+            doc.add(criarTituloSecao("Referente ao mês: " + LocalDate.now().getMonth()));
             doc.add(resumo);
 
-            // Funcionarios
-            doc.add(criarTituloSecao("Lista de Salários"));
+            // Lista de salários
+            doc.add(criarTituloSecao("Lista de Salários Detalhada"));
 
-            PdfPTable tabelaSalarios = new PdfPTable(new float[]{2, 1, 1, 1,2});
+            // 🔹 Removido o CPF → Agora temos 9 colunas
+            PdfPTable tabelaSalarios = new PdfPTable(new float[]{2, 1.5f, 1.3f, 1, 1, 1, 1, 1, 2});
             tabelaSalarios.setWidthPercentage(100);
-            adicionarCabecalhoTabela(tabelaSalarios, "Nome", "Cargo", "Salario", "cpf", "Data de Contratação");
+            tabelaSalarios.getDefaultCell().setPadding(3);
+
+            adicionarCabecalhoTabela(
+                    tabelaSalarios,
+                    "Nome",
+                    "Cargo",
+                    "Regime",
+                    "Salário Bruto",
+                    "Salário Final",
+                    "Vale Alimentação",
+                    "Vale Transporte",
+                    "Bônus",
+                    "Data de Contratação"
+            );
 
             for (Funcionario f : ativos) {
-                tabelaSalarios.addCell(f.getNome());
-                tabelaSalarios.addCell(f.getCargo());
-                tabelaSalarios.addCell(String.format("R$ %.2f", f.getSalariobruto()));
-                tabelaSalarios.addCell(f.getCpf());
-                tabelaSalarios.addCell(f.getDataContratacao());
+                String regime = f.getRegime() != null ? f.getRegime().toString() : "-";
+                double salarioFinal = regras.calcularSalario(f);
+
+                double valeAlimento = 0;
+                double valeTransporte = 0;
+                double bonus = 0;
+
+                switch (f.getRegime()) {
+                    case CLT -> {
+                        valeAlimento = regras.isValealiCLT() ? regras.getValeAlimento() : 0;
+                        valeTransporte = regras.isValetransCLT() ? regras.getValeTransport() : 0;
+                    }
+                    case ESTAGIARIO -> {
+                        valeAlimento = regras.isValealiEST() ? regras.getValeAlimento() : 0;
+                        valeTransporte = regras.isValetransEST() ? regras.getValeTransport() : 0;
+                    }
+                    case PJ -> bonus = regras.isBonusPJ() ? regras.getBonus_PJ() : 0;
+                }
+
+                tabelaSalarios.addCell(celulaTexto(f.getNome()));
+                tabelaSalarios.addCell(celulaTexto(f.getCargo()));
+                tabelaSalarios.addCell(celulaTexto(regime));
+                tabelaSalarios.addCell(celulaTexto(String.format("R$ %.2f", f.getSalariobruto())));
+                tabelaSalarios.addCell(celulaTexto(String.format("R$ %.2f", salarioFinal)));
+                tabelaSalarios.addCell(celulaTexto(String.format("R$ %.2f", valeAlimento)));
+                tabelaSalarios.addCell(celulaTexto(String.format("R$ %.2f", valeTransporte)));
+                tabelaSalarios.addCell(celulaTexto(String.format("R$ %.2f", bonus)));
+                tabelaSalarios.addCell(celulaTexto(f.getDataContratacao()));
             }
+
             doc.add(tabelaSalarios);
 
-            // rodape
+            // Rodapé
             Paragraph rodape = new Paragraph(
-                    "\nFolha de pagamento gerado automaticamente pelo Sistema de Gestão de RH.\n© Universidade de Brasília - Projeto TP1 2025.2",
-                    new Font(Font.FontFamily.HELVETICA, 9, Font.ITALIC, BaseColor.GRAY)
+                    "\nFolha de pagamento gerada automaticamente pelo Sistema de Gestão de RH.\n© Universidade de Brasília - Projeto TP1 2025.2",
+                    new Font(Font.FontFamily.HELVETICA, 8, Font.ITALIC, BaseColor.GRAY)
             );
             rodape.setAlignment(Element.ALIGN_CENTER);
-            rodape.setSpacingBefore(30);
+            rodape.setSpacingBefore(25);
             doc.add(rodape);
 
             doc.close();
             System.out.println("✅ Folha de pagamento PDF gerado com sucesso: " + path);
 
-        }
-        catch (DocumentException | IOException e) {
+        } catch (DocumentException | IOException e) {
             e.printStackTrace();
         }
     }
 
     private static void adicionarLinhaResumo(PdfPTable tabela, String chave, String valor) {
-        PdfPCell c1 = new PdfPCell(new Phrase(chave));
-        PdfPCell c2 = new PdfPCell(new Phrase(valor));
+        PdfPCell c1 = new PdfPCell(new Phrase(chave, FONT_TEXTO));
+        PdfPCell c2 = new PdfPCell(new Phrase(valor, FONT_TEXTO));
         c1.setBackgroundColor(CINZA);
-        c1.setPadding(6);
-        c2.setPadding(6);
+        c1.setPadding(4);
+        c2.setPadding(4);
         tabela.addCell(c1);
         tabela.addCell(c2);
     }
 
     private static PdfPCell celulaTexto(String texto) {
-        PdfPCell cell = new PdfPCell(new Phrase(texto));
-        cell.setPadding(5);
+        PdfPCell cell = new PdfPCell(new Phrase(texto, FONT_CELULA));
+        cell.setPadding(3);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         return cell;
     }
 
     private static void adicionarCabecalhoTabela(PdfPTable tabela, String... colunas) {
         for (String col : colunas) {
-            PdfPCell header = new PdfPCell(new Phrase(col, new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.WHITE)));
+            PdfPCell header = new PdfPCell(new Phrase(col, FONT_HEADER));
             header.setBackgroundColor(AZUL);
-            header.setPadding(6);
+            header.setPadding(4);
             header.setHorizontalAlignment(Element.ALIGN_CENTER);
+            header.setVerticalAlignment(Element.ALIGN_MIDDLE);
             tabela.addCell(header);
         }
     }
 
     private static Paragraph criarTituloSecao(String titulo) {
-        Paragraph p = new Paragraph("\n" + titulo, new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD, AZUL));
-        p.setSpacingAfter(10);
+        Paragraph p = new Paragraph("\n" + titulo, new Font(Font.FontFamily.HELVETICA, 13, Font.BOLD, AZUL));
+        p.setSpacingAfter(8);
         return p;
     }
 
     public static ArrayList<Funcionario> lerFuncionarios(String caminhoArquivo) throws IOException {
+        RegrasSalario regras = RegrasSalario.carregar();
         ArrayList<Funcionario> funcionarios = new ArrayList<>();
-
-        // lê o JSON inteiro como texto
         String json = Files.readString(Path.of(caminhoArquivo), StandardCharsets.UTF_8);
-
-        // encontra todos os blocos {...}
         Pattern pattern = Pattern.compile("\\{([^{}]*)\\}");
         Matcher matcher = pattern.matcher(json);
 
         while (matcher.find()) {
             String bloco = matcher.group(1);
-
             boolean status = extrairBoolean(bloco, "\"status\"");
             if (status) {
                 String nome = extrairValor(bloco, "\"nome\"");
@@ -182,19 +205,14 @@ public class FolhaPagamento {
                 String email = extrairValor(bloco, "\"email\"");
                 String cargo = extrairValor(bloco, "\"cargo\"");
                 double salario = extrairDouble(bloco, "\"salariobruto\"");
-
-                // campos extras opcionais
                 String regime = extrairValor(bloco, "\"regime\"");
+                if (regime.equals("ESTAGIARIO")){salario = regras.bolsa_fixa;}
                 String departamento = extrairValor(bloco, "\"departamento\"");
                 String data = extrairValor(bloco, "\"dataContratacao\"");
-
-                // cria um novo funcionário ativo
-                Funcionario f = new Funcionario(nome, senha, cpf, email, cargo, salario, status,data,regime,departamento);
-
+                Funcionario f = new Funcionario(nome, senha, cpf, email, cargo, salario, status, data, regime, departamento);
                 funcionarios.add(f);
             }
         }
-
         return funcionarios;
     }
 
@@ -216,4 +234,3 @@ public class FolhaPagamento {
         return m.find() && Boolean.parseBoolean(m.group(1));
     }
 }
-
