@@ -73,7 +73,6 @@ public abstract class Usuario {
     }
 
     public boolean validarCPF(String cpf) {
-        /*
         cpf = cpf.replaceAll("\\D", ""); // tira os . e -
 
         if (cpf.length() != 11) return false;
@@ -100,18 +99,14 @@ public abstract class Usuario {
         } catch (Exception e) {
             return false;
         }
-        */
-        //return cpf.length() == 11;
-        return true;
     }
 
     // a senha vai precisar ter no mínimo 8 de tamanho, ter letras maiusculas e numeros
     private String validarSenha(String senha) {
-        /* comentado pra debug
         if (senha.length() < 8) {
             return "A senha deve ter no mínimo 8 caracteres.";
         }
-        */
+
 
         int maiusculas = 0;
         int numeros = 0;
@@ -123,23 +118,6 @@ public abstract class Usuario {
         if (maiusculas == 0 || numeros == 0) return "A senha deve conter letras maiúsculas e números.";
 
         return "\0";
-    }
-
-    public void editarDados(String nome, String senha, String cpf, String email) throws InvalidCPF, InvalidPassword{
-        this.nome = nome;
-        this.email = email;
-
-        if (!validarCPF(cpf)) {
-            throw new InvalidCPF();
-        }
-
-        String msg = validarSenha(senha);
-        if (!msg.equals("\0")) {
-            throw new InvalidPassword(msg);
-        }
-
-        this.senha = senha;
-        this.cpf = cpf;
     }
 
     public int getId() {
