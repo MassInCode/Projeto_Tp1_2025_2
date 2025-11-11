@@ -161,13 +161,14 @@
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                        </columnResizePolicy>
                                        <columns>
-                                          <TableColumn fx:id="colTodosNomes" editable="false" minWidth="-Infinity" prefWidth="173.0" resizable="false" text="Candidato" />
-                                          <TableColumn fx:id="colTodasVaga" editable="false" minWidth="-Infinity" prefWidth="136.0" resizable="false" text="Vaga" />
-                                          <TableColumn fx:id="colTodasDepartamento" editable="false" minWidth="-Infinity" prefWidth="143.0" resizable="false" text="Departamento" />
-                                          <TableColumn fx:id="colTodasDataCand" editable="false" minWidth="-Infinity" prefWidth="145.0" resizable="false" text="Data de Candidatura" />
-                                          <TableColumn fx:id="colTodasCodigo" editable="false" minWidth="-Infinity" prefWidth="118.0" resizable="false" text="Codigo da Vaga" />
-                                          <TableColumn fx:id="colTodasStatusVaga" editable="false" minWidth="-Infinity" prefWidth="153.0" resizable="false" text="Status da Vaga" />
-                                          <TableColumn fx:id="colTodasStatusCand" editable="false" minWidth="-Infinity" prefWidth="178.0" resizable="false" text="Status do Candidato" />
+                                          <TableColumn fx:id="colTodosNomes" editable="false" minWidth="-Infinity" prefWidth="93.0" resizable="false" text="Candidato" />
+                                          <TableColumn fx:id="colTodasVaga" editable="false" minWidth="-Infinity" prefWidth="109.0" resizable="false" text="Vaga" />
+                                          <TableColumn fx:id="colTodasDepartamento" editable="false" minWidth="-Infinity" prefWidth="107.0" resizable="false" text="Departamento" />
+                                          <TableColumn fx:id="colTodasDataCand" editable="false" minWidth="-Infinity" prefWidth="149.0" resizable="false" text="Data de Candidatura" />
+                                          <TableColumn fx:id="colTodasCodigo" editable="false" minWidth="-Infinity" prefWidth="130.0" resizable="false" text="Codigo da Vaga" />
+                                          <TableColumn fx:id="colTodasStatusVaga" editable="false" minWidth="-Infinity" prefWidth="124.0" resizable="false" text="Status da Vaga" />
+                                          <TableColumn fx:id="colTodasStatusCand" editable="false" minWidth="-Infinity" prefWidth="150.0" resizable="false" text="Status do Candidato" />
+                                          <TableColumn fx:id="colTodasStatusCandidatura" editable="false" minWidth="-Infinity" prefWidth="177.0" resizable="false" text="Status da Candidatura" />
                                        </columns>
                                     </TableView>
                                  </children>

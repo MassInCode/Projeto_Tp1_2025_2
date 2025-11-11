@@ -1,6 +1,7 @@
     package com.Projeto_Tp1_2025_2.models.funcionario;
 
     import com.Projeto_Tp1_2025_2.exceptions.InvalidCPF;
+    import com.Projeto_Tp1_2025_2.exceptions.InvalidPassword;
     import com.Projeto_Tp1_2025_2.models.Usuario;
     import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -20,6 +21,7 @@
 
         private String regime;
         private String departamento;
+        private String cargoContratado;
 
         public Funcionario(String nome, String senha, String cpf, String email, String cargo,double salario,boolean status,String dataContratacao,String regime, String departamento) {
             super(nome, senha, cpf, email, cargo);
@@ -28,6 +30,7 @@
             this.dataContratacao = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
             this.regime = regime;
             this.departamento = departamento;
+            this.cargoContratado = cargo;
         }
 
         //nao apagar
@@ -42,6 +45,7 @@
             this.dataContratacao = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
             this.regime = regime;
             this.departamento = departamento;
+            this.cargoContratado = cargo;
         }
 
         public Funcionario(String nome, String senha, String cpf, String email, String cargo) {
@@ -51,6 +55,7 @@
             this.dataContratacao = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
             this.regime = "NULL";
             this.departamento = "NULL";
+            this.cargoContratado = cargo;
         }
 
         public Funcionario(Usuario user) {
@@ -60,6 +65,19 @@
             this.dataContratacao = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
             this.regime = "NULL";
             this.departamento = "NULL";
+            this.cargoContratado = user.getCargo();
+        }
+
+        //para contratação ^^
+        public Funcionario(int id, Usuario usuario, double salariobruto, String regime, String departamento, String cargoContratado) throws InvalidPassword, InvalidCPF {
+            //A SENHA PADRÃO VAI SER O CPF + A PRIMEIRA LETRA DO NOME
+            super(id, usuario.getNome(), usuario.getCpf()+usuario.getNome().toUpperCase().charAt(0), usuario.getCpf(), usuario.getEmail(), "FUNCIONARIO");
+            this.salariobruto = salariobruto;
+            this.status = true;
+            this.dataContratacao = LocalDate.now();
+            this.regime = regime;
+            this.departamento = departamento;
+            this.cargoContratado = cargoContratado;
         }
 
         public double getSalariobruto() {

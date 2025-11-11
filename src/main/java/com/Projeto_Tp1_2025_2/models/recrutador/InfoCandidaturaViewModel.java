@@ -24,6 +24,8 @@ public class InfoCandidaturaViewModel {
         this.candidatura = candidatura;
     }
 
+    public Vaga getVaga(){return vaga;}
+    public Candidato getUsuario(){return (Candidato)  usuario;}
     public String getCargoVaga(){
         return this.vaga.getCargo();
     }

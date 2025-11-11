@@ -291,18 +291,18 @@ public class GestaoController extends ApplicationController implements TelaContr
 
             tabela_vagas.setItems(vagasBase);
 
-            List<Map<String, Object>> dados2 = pdb.getData("pedidos");
+            /*List<Map<String, Object>> dados2 = pdb.getData("pedidos");
 
             for (Map<String, Object> mapa : dados2) {
                 Candidato candidato = pdb.convertMaptoObject((Map<String, Object>) mapa.get("candidato"), Candidato.class);
                 Vaga vaga = pdb.convertMaptoObject((Map<String, Object>) mapa.get("vaga"), Vaga.class);
-                /*
+
                 contratacoesBase.add(new Contratacao(
                         candidato, vaga, mapa.get("dataContratacao").toString(), mapa.get("regime").toString()
-                ));*/
+                ));
             }
 
-            tabela_pedidos.setItems(contratacoesBase);
+            tabela_pedidos.setItems(contratacoesBase);*/
         }
         catch (IOException e) {
             System.out.println(e.getMessage());

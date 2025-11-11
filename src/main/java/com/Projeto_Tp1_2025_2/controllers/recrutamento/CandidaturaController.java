@@ -7,6 +7,7 @@ import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
 import com.Projeto_Tp1_2025_2.models.candidatura.StatusCandidatura;
+import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
 import com.Projeto_Tp1_2025_2.models.recrutador.*;
 import com.Projeto_Tp1_2025_2.util.*;
 import javafx.beans.binding.Bindings;
@@ -77,6 +78,7 @@ public class CandidaturaController extends ApplicationController implements Tela
     @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodasStatusVaga;
     @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodasStatusCand;
     @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodosNomes;
+    @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodasStatusCandidatura;
 
     @FXML AnchorPane tab_editarVagas;
     @FXML TextField ev_cargo;
@@ -163,6 +165,14 @@ public class CandidaturaController extends ApplicationController implements Tela
         colTodasStatusVaga.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatusVaga().toString()));
         colTodasStatusCand.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatusCandidatura().toString()));
         colTodosNomes.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNomeCandidato()));
+        colTodasStatusCandidatura.setCellValueFactory(cellData -> new SimpleStringProperty(
+                switch(cellData.getValue().getStatusCandidatura()){
+                    case StatusCandidatura.PENDENTE -> "Pendente";
+                    case StatusCandidatura.APROVADO -> "Aprovado";
+                    case StatusCandidatura.REPROVADO -> "Reprovado";
+                    case StatusCandidatura.ANALISE -> "Análise";
+                }
+        ));
 
         btn_filtrar.setItems(FXCollections.observableArrayList("Nome", "CPF", "Email", "Formação"));
         btn_filtrar.setValue("Nome");
@@ -754,6 +764,36 @@ public class CandidaturaController extends ApplicationController implements Tela
         MenuItem editarStatusItem = new MenuItem("Editar Status de Candidatura");
         MenuItem agendarItem = new MenuItem("Agendar Entrevista");
         MenuItem excluirItem = new MenuItem("Excluir Candidatura");
+        MenuItem recrutarCandidatoItem = new MenuItem("Recrutar Candidato");
+
+        recrutarCandidatoItem.setOnAction(event -> {
+            InfoCandidaturaViewModel viewModel = tabTodasCandidaturas.getSelectionModel().getSelectedItem();
+            if (viewModel == null) return;
+
+            if(viewModel.getStatusCandidatura() == StatusCandidatura.APROVADO){
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmação");
+                alert.setHeaderText("Você realmente deseja recrutar este candidato?");
+
+                var resultado = alert.showAndWait();
+
+                if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+                    Vaga vaga = viewModel.getVaga();
+                    Funcionario funcionario = new Funcionario(viewModel.getCandidatura().getCandidatoId(), viewModel.getUsuario(), vaga.getSalarioBase(), vaga.getRegimeContratacao(), vaga.getDepartamento(), vaga.getCargo());
+
+                    dbRecrutadores.deleteObject(viewModel.getUsuario(), "usuarios");
+                    dbRecrutadores.addObject(funcionario, "usuarios");
+                }
+            }
+
+            else{
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setHeaderText(null);
+                alert.setContentText("É necessário que a candidatura esteja aprovada.");
+                alert.showAndWait();
+            }
+
+        });
 
         editarStatusItem.setOnAction(event -> {
             InfoCandidaturaViewModel viewModel = tabTodasCandidaturas.getSelectionModel().getSelectedItem(); //
@@ -816,7 +856,7 @@ public class CandidaturaController extends ApplicationController implements Tela
             }
         });
 
-        contextMenu.getItems().addAll(editarStatusItem, agendarItem, new SeparatorMenuItem(), excluirItem);
+        contextMenu.getItems().addAll(recrutarCandidatoItem, editarStatusItem, agendarItem, new SeparatorMenuItem(), excluirItem);
 
         tabTodasCandidaturas.setRowFactory(tv -> {
             TableRow<InfoCandidaturaViewModel> row = new TableRow<>();
