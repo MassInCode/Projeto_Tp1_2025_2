@@ -783,6 +783,21 @@ public class CandidaturaController extends ApplicationController implements Tela
 
                     dbRecrutadores.deleteObject(viewModel.getUsuario(), "usuarios");
                     dbRecrutadores.addObject(funcionario, "usuarios");
+
+                    //EXCLUIR CANDIDATURA PQ TA DANDOE RRO DPS Q O CANDIDATO É EFETIVADO
+                    //TALVEZ MODIFICAR DEPOIS PARA OUTRA ABORDAGEM
+                    try {
+                        candidaturaService.excluirCandidatura(viewModel.getCandidatura());
+                        carregarTodasCandidaturas();
+                        tabTodasCandidaturas.refresh();
+                        carregarVagas();
+                        carregarCandidatos();
+                        this.allCandidaturas = candidaturaService.getAllCandidaturas();
+                        tabCandidatos.refresh();
+                        tabelaRegistrarVagas.refresh();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
