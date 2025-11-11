@@ -1,6 +1,7 @@
 package com.Projeto_Tp1_2025_2.controllers.admin;
 
 import com.Projeto_Tp1_2025_2.models.admin.Gestor;
+import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.recrutador.Contratacao;
 import com.Projeto_Tp1_2025_2.models.recrutador.StatusVaga;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
@@ -10,8 +11,13 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import com.Projeto_Tp1_2025_2.util.CandidaturaService;
+import com.Projeto_Tp1_2025_2.util.UsuarioService;
+import com.Projeto_Tp1_2025_2.util.VagaService;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import javafx.beans.property.SimpleStringProperty;
 
 public class RelatorioGestao {
     private static final BaseColor AZUL = new BaseColor(41, 128, 185);
@@ -30,6 +36,19 @@ public class RelatorioGestao {
 
     public RelatorioGestao(Gestor gestor) {
         this.gestor = gestor;
+        this.pedidos_aceitos = 0;
+        this.pedidos_recebidos = 0;
+        this.vagas_criadas = 0;
+        this.vagas_excluidas = 0;
+        data_criacao = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        pedidos = new ArrayList<>();
+        vagas = new ArrayList<>();
+    }
+
+    public RelatorioGestao() {
+        this.gestor = null;
+
         this.pedidos_aceitos = 0;
         this.pedidos_recebidos = 0;
         this.vagas_criadas = 0;
@@ -76,7 +95,7 @@ public class RelatorioGestao {
            titulo.setSpacingAfter(5);
 
            Paragraph subtitulo = new Paragraph(
-                   "Gestor: " + gestor.getNome() +
+                   "Gestor: " + ((gestor != null) ? gestor.getNome() : "admin") +
                            " | Data: " + data_criacao,
                    subtituloFont
            );
@@ -128,14 +147,26 @@ public class RelatorioGestao {
            tabelaPedidos.setWidthPercentage(100);
            adicionarCabecalhoTabela(tabelaPedidos, "Candidato", "Vaga", "Status", "Data Contratação");
 
-           /*for (Contratacao c : pedidos) {
-               tabelaPedidos.addCell(celulaTexto(c.getCandidato().getNome()));
-               tabelaPedidos.addCell(celulaTexto(c.getVaga().getCargo()));
-               tabelaPedidos.addCell(celulaTexto((c.isAutorizado()) ? "Autorizado" : "Não autorizado"));
-               tabelaPedidos.addCell(celulaTexto(c.getDataContratacao() != null ?
-                       c.getDataContratacao() : "-"));
+           for (Contratacao c : pedidos) {
+               UsuarioService us = new UsuarioService();
+               CandidaturaService cs = new CandidaturaService();
+               VagaService vs = new VagaService();
+
+               try {
+                   Candidato candidato = (Candidato) us.getUsuarioPorId(cs.getCandidaturaPorId(c.getEntrevista().getCandidaturaId()).getCandidatoId());
+                   Vaga vaga = vs.getVagaPorId(cs.getCandidaturaPorId(c.getEntrevista().getCandidaturaId()).getVagaId());
+
+                   tabelaPedidos.addCell(celulaTexto(candidato.getNome()));
+                   tabelaPedidos.addCell(celulaTexto(vaga.getCargo()));
+                   tabelaPedidos.addCell(celulaTexto(c.getStatus()));
+                   tabelaPedidos.addCell(celulaTexto(c.getDataPedido() != null ?
+                           c.getDataPedido().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "-"));
+               }
+               catch (IOException e) {
+                   e.printStackTrace();
+               }
            }
-           doc.add(tabelaPedidos);*/
+           doc.add(tabelaPedidos);
 
            // rodape
            Paragraph rodape = new Paragraph(

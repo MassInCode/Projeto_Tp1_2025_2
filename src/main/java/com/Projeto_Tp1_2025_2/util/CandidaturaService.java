@@ -14,8 +14,13 @@ public class CandidaturaService {
     private Database dbCandidaturas;
     private static final String CANDIDATURAS_KEY = "candidaturas";
 
-    public CandidaturaService() throws IOException {
-        this.dbCandidaturas = new Database("src/main/resources/candidaturas.json");
+    public CandidaturaService() {
+        try {
+            this.dbCandidaturas = new Database("src/main/resources/candidaturas.json");
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void registrarCandidatura(int candidatoId, int vagaId) throws IOException, ValidationException {

@@ -191,7 +191,6 @@ public class CandidaturaController extends ApplicationController implements Tela
         criarContextMenuEntrevistas();
         criarContextMenuTodasCandidaturas();
         criarContextMenuVaga();
-        criarContextMenuPedidosContratacao();
     }
 
     public void initData(Usuario usuarioLogado) {
@@ -267,39 +266,6 @@ public class CandidaturaController extends ApplicationController implements Tela
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
-                }
-            });
-
-            row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
-                if(isNowEmpty){
-                    row.setContextMenu(null);
-                } else{
-                    row.setContextMenu(rowMenu);
-                }
-            });
-
-            return row;
-        });
-    }
-
-    private void criarContextMenuPedidosContratacao() {
-        tabEntrevistas.setRowFactory(tv -> {
-            TableRow<AgendaViewModel> row = new TableRow<>(); // row especifica
-            ContextMenu rowMenu = new ContextMenu();
-
-            MenuItem solicitarContratacao = new MenuItem("Solicitar Contratação");
-
-            rowMenu.getItems().addAll(solicitarContratacao);
-
-            solicitarContratacao.setOnAction(e -> {
-                var entrevistaSelecioanda = tabEntrevistas.getSelectionModel().getSelectedItem();
-                if (entrevistaSelecioanda != null) {
-                    realizarPedidoDeContratacao(entrevistaSelecioanda);
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setHeaderText(null);
-                    alert.setContentText("Selecione uma entrevista antes de solicitar a contratação!");
-                    alert.showAndWait();
                 }
             });
 
@@ -613,7 +579,7 @@ public class CandidaturaController extends ApplicationController implements Tela
             this.allCandidaturas = candidaturaService.getAllCandidaturas();
             boolean veri = usuarioService.excluirUsuario(candidatoSelecionado);
             if(veri){
-                tabCandidatos.getItems().remove(candidatoSelecionado);
+                candidatosBase.remove(candidatoSelecionado);
                 tabCandidatos.refresh();
                 System.out.println("Candidato excluido com sucesso.");
             } else{
@@ -659,6 +625,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         MenuItem excluirItem = new MenuItem("Excluir Entrevista");
         MenuItem reagendarItem = new MenuItem("Reagendar Entrevista");
         MenuItem atribuirNotaItem = new MenuItem("Atribuir Nota");
+        MenuItem solicitarContratacao = new MenuItem("Solicitar Contratação");
 
         excluirItem.setOnAction(event -> {
             AgendaViewModel viewModelSelecionado = tabEntrevistas.getSelectionModel().getSelectedItem();
@@ -745,7 +712,19 @@ public class CandidaturaController extends ApplicationController implements Tela
             }
         });
 
-        contextMenu.getItems().addAll(reagendarItem, atribuirNotaItem, new SeparatorMenuItem(), excluirItem);
+        solicitarContratacao.setOnAction(e -> {
+            var entrevistaSelecioanda = tabEntrevistas.getSelectionModel().getSelectedItem();
+            if (entrevistaSelecioanda != null) {
+                realizarPedidoDeContratacao(entrevistaSelecioanda);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setHeaderText(null);
+                alert.setContentText("Selecione uma entrevista antes de solicitar a contratação!");
+                alert.showAndWait();
+            }
+        });
+
+        contextMenu.getItems().addAll(solicitarContratacao, reagendarItem, atribuirNotaItem, new SeparatorMenuItem(), excluirItem);
         tabEntrevistas.setRowFactory(tv -> {
             TableRow<AgendaViewModel> row = new TableRow<>();
             row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {

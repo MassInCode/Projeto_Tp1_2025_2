@@ -6,11 +6,13 @@ import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
 import com.Projeto_Tp1_2025_2.models.admin.Administrador;
 import com.Projeto_Tp1_2025_2.models.admin.Gestor;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
-import com.Projeto_Tp1_2025_2.models.recrutador.Contratacao;
-import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
-import com.Projeto_Tp1_2025_2.models.recrutador.StatusVaga;
-import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
+import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
+import com.Projeto_Tp1_2025_2.models.candidatura.StatusCandidatura;
+import com.Projeto_Tp1_2025_2.models.recrutador.*;
+import com.Projeto_Tp1_2025_2.util.CandidaturaService;
 import com.Projeto_Tp1_2025_2.util.Database;
+import com.Projeto_Tp1_2025_2.util.UsuarioService;
+import com.Projeto_Tp1_2025_2.util.VagaService;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -104,12 +106,16 @@ public class GestaoController extends ApplicationController implements TelaContr
     }
 
     @FXML
-    public void initData2(Administrador admin) {
+    public void initData(Administrador admin) {
         this.admin = admin;
     }
 
     @FXML
     public void initialize() {
+        if (relatorio == null) {
+            System.out.println("Acesso por admin");
+            relatorio = new RelatorioGestao();
+        }
         // ------------- Inicialização das Databases -------------
         try {
             db = new Database(db_paths.get(DATABASES.VAGAS));
@@ -160,13 +166,44 @@ public class GestaoController extends ApplicationController implements TelaContr
 
             return new SimpleStringProperty(builder.toString());
         });
-/*
-        colunaCandidato.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCandidato().getNome()));
-        colunaVaga.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getVaga().getCargo()));
-        colunaData.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataContratacao()));
+
+        UsuarioService us = new UsuarioService();
+        CandidaturaService cs = new CandidaturaService();
+        VagaService vs = new VagaService();
+
+        colunaCandidato.setCellValueFactory(cellData -> {
+            try {
+                Candidato candidato = (Candidato) us.getUsuarioPorId(cs.getCandidaturaPorId(cellData.getValue().getEntrevista().getCandidaturaId()).getCandidatoId());
+                return new SimpleStringProperty(candidato.getNome());
+            }
+             catch (IOException e) {
+                e.printStackTrace();
+                return new SimpleStringProperty("ERRO");
+             }
+
+            catch (NullPointerException e) {
+                return new SimpleStringProperty("Contratado");
+            }
+        });
+        colunaVaga.setCellValueFactory(cellData -> {
+            try {
+                Vaga vaga = vs.getVagaPorId(cs.getCandidaturaPorId(cellData.getValue().getEntrevista().getCandidaturaId()).getVagaId());
+
+                return new SimpleStringProperty(vaga.getCargo());
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                return new SimpleStringProperty("ERRO");
+            }
+
+            catch (NullPointerException e) {
+                return new SimpleStringProperty("Preenchida");
+            }
+        });
+        colunaData.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataPedido().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
         colunaPRegime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRegime()));
-        colunaAutorizado.setCellValueFactory(cellData -> new SimpleStringProperty((cellData.getValue().isAutorizado()) ? "Autorizado" : "Não autorizado"));
-*/
+        colunaAutorizado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus()));
+
         // ------------- Carregamento de Dados -------------
         carregarDados();
         loadRecrutadores();
@@ -242,6 +279,17 @@ public class GestaoController extends ApplicationController implements TelaContr
 
             aceitar.setOnAction(e -> {
                 row.getItem().autorizar();
+
+                // dando update no candidatura para aprovar ele
+                try {
+                    Candidatura can = cs.getCandidaturaPorId(row.getItem().getEntrevista().getCandidaturaId());
+                    can.setStatus(StatusCandidatura.APROVADO);
+                    cs.atualizarCandidatura(can);
+                }
+                catch (IOException error) {
+                    error.printStackTrace();
+                }
+
                 tabela_pedidos.refresh();
 
                 relatorio.addPedidos(row.getItem());
@@ -291,18 +339,18 @@ public class GestaoController extends ApplicationController implements TelaContr
 
             tabela_vagas.setItems(vagasBase);
 
-            /*List<Map<String, Object>> dados2 = pdb.getData("pedidos");
+            List<Map<String, Object>> dados2 = pdb.getData("pedidos");
 
             for (Map<String, Object> mapa : dados2) {
-                Candidato candidato = pdb.convertMaptoObject((Map<String, Object>) mapa.get("candidato"), Candidato.class);
-                Vaga vaga = pdb.convertMaptoObject((Map<String, Object>) mapa.get("vaga"), Vaga.class);
+                Recrutador recrutador = pdb.convertMaptoObject((Map<String, Object>) mapa.get("recrutador"), Recrutador.class);
+                Entrevista entrevista = pdb.convertMaptoObject((Map<String, Object>) mapa.get("entrevista"), Entrevista.class);
 
                 contratacoesBase.add(new Contratacao(
-                        candidato, vaga, mapa.get("dataContratacao").toString(), mapa.get("regime").toString()
+                        recrutador, entrevista, LocalDate.parse(mapa.get("dataPedido").toString(), DateTimeFormatter.ofPattern("dd/MM/yyyy")), mapa.get("regime").toString()
                 ));
             }
 
-            tabela_pedidos.setItems(contratacoesBase);*/
+            tabela_pedidos.setItems(contratacoesBase);
         }
         catch (IOException e) {
             System.out.println(e.getMessage());

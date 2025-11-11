@@ -199,12 +199,18 @@ public class Database {
         try {
             List<Map<String, Object>> lista = (List<Map<String, Object>>) jsonMap.get(data);
 
-            if (lista == null || lista.isEmpty()) return false;
+            if (lista == null || lista.isEmpty()) {
+                System.out.println("lista nula ou vazia");
+                return false;
+            }
 
             Map<String, Object> novoMapa = objectToMap(object);
 
             Object id = novoMapa.get("id");
-            if (id == null) return false;
+            if (id == null) {
+                return false;
+            }
+
 
             // procura o mapa pelo id
             boolean encontrado = false;
@@ -219,7 +225,9 @@ public class Database {
                 }
             }
 
-            if (!encontrado) return false;
+            if (!encontrado) {
+                return false;
+            }
 
             // atualiza a lista no JSON e salva
             jsonMap.put(data, lista);

@@ -83,6 +83,14 @@ public class Contratacao {
         return id;
     }
 
+    public String getRegime() {
+        return regime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
     public void autorizar(){
         this.status = "Aprovado";
     }
