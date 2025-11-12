@@ -278,7 +278,7 @@ public class GestaoController extends ApplicationController implements TelaContr
             MenuItem aceitar = new MenuItem("Aceitar contratação");
             MenuItem recusar = new MenuItem("Recusar contratação");
 
-            rowMenu.getItems().addAll(aceitar);
+            rowMenu.getItems().addAll(aceitar, recusar);
 
             aceitar.setOnAction(e -> {
                 row.getItem().autorizar();
@@ -297,6 +297,27 @@ public class GestaoController extends ApplicationController implements TelaContr
 
                 relatorio.addPedidos(row.getItem());
                 relatorio.aceitarPedido();
+
+                pdb.editObject(row.getItem(), "pedidos");
+            });
+
+            recusar.setOnAction(e -> {
+                row.getItem().recusar();
+
+                // dando update no candidatura para aprovar ele
+                try {
+                    Candidatura can = cs.getCandidaturaPorId(row.getItem().getEntrevista().getCandidaturaId());
+                    can.setStatus(StatusCandidatura.REPROVADO);
+                    cs.atualizarCandidatura(can);
+                }
+                catch (IOException error) {
+                    error.printStackTrace();
+                }
+
+                tabela_pedidos.refresh();
+
+                relatorio.addPedidos(row.getItem());
+                relatorio.recusarPedido();
 
                 pdb.editObject(row.getItem(), "pedidos");
             });
