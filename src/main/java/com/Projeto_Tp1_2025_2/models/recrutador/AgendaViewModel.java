@@ -1,6 +1,5 @@
 package com.Projeto_Tp1_2025_2.models.recrutador;
 
-import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -8,11 +7,11 @@ import java.time.format.DateTimeFormatter;
 
 public class AgendaViewModel {
 
-    private Usuario candidato;
+    private Candidato candidato;
     private Vaga vaga;
     private Entrevista entrevista;
 
-    public AgendaViewModel(Usuario candidato, Vaga vaga, Entrevista entrevista) {
+    public AgendaViewModel(Candidato candidato, Vaga vaga, Entrevista entrevista) {
         this.candidato = candidato;
         this.vaga = vaga;
         this.entrevista = entrevista;

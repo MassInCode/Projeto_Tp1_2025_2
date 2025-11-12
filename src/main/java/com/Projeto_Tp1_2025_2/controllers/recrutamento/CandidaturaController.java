@@ -39,69 +39,37 @@ import javafx.scene.control.TextInputDialog;
 public class CandidaturaController extends ApplicationController implements TelaController {
 
     Database db, dbRecrutadores;
+
     @FXML private Button btn_sair;
-
-    //<editor-fold desc="Declarações FXML: Telas">
-    //================TELAS================
-    @FXML private AnchorPane tab_vagas;                 //tela de vagas
-    @FXML private AnchorPane tab_candidatos;            //tela de candidatos
-    @FXML private AnchorPane tab_RegistrarCandidato;    //tela de cadasttro de candidatos
-    @FXML private AnchorPane tab_entrevistas;           //tela de entrevistas
-    @FXML private AnchorPane tab_listarCandidaturas;    //tela de candidaturas
-    //================TELAS================
-    //</editor-fold>
-
-    //<editor-fold desc="Declarações FXML: Tabela Candidatos">
-    //================TABELA DE CANDIDATOS================
+    @FXML private AnchorPane tab_vagas;
+    @FXML private AnchorPane tab_candidatos;
+    @FXML private AnchorPane tab_RegistrarCandidato;
+    @FXML private AnchorPane tab_entrevistas;
     @FXML private TableView<Candidato> tabCandidatos;
     @FXML private TableColumn<Candidato, String> colNome;
     @FXML private TableColumn<Candidato, String> colCpf;
     @FXML private TableColumn<Candidato, String> colEmail;
     @FXML private TableColumn<Candidato, String> colFormacao;
-    //================TABELA DE CANDIDATOS================
-    //</editor-fold>
-
-    //<editor-fold desc="Declarações FXML: Barra Pesquisar">
-    //================PESQUISAR================
     @FXML private TextField barraPesquisar;
     @FXML private ComboBox<String> btn_filtrar;
-    //================PESQUISAR================
-    //</editor-fold>
-
-    //<editor-fold desc="Declarações FXML: Tabela de Vagas">
-    //================TABELA DE VAGAS================
     @FXML private TableView<Vaga> tabelaRegistrarVagas;
     @FXML private TableColumn<Vaga, String> colVaga;
     @FXML private TableColumn<Vaga, String> colDepartamento;
     @FXML private TableColumn<Vaga, String> colNumCandidatos;
     @FXML private TableColumn<Vaga, String> colCodigo;
     @FXML private TableColumn<Vaga, String> colStatus;
-    //================TABELA DE VAGAS================
-    //</editor-fold>
-
-    //<editor-fold desc="Declarações FXML: Campos de Cadastro">
-    //================CAMPOS DE CADASTRO================
     @FXML private TextField ld_nome_cadastro;
     @FXML private TextField ld_email_cadastro;
     @FXML private TextField ld_cpf_cadastro;
     @FXML private TextField ld_formacao_cadastro;
     @FXML private Label mensagem_erro2;
-    //================CAMPOS DE CADASTRO================
-    //</editor-fold>
-
-    //<editor-fold desc="Declarações FXML: Tabela Entrevistas">
-    //================TABELA ENTREVISTAS================
     @FXML private TableView<AgendaViewModel> tabEntrevistas;
     @FXML private TableColumn<AgendaViewModel, String> colCandidato;
     @FXML private TableColumn<AgendaViewModel, String> colVagaEntrevistas;
     @FXML private TableColumn<AgendaViewModel, String> colDataEntrevista;
     @FXML private TableColumn<AgendaViewModel, String> colHoraEntrevista;
     @FXML private TableColumn<AgendaViewModel, String> colNotaEntrevista;
-    //================TABELA ENTREVISTAS================
-    //</editor-fold>
-
-    //<editor-fold desc="Declarações FXML: Tabela Todas Candidaturas">
-    //================TABELA CANDIDATURAS================
+    @FXML private AnchorPane tab_listarCandidaturas;
     @FXML private TableView<InfoCandidaturaViewModel> tabTodasCandidaturas;
     @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodasVaga;
     @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodasDepartamento;
@@ -111,11 +79,7 @@ public class CandidaturaController extends ApplicationController implements Tela
     @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodasStatusCand;
     @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodosNomes;
     @FXML private TableColumn<InfoCandidaturaViewModel, String> colTodasStatusCandidatura;
-    //================TABELA CANDIDATURAS================
-    //</editor-fold>
 
-    //<editor-fold desc="Declarações FXML: Pop-up Editar Vaga">
-    //================???================
     @FXML AnchorPane tab_editarVagas;
     @FXML TextField ev_cargo;
     @FXML TextField ev_salario;
@@ -125,32 +89,25 @@ public class CandidaturaController extends ApplicationController implements Tela
     @FXML Button btn_ev_salvar;
     @FXML Button btn_ev_cancelar;
     @FXML Label ev_error;
-    //================???================
-    //</editor-fold>
 
-    //<editor-fold desc="Declarações Importantes">
-    private AnchorPane nowVisible;          //anchorpane para gerenciar o que fica visivel ou não
-    UsuarioService usuarioService;          //mexer com o DataBase de Usuarios
-    VagaService vagaService;                //mexer com o DataBase de Vagas
-    CandidaturaService candidaturaService;  //mexer com o DataBase de Candidatura
-    EntrevistaService entrevistaService;    //mexer com o DataBase de Entrevistas
-    List<Candidatura> allCandidaturas;      //Lista que gerencia as informações da tabela de Candidaturas
-    private Usuario usuarioLogado;          //Armazena o recrutador que esta logado
-    private List<Vaga> allVagas;            //Lista que gerencia as informações da tabela de Vagas
+
+
+    private AnchorPane nowVisible;
+    UsuarioService usuarioService;
+    VagaService vagaService;
+    CandidaturaService candidaturaService;
+    EntrevistaService entrevistaService;
+    List<Candidatura> allCandidaturas;
+    private Usuario usuarioLogado;
+    private List<Vaga> allVagas;
     private final ObservableList<Candidato> candidatosBase = FXCollections.observableArrayList();
     private final ObservableList<Vaga> vagasBase = FXCollections.observableArrayList();
     private final ObservableList<AgendaViewModel> entrevistasBase = FXCollections.observableArrayList();
     private final ObservableList<InfoCandidaturaViewModel> todasCandidaturasBase = FXCollections.observableArrayList();
-    //</editor-fold>
 
 
-
-    //===============================================================================================================================
-
-
-
-
-    @FXML public void initialize() throws IOException {
+    @FXML
+    public void initialize() throws IOException {
 
         try {
             db = new Database(db_paths.get(DATABASES.PEDIDOS));
@@ -164,10 +121,14 @@ public class CandidaturaController extends ApplicationController implements Tela
             alert.showAndWait();
         }
 
+        //choiceRegime.setItems(FXCollections.observableArrayList("CLT", "PJ", "ESTAGIO"));
+        //choiceRegime.setValue("CLT");
+
         usuarioService = new UsuarioService();
         vagaService = new VagaService();
         candidaturaService = new CandidaturaService();
         entrevistaService = new EntrevistaService();
+
         this.allCandidaturas = candidaturaService.getAllCandidaturas();
 
         //==============CARREGA A TABELA DE VAGAS==============
@@ -180,6 +141,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         });
         colCodigo.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getId())));
         colStatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus().toString()));
+
 
         //==============CARREGA A TABELA DE CANDIDATOS==============
         colNome.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNome()));
@@ -194,7 +156,6 @@ public class CandidaturaController extends ApplicationController implements Tela
         colHoraEntrevista.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHoraFormatada()));
         colNotaEntrevista.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNotaFormatada()));
 
-        //================CARREGA A TABELA DE TODAS AS CANDIDATURAS================
         colTodasVaga.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCargoVaga()));
         colTodasDepartamento.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDepartamentoVaga()));
         colTodasDataCand.setCellValueFactory(cellData -> new SimpleStringProperty(
@@ -215,7 +176,6 @@ public class CandidaturaController extends ApplicationController implements Tela
 
         btn_filtrar.setItems(FXCollections.observableArrayList("Nome", "CPF", "Email", "Formação"));
         btn_filtrar.setValue("Nome");
-
         search(tabCandidatos, barraPesquisar, btn_filtrar, this::filtro, candidatosBase);
         search(tabelaRegistrarVagas, barraPesquisar, btn_filtrar, this::filtro, vagasBase);
         search(tabEntrevistas, barraPesquisar, btn_filtrar, this::filtro, entrevistasBase);
@@ -244,6 +204,8 @@ public class CandidaturaController extends ApplicationController implements Tela
             e.printStackTrace();
         }
     }
+
+
 
     @FXML
     public <T> String filtro(String campo, T classe) throws BadFilter {
@@ -283,11 +245,130 @@ public class CandidaturaController extends ApplicationController implements Tela
         }
     }
 
+    //==============CONTEXT MENU DE VAGAS(EDITAR E EXCLUIR)==============
+    private void criarContextMenuVaga() {
+        tabelaRegistrarVagas.setRowFactory(tv -> {
+            TableRow<Vaga> row = new TableRow<>(); // row especifica
+            ContextMenu rowMenu = new ContextMenu();
 
+            Vaga vaga_atual = row.getItem();
+
+            MenuItem editarItem = new MenuItem("Editar vaga");
+            MenuItem excluirItem = new MenuItem("Excluir vaga");
+            MenuItem solicitarContratacao = new MenuItem("Solicitar Contratação");
+            //solicitarContratacao.setOnAction(e -> realizarPedidoDeContratação(candidaturaSelecionada));
+
+            rowMenu.getItems().addAll(editarItem, excluirItem, solicitarContratacao);
+
+            editarItem.setOnAction(e -> {
+                Vaga vagaSelecionada = tabelaRegistrarVagas.getSelectionModel().getSelectedItem();
+                editarVaga(vagaSelecionada);
+            });
+
+            excluirItem.setOnAction(e -> {
+                Vaga vagaSelecionada = tabelaRegistrarVagas.getSelectionModel().getSelectedItem();
+                if(vagaSelecionada != null){
+                    try {
+                        excluirVaga(vagaSelecionada);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            });
+
+            row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+                if(isNowEmpty){
+                    row.setContextMenu(null);
+                } else{
+                    row.setContextMenu(rowMenu);
+                }
+            });
+
+            return row;
+        });
+    }
+
+    private void realizarPedidoDeContratacao(AgendaViewModel entrevista) {
+        //isAprovado tem q implementar usando a nota
+        if (!entrevista.getEntrevista().isAprovada()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText(null);
+            alert.setContentText("Somente candidatos aprovados podem ser contratados!");
+            alert.showAndWait();
+            return;
+        }
+
+
+        try {
+            for(var mapa : db.getData("pedidos")){
+                if(db.convertMaptoObject((Map<String, Object>) mapa.get("entrevista"), Entrevista.class).getId() == entrevista.getEntrevista().getId()){
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setHeaderText(null);
+                    alert.setContentText("Já foi realizado um pedido a essa entrevista.");
+                    alert.showAndWait();
+                    return;
+                }
+            }
+
+            Recrutador recrutador = (Recrutador) dbRecrutadores.searchUsuario("usuarios", "id", String.valueOf(entrevista.getEntrevista().getRecrutadorId()));
+            Contratacao contratacao = new Contratacao(recrutador, entrevista.getEntrevista(), LocalDate.now(), entrevista.getRegimeVaga());
+            db.addObject(contratacao, "pedidos");
+            int id = contratacao.getId();
+            db.setActualId(++id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Erro ao registrar pedido");
+            alert.setContentText("Ocorreu um erro ao salvar o pedido de contratação.");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    private void editarVaga(Vaga vagaSelecionada) {
+
+        tab_editarVagas.setVisible(true);
+
+        ev_cargo.setText(vagaSelecionada.getCargo());
+        ev_salario.setText(String.valueOf(vagaSelecionada.getSalarioBase()));
+        ev_requisitos.setText(vagaSelecionada.getRequisitos());
+        ev_departamento.setText(vagaSelecionada.getDepartamento());
+        ev_regime.setText(vagaSelecionada.getRegimeContratacao());
+
+        btn_ev_salvar.setOnAction(e -> {
+            try {
+                double salario = Double.parseDouble(ev_salario.getText());
+                boolean sucesso = vagaService.editarVaga(vagaSelecionada, ev_cargo.getText(), salario, ev_requisitos.getText(), ev_departamento.getText(), ev_regime.getText());
+
+                if (sucesso) {
+                    tabelaRegistrarVagas.refresh();
+                    cancelar();
+                }
+            } catch (NumberFormatException f) {
+                ev_error.setManaged(true);
+                ev_error.setText("Salário deve ser um número real válido.");
+            }
+        });
+
+        btn_ev_cancelar.setOnAction(e -> {
+            tab_editarVagas.setVisible(false);
+        });
+
+    }
+
+    private void cancelar() {
+        ev_cargo.setText("");
+        ev_salario.setText("");
+        ev_requisitos.setText("");
+        ev_departamento.setText("");
+        ev_regime.setText("");
+        ev_error.setText("");
+        ev_error.setManaged(false);
+
+        tab_editarVagas.setVisible(false);
+    }
 
     //==============CONTEXT MENU DE CANDIDATOS(EDITAR E EXCLUIR)==============
-
-    //(Editar Candidato, Excluir Candidato, Registrar Candidatura, Mostrar Candidaturas, Visualizar Perfil)
     private void criarContextMenuCandidato() throws IOException {
 
         ContextMenu contextMenu = new ContextMenu();
@@ -378,7 +459,172 @@ public class CandidaturaController extends ApplicationController implements Tela
         });
     }
 
-    //(Excluir Entrevista, Reagendar Entrevistar, Atribuir Nota a entrevista)
+    private void abrirModalDeEdicao(Candidato candidatoSelecionado, String tela, String name) throws IOException {
+        try{
+            var resource = getClass().getResource(name);
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent root = loader.load();
+            EditarController controller = loader.getController();
+            controller.initData(candidatoSelecionado, this.usuarioLogado, tela, vagaService, candidaturaService, usuarioService);
+            Stage stage = new Stage();
+            stage.setTitle(tela + candidatoSelecionado.getNome());
+            stage.setScene(new Scene(root));
+
+            Window ownerStage = (Window) tab_vagas.getScene().getWindow();
+            stage.initOwner(ownerStage);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            stage.showAndWait();
+
+            carregarVagas();
+            carregarCandidatos();
+            this.allCandidaturas = candidaturaService.getAllCandidaturas();
+            tabCandidatos.refresh();
+            tabelaRegistrarVagas.refresh();
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void abrirModalDeInfos(Candidato candidatoSelecionado, String tela, String name) throws IOException {
+        try{
+            var resource = getClass().getResource(name);
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent root = loader.load();
+            InfoCandidaturaController controller = loader.getController();
+            controller.initData(candidatoSelecionado, this.usuarioLogado, tela, vagaService, candidaturaService, usuarioService, entrevistaService);
+            Stage stage = new Stage();
+            stage.setTitle(tela);
+            stage.setScene(new Scene(root));
+            Window ownerStage = (Window) tab_vagas.getScene().getWindow();
+            stage.initOwner(ownerStage);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            carregarVagas();
+            carregarCandidatos();
+            this.allCandidaturas = candidaturaService.getAllCandidaturas();
+            tabCandidatos.refresh();
+            tabelaRegistrarVagas.refresh();
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void abrirModalAgendamento(InfoCandidaturaViewModel viewModel, Entrevista entrevista, String tela) throws IOException {
+        try{
+            var resource = getClass().getResource("/com/Projeto_Tp1_2025_2/view/Recrutamento/TelinhaAux.fxml"); //
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent root = loader.load();
+            TelinhaAuxController controller = loader.getController();
+
+            controller.initData(viewModel, entrevista, tela, vagaService, candidaturaService, usuarioService, entrevistaService);
+            Stage stage = new Stage();
+            stage.setTitle(tela);
+            stage.setScene(new Scene(root));
+            Window ownerStage = (Window) tab_candidatos.getScene().getWindow();
+            stage.initOwner(ownerStage);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            this.allCandidaturas = candidaturaService.getAllCandidaturas();
+            carregarEntrevistas();
+            tabEntrevistas.refresh();
+            carregarTodasCandidaturas();
+            tabTodasCandidaturas.refresh();
+            carregarVagas();
+            tabelaRegistrarVagas.refresh();
+
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void abrirModalPerfil(Candidato candidatoSelecionado, String tela, String name) throws IOException {
+        try{
+            var resource = getClass().getResource(name);
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent root = loader.load();
+            TelinhaAuxController controller = loader.getController();
+
+            controller.initData(candidatoSelecionado, tela, vagaService, candidaturaService, usuarioService, entrevistaService);
+
+            Stage stage = new Stage();
+            stage.setTitle(tela + candidatoSelecionado.getNome());
+            stage.setScene(new Scene(root));
+            Window ownerStage = (Window) tab_candidatos.getScene().getWindow();
+            stage.initOwner(ownerStage);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            stage.showAndWait();
+
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    @FXML private void excluirCandidato(Candidato candidatoSelecionado) throws IOException {
+        if(candidatoSelecionado == null){
+            System.out.println("Nenhum candidato selecionado para excluir.");
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Excluir Candidato");
+        alert.setHeaderText("Excluir Candidato");
+        alert.setContentText("Nome: " + candidatoSelecionado.getNome() + "\nCPF: " + candidatoSelecionado.getCpf());
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if(result.get() == ButtonType.OK && result.isPresent()){
+
+            List<Candidatura> candidaturas = candidaturaService.getAllCandidaturasPorCandidato(candidatoSelecionado);
+            for(var candidatura : candidaturas){
+                candidaturaService.excluirCandidatura(candidatura);
+            }
+            this.allCandidaturas = candidaturaService.getAllCandidaturas();
+            boolean veri = usuarioService.excluirUsuario(candidatoSelecionado);
+            if(veri){
+                candidatosBase.remove(candidatoSelecionado);
+                tabCandidatos.refresh();
+                System.out.println("Candidato excluido com sucesso.");
+            } else{
+                System.out.println("Erro ao excluir Candidato");
+            }
+        }
+    }
+
+    @FXML private void excluirVaga(Vaga vagaSelecionada) throws IOException {
+        if(vagaSelecionada == null){
+            System.out.println("Nenhuma vaga selecionada para excluir.");
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Excluir Vaga");
+        alert.setHeaderText("Excluir Vaga");
+        alert.setContentText("Vaga: " + vagaSelecionada.getId() + "\nCargo: " + vagaSelecionada.getCargo());
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if(result.get() == ButtonType.OK && result.isPresent()){
+
+            List<Candidatura> candidaturas = candidaturaService.getAllCandidaturasPorVaga(vagaSelecionada);
+            for(var candidatura : candidaturas){
+                candidaturaService.excluirCandidatura(candidatura);
+            }
+            this.allVagas = vagaService.getAllVagas();
+            boolean veri = vagaService.excluirVaga(vagaSelecionada);
+            if(veri){
+                tabelaRegistrarVagas.getItems().remove(vagaSelecionada);
+                tabelaRegistrarVagas.refresh();
+                System.out.println("Vaga excluida com sucesso.");
+            } else{
+                System.out.println("Erro ao excluir Vaga");
+            }
+        }
+    }
+
     private void criarContextMenuEntrevistas() {
         ContextMenu contextMenu = new ContextMenu();
 
@@ -498,7 +744,6 @@ public class CandidaturaController extends ApplicationController implements Tela
         });
     }
 
-    //(Editar Status De Candidatura, Agendar Entrevista, Excluir Candidatura)
     private void criarContextMenuTodasCandidaturas() {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem editarStatusItem = new MenuItem("Editar Status de Candidatura");
@@ -528,13 +773,13 @@ public class CandidaturaController extends ApplicationController implements Tela
                     //TALVEZ MODIFICAR DEPOIS PARA OUTRA ABORDAGEM
                     try {
                         candidaturaService.excluirCandidatura(viewModel.getCandidatura());
-                        this.allCandidaturas = candidaturaService.getAllCandidaturas();
                         carregarTodasCandidaturas();
                         tabTodasCandidaturas.refresh();
                         carregarVagas();
-                        tabelaRegistrarVagas.refresh();
                         carregarCandidatos();
+                        this.allCandidaturas = candidaturaService.getAllCandidaturas();
                         tabCandidatos.refresh();
+                        tabelaRegistrarVagas.refresh();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -626,201 +871,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         });
     }
 
-    @FXML private void excluirCandidato(Candidato candidatoSelecionado) throws IOException {
-        if(candidatoSelecionado == null){
-            System.out.println("Nenhum candidato selecionado para excluir.");
-            return;
-        }
-
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Excluir Candidato");
-        alert.setHeaderText("Excluir Candidato");
-        alert.setContentText("Nome: " + candidatoSelecionado.getNome() + "\nCPF: " + candidatoSelecionado.getCpf());
-
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if(result.get() == ButtonType.OK && result.isPresent()){
-
-            List<Candidatura> candidaturas = candidaturaService.getAllCandidaturasPorCandidato(candidatoSelecionado);
-            for(var candidatura : candidaturas){
-                candidaturaService.excluirCandidatura(candidatura);
-            }
-            this.allCandidaturas = candidaturaService.getAllCandidaturas();
-            boolean veri = usuarioService.excluirUsuario(candidatoSelecionado);
-            if(veri){
-                candidatosBase.remove(candidatoSelecionado);
-                tabCandidatos.refresh();
-                System.out.println("Candidato excluido com sucesso.");
-            } else{
-                System.out.println("Erro ao excluir Candidato");
-            }
-        }
-    }
-
-    @FXML private void excluirVaga(Vaga vagaSelecionada) throws IOException {
-        if(vagaSelecionada == null){
-            System.out.println("Nenhuma vaga selecionada para excluir.");
-            return;
-        }
-
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Excluir Vaga");
-        alert.setHeaderText("Excluir Vaga");
-        alert.setContentText("Vaga: " + vagaSelecionada.getId() + "\nCargo: " + vagaSelecionada.getCargo());
-
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if(result.get() == ButtonType.OK && result.isPresent()){
-
-            List<Candidatura> candidaturas = candidaturaService.getAllCandidaturasPorVaga(vagaSelecionada);
-            for(var candidatura : candidaturas){
-                candidaturaService.excluirCandidatura(candidatura);
-            }
-            this.allVagas = vagaService.getAllVagas();
-            boolean veri = vagaService.excluirVaga(vagaSelecionada);
-            if(veri){
-                tabelaRegistrarVagas.getItems().remove(vagaSelecionada);
-                tabelaRegistrarVagas.refresh();
-                System.out.println("Vaga excluida com sucesso.");
-            } else{
-                System.out.println("Erro ao excluir Vaga");
-            }
-        }
-    }
     //==============CONTEXT MENU DE CANDIDATOS(EDITAR E EXCLUIR)==============
-
-
-
-    //==============MODALS==============
-
-    /**Abre a tela de edicao ou candastro de candidatos
-     * gerenciado pelo EditarController.java
-     * @param candidatoSelecionado O candidato que será editado
-     * @param tela O título da janela e também a lógica de controlo (veja os if do InitData de EditarController)
-     * @param name O path de execução: "/com/Projeto_Tp1_2025_2/view/Recrutamento/TelaEditarCandidato.fxml"
-     */
-    private void abrirModalDeEdicao(Candidato candidatoSelecionado, String tela, String name) throws IOException {
-        try{
-            var resource = getClass().getResource(name);
-            FXMLLoader loader = new FXMLLoader(resource);
-            Parent root = loader.load();
-            EditarController controller = loader.getController();
-            controller.initData(candidatoSelecionado, this.usuarioLogado, tela, vagaService, candidaturaService, usuarioService);
-            Stage stage = new Stage();
-            stage.setTitle(tela + candidatoSelecionado.getNome());
-            stage.setScene(new Scene(root));
-
-            Window ownerStage = (Window) tab_vagas.getScene().getWindow();
-            stage.initOwner(ownerStage);
-            stage.initModality(Modality.APPLICATION_MODAL);
-
-            stage.showAndWait();
-
-            carregarVagas();
-            carregarCandidatos();
-            this.allCandidaturas = candidaturaService.getAllCandidaturas();
-            tabCandidatos.refresh();
-            tabelaRegistrarVagas.refresh();
-        } catch(IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    /**abre a tela de candidaturas por candidato
-     * gerenciado pelo InfoCandidaturaController
-     * @param candidatoSelecionado O candidato que terá as informações mostradas
-     * @param tela O titulo da janela
-     * @param name O path de execução: "/com/Projeto_Tp1_2025_2/view/Recrutamento/CandidaturaInfos.fxml"
-     */
-    private void abrirModalDeInfos(Candidato candidatoSelecionado, String tela, String name) throws IOException {
-        try{
-            var resource = getClass().getResource(name);
-            FXMLLoader loader = new FXMLLoader(resource);
-            Parent root = loader.load();
-            InfoCandidaturaController controller = loader.getController();
-            controller.initData(candidatoSelecionado, this.usuarioLogado, tela, vagaService, candidaturaService, usuarioService, entrevistaService);
-            Stage stage = new Stage();
-            stage.setTitle(tela);
-            stage.setScene(new Scene(root));
-            Window ownerStage = (Window) tab_vagas.getScene().getWindow();
-            stage.initOwner(ownerStage);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-
-            carregarVagas();
-            carregarCandidatos();
-            this.allCandidaturas = candidaturaService.getAllCandidaturas();
-            tabCandidatos.refresh();
-            tabelaRegistrarVagas.refresh();
-        } catch(IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    /**Abre a tela auxiliar para Agendamento, Reagendamento ou Edição de Status.
-     * Gerenciado pelo TelinhaAuxController.java.
-     * @param viewModel O item (ViewModel) selecionado na tabela, usado para contexto.
-     * @param entrevista A entrevista a ser editada (para "Reagendamento") ou null para novas ações.
-     * @param tela A String de controlo (ex: "Agendamento", "Editar Status Candidatura").
-     */
-    private void abrirModalAgendamento(InfoCandidaturaViewModel viewModel, Entrevista entrevista, String tela) throws IOException {
-        try{
-            var resource = getClass().getResource("/com/Projeto_Tp1_2025_2/view/Recrutamento/TelinhaAux.fxml"); //
-            FXMLLoader loader = new FXMLLoader(resource);
-            Parent root = loader.load();
-            TelinhaAuxController controller = loader.getController();
-
-            controller.initData(viewModel, entrevista, tela, vagaService, candidaturaService, usuarioService, entrevistaService);
-            Stage stage = new Stage();
-            stage.setTitle(tela);
-            stage.setScene(new Scene(root));
-            Window ownerStage = (Window) tab_candidatos.getScene().getWindow();
-            stage.initOwner(ownerStage);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-
-            this.allCandidaturas = candidaturaService.getAllCandidaturas();
-            carregarEntrevistas();
-            tabEntrevistas.refresh();
-            carregarTodasCandidaturas();
-            tabTodasCandidaturas.refresh();
-            carregarVagas();
-            tabelaRegistrarVagas.refresh();
-
-        } catch(IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    /**Abre a tela de "Visualizar Perfil" do candidato (campos não editáveis).
-     * Gerenciado pelo TelinhaAuxController.java (sobrecarga initData de Candidato).
-     * @param candidatoSelecionado O candidato que terá as informações exibidas.
-     * @param tela O título da janela e a String de controlo (ex: "Perfil").
-     * @param name O path de execução: "/com/Projeto_Tp1_2025_2/view/Recrutamento/TelinhaAux.fxml"
-     */
-    private void abrirModalPerfil(Candidato candidatoSelecionado, String tela, String name) throws IOException {
-        try{
-            var resource = getClass().getResource(name);
-            FXMLLoader loader = new FXMLLoader(resource);
-            Parent root = loader.load();
-            TelinhaAuxController controller = loader.getController();
-
-            controller.initData(candidatoSelecionado, tela, vagaService, candidaturaService, usuarioService, entrevistaService);
-
-            Stage stage = new Stage();
-            stage.setTitle(tela + candidatoSelecionado.getNome());
-            stage.setScene(new Scene(root));
-            Window ownerStage = (Window) tab_candidatos.getScene().getWindow();
-            stage.initOwner(ownerStage);
-            stage.initModality(Modality.APPLICATION_MODAL);
-
-            stage.showAndWait();
-
-        } catch(IOException e){
-            e.printStackTrace();
-        }
-    }
-    //==============MODALS==============
 
 
 
@@ -908,8 +959,6 @@ public class CandidaturaController extends ApplicationController implements Tela
 
 
     //=====================BOTOES=======================
-
-    //Eles mudam as tabelas visiveis
     @FXML private void btn_vagas(ActionEvent event) throws IOException {
         carregarVagas();
         tabelaRegistrarVagas.refresh();
@@ -939,6 +988,14 @@ public class CandidaturaController extends ApplicationController implements Tela
         ));
         btn_filtrar.setValue("Nome");
     }
+
+    /*@FXML private void btn_RegistrarVaga(ActionEvent event) throws IOException {
+        if(nowVisible != tab_RegistrarVagas){
+            nowVisible.setVisible(false);
+        }
+        tab_RegistrarVagas.setVisible(true);
+        nowVisible = tab_RegistrarVagas;
+    }*/
 
     @FXML private void btn_RegistrarCandidato(ActionEvent event) throws IOException {
         if(nowVisible != tab_RegistrarCandidato){
@@ -982,6 +1039,16 @@ public class CandidaturaController extends ApplicationController implements Tela
 
 
     //==============ON CLICKS==============
+    /*@FXML protected void onClickRegistrarVaga(ActionEvent event) throws IOException {
+        try{
+            vagaService.registrar(txtCargo.getText(), txtSalario.getText(), txtRequisitos.getText(), choiceRegime.getValue(), txtDepartamento.getText());
+            limparCampos();
+            carregarVagas();
+        } catch(ValidationException | IOException e){
+            error_message.setText(e.getMessage());
+        }
+    }*/
+
     @FXML private void onClickSair(ActionEvent event) throws IOException {
         SceneSwitcher.sceneswitcher(event, "Login", telas_path.get("LOGIN"));
     }
@@ -1010,132 +1077,6 @@ public class CandidaturaController extends ApplicationController implements Tela
         return;
     }
     //==============ON CLICKS==============
-
-
-    //==============CONTEXT MENU DE VAGAS(EDITAR E EXCLUIR)==============
-    private void criarContextMenuVaga() {
-        tabelaRegistrarVagas.setRowFactory(tv -> {
-            TableRow<Vaga> row = new TableRow<>(); // row especifica
-            ContextMenu rowMenu = new ContextMenu();
-
-            Vaga vaga_atual = row.getItem();
-
-            MenuItem editarItem = new MenuItem("Editar vaga");
-            MenuItem excluirItem = new MenuItem("Excluir vaga");
-            MenuItem solicitarContratacao = new MenuItem("Solicitar Contratação");
-            //solicitarContratacao.setOnAction(e -> realizarPedidoDeContratação(candidaturaSelecionada));
-
-            rowMenu.getItems().addAll(editarItem, excluirItem, solicitarContratacao);
-
-            editarItem.setOnAction(e -> {
-                Vaga vagaSelecionada = tabelaRegistrarVagas.getSelectionModel().getSelectedItem();
-                editarVaga(vagaSelecionada);
-            });
-
-            excluirItem.setOnAction(e -> {
-                Vaga vagaSelecionada = tabelaRegistrarVagas.getSelectionModel().getSelectedItem();
-                if(vagaSelecionada != null){
-                    try {
-                        excluirVaga(vagaSelecionada);
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }
-            });
-
-            row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
-                if(isNowEmpty){
-                    row.setContextMenu(null);
-                } else{
-                    row.setContextMenu(rowMenu);
-                }
-            });
-
-            return row;
-        });
-    }
-
-    private void realizarPedidoDeContratacao(AgendaViewModel entrevista) {
-        //isAprovado tem q implementar usando a nota
-        if (!entrevista.getEntrevista().isAprovada()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText(null);
-            alert.setContentText("Somente candidatos aprovados podem ser contratados!");
-            alert.showAndWait();
-            return;
-        }
-
-
-        try {
-            for(var mapa : db.getData("pedidos")){
-                if(db.convertMaptoObject((Map<String, Object>) mapa.get("entrevista"), Entrevista.class).getId() == entrevista.getEntrevista().getId()){
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setHeaderText(null);
-                    alert.setContentText("Já foi realizado um pedido a essa entrevista.");
-                    alert.showAndWait();
-                    return;
-                }
-            }
-
-            Recrutador recrutador = (Recrutador) dbRecrutadores.searchUsuario("usuarios", "id", String.valueOf(entrevista.getEntrevista().getRecrutadorId()));
-            Contratacao contratacao = new Contratacao(recrutador, entrevista.getEntrevista(), LocalDate.now(), entrevista.getRegimeVaga());
-            db.addObject(contratacao, "pedidos");
-            int id = contratacao.getId();
-            db.setActualId(++id);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Erro ao registrar pedido");
-            alert.setContentText("Ocorreu um erro ao salvar o pedido de contratação.");
-            alert.showAndWait();
-        }
-    }
-
-
-    @FXML
-    private void editarVaga(Vaga vagaSelecionada) {
-
-        tab_editarVagas.setVisible(true);
-
-        ev_cargo.setText(vagaSelecionada.getCargo());
-        ev_salario.setText(String.valueOf(vagaSelecionada.getSalarioBase()));
-        ev_requisitos.setText(vagaSelecionada.getRequisitos());
-        ev_departamento.setText(vagaSelecionada.getDepartamento());
-        ev_regime.setText(vagaSelecionada.getRegimeContratacao());
-
-        btn_ev_salvar.setOnAction(e -> {
-            try {
-                double salario = Double.parseDouble(ev_salario.getText());
-                boolean sucesso = vagaService.editarVaga(vagaSelecionada, ev_cargo.getText(), salario, ev_requisitos.getText(), ev_departamento.getText(), ev_regime.getText());
-
-                if (sucesso) {
-                    tabelaRegistrarVagas.refresh();
-                    cancelar();
-                }
-            } catch (NumberFormatException f) {
-                ev_error.setManaged(true);
-                ev_error.setText("Salário deve ser um número real válido.");
-            }
-        });
-
-        btn_ev_cancelar.setOnAction(e -> {
-            tab_editarVagas.setVisible(false);
-        });
-
-    }
-
-    private void cancelar() {
-        ev_cargo.setText("");
-        ev_salario.setText("");
-        ev_requisitos.setText("");
-        ev_departamento.setText("");
-        ev_regime.setText("");
-        ev_error.setText("");
-        ev_error.setManaged(false);
-
-        tab_editarVagas.setVisible(false);
-    }
-    //==============CONTEXT MENU DE VAGAS(EDITAR E EXCLUIR)==============
 
 
 

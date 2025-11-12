@@ -28,7 +28,6 @@ public class RelatorioGestao {
 
     ArrayList<Contratacao> pedidos;
     private int pedidos_aceitos;
-    private int pedidos_recusados;
     private int pedidos_recebidos;
 
     ArrayList<Vaga> vagas;
@@ -41,7 +40,6 @@ public class RelatorioGestao {
         this.pedidos_recebidos = 0;
         this.vagas_criadas = 0;
         this.vagas_excluidas = 0;
-        this.pedidos_recusados = 0;
         data_criacao = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
         pedidos = new ArrayList<>();
@@ -55,141 +53,138 @@ public class RelatorioGestao {
         this.pedidos_recebidos = 0;
         this.vagas_criadas = 0;
         this.vagas_excluidas = 0;
-        this.pedidos_recusados = 0;
         data_criacao = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
         pedidos = new ArrayList<>();
         vagas = new ArrayList<>();
     }
 
-    public void addPedidos(Contratacao pedido) {
+   public void addPedidos(Contratacao pedido) {
         pedidos.add(pedido);
         pedidos_recebidos++;
-    }
+   }
 
-    public void addVagas(Vaga vaga) {
+   public void addVagas(Vaga vaga) {
         vagas.add(vaga);
         vagas_criadas++;
-    }
+   }
 
-    public void removeVagas(Vaga vaga) {
+   public void removeVagas(Vaga vaga) {
         vagas.remove(vaga);
         vagas_excluidas++;
-    }
+   }
 
-    public void aceitarPedido() {
+   public void aceitarPedido() {
         pedidos_aceitos++;
-    }
-    public void recusarPedido(){pedidos_recusados++;}
+   }
 
-    public void gerar(String path) {
+   public void gerar(String path) {
         Document doc = new Document(PageSize.A4, 50, 50, 60, 60);
 
-        try {
-            PdfWriter.getInstance(doc, new FileOutputStream(path));
-            doc.open();
+       try {
+           PdfWriter.getInstance(doc, new FileOutputStream(path));
+           doc.open();
 
-            // cabecalho
-            Font tituloFont = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD, AZUL);
-            Font subtituloFont = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL, BaseColor.DARK_GRAY);
-            Font textoFont = new Font(Font.FontFamily.HELVETICA, 11, Font.NORMAL, BaseColor.BLACK);
+           // cabecalho
+           Font tituloFont = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD, AZUL);
+           Font subtituloFont = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL, BaseColor.DARK_GRAY);
+           Font textoFont = new Font(Font.FontFamily.HELVETICA, 11, Font.NORMAL, BaseColor.BLACK);
 
-            Paragraph titulo = new Paragraph("Relatório de Gestão de RH", tituloFont);
-            titulo.setAlignment(Element.ALIGN_CENTER);
-            titulo.setSpacingAfter(5);
+           Paragraph titulo = new Paragraph("Relatório de Gestão de RH", tituloFont);
+           titulo.setAlignment(Element.ALIGN_CENTER);
+           titulo.setSpacingAfter(5);
 
-            Paragraph subtitulo = new Paragraph(
-                    "Gestor: " + ((gestor != null) ? gestor.getNome() : "admin") +
-                            " | Data: " + data_criacao,
-                    subtituloFont
-            );
-            subtitulo.setAlignment(Element.ALIGN_CENTER);
-            subtitulo.setSpacingAfter(20);
+           Paragraph subtitulo = new Paragraph(
+                   "Gestor: " + ((gestor != null) ? gestor.getNome() : "admin") +
+                           " | Data: " + data_criacao,
+                   subtituloFont
+           );
+           subtitulo.setAlignment(Element.ALIGN_CENTER);
+           subtitulo.setSpacingAfter(20);
 
-            doc.add(titulo);
-            doc.add(subtitulo);
+           doc.add(titulo);
+           doc.add(subtitulo);
 
-            // resumo
-            PdfPTable resumo = new PdfPTable(2);
-            resumo.setWidthPercentage(100);
-            resumo.setSpacingAfter(15);
-            resumo.getDefaultCell().setPadding(8);
+           // resumo
+           PdfPTable resumo = new PdfPTable(2);
+           resumo.setWidthPercentage(100);
+           resumo.setSpacingAfter(15);
+           resumo.getDefaultCell().setPadding(8);
 
-            adicionarLinhaResumo(resumo, "Total de Vagas Criadas", String.valueOf(vagas_criadas));
-            adicionarLinhaResumo(resumo, "Total de Vagas Excluídas", String.valueOf(vagas_excluidas));
-            adicionarLinhaResumo(resumo, "Pedidos de Contratação Recebidos", String.valueOf(pedidos_recebidos));
-            adicionarLinhaResumo(resumo, "Pedidos de Contratação Aceitos", String.valueOf(pedidos_aceitos));
-            adicionarLinhaResumo(resumo, "Pedidos de Contratação Aceitos", String.valueOf(pedidos_recusados));
+           adicionarLinhaResumo(resumo, "Total de Vagas Criadas", String.valueOf(vagas_criadas));
+           adicionarLinhaResumo(resumo, "Total de Vagas Excluídas", String.valueOf(vagas_excluidas));
+           adicionarLinhaResumo(resumo, "Pedidos de Contratação Recebidos", String.valueOf(pedidos_recebidos));
+           adicionarLinhaResumo(resumo, "Pedidos de Contratação Aceitos", String.valueOf(pedidos_aceitos));
 
-            doc.add(criarTituloSecao("Resumo do Período"));
-            doc.add(resumo);
+           doc.add(criarTituloSecao("Resumo do Período"));
+           doc.add(resumo);
 
-            // detalhamento vagas
-            doc.add(criarTituloSecao("Vagas Criadas"));
+           // detalhamento vagas
+           doc.add(criarTituloSecao("Vagas Criadas"));
 
-            PdfPTable tabelaVagas = new PdfPTable(new float[]{2, 1, 1, 1});
-            tabelaVagas.setWidthPercentage(100);
-            adicionarCabecalhoTabela(tabelaVagas, "Cargo", "Departamento", "Status", "Salário Base");
+           PdfPTable tabelaVagas = new PdfPTable(new float[]{2, 1, 1, 1});
+           tabelaVagas.setWidthPercentage(100);
+           adicionarCabecalhoTabela(tabelaVagas, "Cargo", "Departamento", "Status", "Salário Base");
 
-            for (Vaga v : vagas) {
-                tabelaVagas.addCell(celulaTexto(v.getCargo()));
-                tabelaVagas.addCell(celulaTexto(v.getDepartamento()));
-                tabelaVagas.addCell(celulaTexto(
-                        switch (v.getStatus()) {
-                            case StatusVaga.ATIVO -> "Ativo";
-                            case StatusVaga.INSCRICOES_PAUSADAS -> "Pausado";
-                            case StatusVaga.FECHADA -> "Fechada";
-                        }
-                ));
-                tabelaVagas.addCell(celulaTexto(String.format("R$ %.2f", v.getSalarioBase())));
-            }
-            doc.add(tabelaVagas);
+           for (Vaga v : vagas) {
+               tabelaVagas.addCell(celulaTexto(v.getCargo()));
+               tabelaVagas.addCell(celulaTexto(v.getDepartamento()));
+               tabelaVagas.addCell(celulaTexto(
+                       switch (v.getStatus()) {
+                           case StatusVaga.ATIVO -> "Ativo";
+                           case StatusVaga.INSCRICOES_PAUSADAS -> "Pausado";
+                           case StatusVaga.FECHADA -> "Fechada";
+                       }
+               ));
+               tabelaVagas.addCell(celulaTexto(String.format("R$ %.2f", v.getSalarioBase())));
+           }
+           doc.add(tabelaVagas);
 
-            // contratacoes
-            doc.add(criarTituloSecao("Pedidos de Contratação"));
+           // contratacoes
+           doc.add(criarTituloSecao("Pedidos de Contratação"));
 
-            PdfPTable tabelaPedidos = new PdfPTable(new float[]{2, 2, 1, 1});
-            tabelaPedidos.setWidthPercentage(100);
-            adicionarCabecalhoTabela(tabelaPedidos, "Candidato", "Vaga", "Status", "Data Contratação");
+           PdfPTable tabelaPedidos = new PdfPTable(new float[]{2, 2, 1, 1});
+           tabelaPedidos.setWidthPercentage(100);
+           adicionarCabecalhoTabela(tabelaPedidos, "Candidato", "Vaga", "Status", "Data Contratação");
 
-            for (Contratacao c : pedidos) {
-                UsuarioService us = new UsuarioService();
-                CandidaturaService cs = new CandidaturaService();
-                VagaService vs = new VagaService();
+           for (Contratacao c : pedidos) {
+               UsuarioService us = new UsuarioService();
+               CandidaturaService cs = new CandidaturaService();
+               VagaService vs = new VagaService();
 
-                try {
-                    Candidato candidato = (Candidato) us.getUsuarioPorId(cs.getCandidaturaPorId(c.getEntrevista().getCandidaturaId()).getCandidatoId());
-                    Vaga vaga = vs.getVagaPorId(cs.getCandidaturaPorId(c.getEntrevista().getCandidaturaId()).getVagaId());
+               try {
+                   Candidato candidato = (Candidato) us.getUsuarioPorId(cs.getCandidaturaPorId(c.getEntrevista().getCandidaturaId()).getCandidatoId());
+                   Vaga vaga = vs.getVagaPorId(cs.getCandidaturaPorId(c.getEntrevista().getCandidaturaId()).getVagaId());
 
-                    tabelaPedidos.addCell(celulaTexto(candidato.getNome()));
-                    tabelaPedidos.addCell(celulaTexto(vaga.getCargo()));
-                    tabelaPedidos.addCell(celulaTexto(c.getStatus()));
-                    tabelaPedidos.addCell(celulaTexto(c.getDataPedido() != null ?
-                            c.getDataPedido().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "-"));
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            doc.add(tabelaPedidos);
+                   tabelaPedidos.addCell(celulaTexto(candidato.getNome()));
+                   tabelaPedidos.addCell(celulaTexto(vaga.getCargo()));
+                   tabelaPedidos.addCell(celulaTexto(c.getStatus()));
+                   tabelaPedidos.addCell(celulaTexto(c.getDataPedido() != null ?
+                           c.getDataPedido().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "-"));
+               }
+               catch (IOException e) {
+                   e.printStackTrace();
+               }
+           }
+           doc.add(tabelaPedidos);
 
-            // rodape
-            Paragraph rodape = new Paragraph(
-                    "\nRelatório gerado automaticamente pelo Sistema de Gestão de RH.\n© Universidade de Brasília - Projeto TP1 2025.2",
-                    new Font(Font.FontFamily.HELVETICA, 9, Font.ITALIC, BaseColor.GRAY)
-            );
-            rodape.setAlignment(Element.ALIGN_CENTER);
-            rodape.setSpacingBefore(30);
-            doc.add(rodape);
+           // rodape
+           Paragraph rodape = new Paragraph(
+                   "\nRelatório gerado automaticamente pelo Sistema de Gestão de RH.\n© Universidade de Brasília - Projeto TP1 2025.2",
+                   new Font(Font.FontFamily.HELVETICA, 9, Font.ITALIC, BaseColor.GRAY)
+           );
+           rodape.setAlignment(Element.ALIGN_CENTER);
+           rodape.setSpacingBefore(30);
+           doc.add(rodape);
 
-            doc.close();
-            System.out.println("Relatório PDF gerado com sucesso: " + path);
+           doc.close();
+           System.out.println("✅ Relatório PDF gerado com sucesso: " + path);
 
-        }
-        catch (DocumentException | IOException e) {
-            e.printStackTrace();
-        }
-    }
+       }
+       catch (DocumentException | IOException e) {
+           e.printStackTrace();
+       }
+   }
 
     private static void adicionarLinhaResumo(PdfPTable tabela, String chave, String valor) {
         PdfPCell c1 = new PdfPCell(new Phrase(chave));
