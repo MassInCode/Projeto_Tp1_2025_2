@@ -35,7 +35,7 @@ public class Contratacao {
         this.entrevista = entrevista;
         this.dataPedido = dataPedido;
         this.status = "Pendente";
-        this.id = ++contador;
+        this.id = contador++;
         this.regime = regime;
     }
 
@@ -94,6 +94,4 @@ public class Contratacao {
     public void autorizar(){
         this.status = "Aprovado";
     }
-
-    public void negar(){this.status = "Reprovado";}
 }
