@@ -81,6 +81,7 @@
                            </font>
                         </Label>
                         <Separator orientation="VERTICAL" prefHeight="40.0" visible="false" />
+                        <Button fx:id="btn_candidato" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#alterarPerfil" prefHeight="30.0" prefWidth="200.0" text="Candidato" textFill="WHITE" />
                         <Button fx:id="btn_recrutador" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#alterarPerfil" prefHeight="30.0" prefWidth="200.0" text="Recrutador" textFill="WHITE" />
                         <Button fx:id="btn_gestor" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#alterarPerfil" prefHeight="30.0" prefWidth="200.0" text="Gestor" textFill="WHITE" />
                         <Separator orientation="VERTICAL" prefHeight="20.0" visible="false" />

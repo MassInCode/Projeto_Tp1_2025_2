@@ -91,6 +91,13 @@ public class LoginController {
         tab_telaInicial.setVisible(true);
     }
 
+
+
+    @FXML
+    private void btn_recrutamento(ActionEvent event) throws IOException {
+        SceneSwitcher.sceneswitcher(event, "Recrutamento", AdminController.telas_path.get("RECRUTADOR"));
+    }
+
     @FXML
     protected void onClickEnter(KeyEvent event) throws IOException{
         if (event.getCode() == KeyCode.ENTER) {

@@ -38,7 +38,6 @@ public class GestaoController extends ApplicationController implements TelaContr
     Database db;
     Database udb;
     Database pdb;
-    boolean acessoAdm = false;
     ArrayList<Recrutador> recrutadores;
     private final ObservableList<Vaga> vagasBase = FXCollections.observableArrayList();
     private final ObservableList<Contratacao> contratacoesBase = FXCollections.observableArrayList();
@@ -116,7 +115,6 @@ public class GestaoController extends ApplicationController implements TelaContr
         if (relatorio == null) {
             System.out.println("Acesso por admin");
             relatorio = new RelatorioGestao();
-            acessoAdm = true;
         }
         // ------------- Inicialização das Databases -------------
         try {
@@ -231,7 +229,7 @@ public class GestaoController extends ApplicationController implements TelaContr
             MenuItem excluirVaga = new MenuItem("Excluir vaga");
             MenuItem atribuirRecrutador = new MenuItem("Atribuir recrutador");
 
-            rowMenu.getItems().addAll(cadastrarVaga, editarVaga, excluirVaga, new SeparatorMenuItem(), atribuirRecrutador);
+            rowMenu.getItems().addAll(cadastrarVaga, editarVaga, excluirVaga, atribuirRecrutador);
 
             cadastrarVaga.setOnAction(e -> criacaoVagaJanela.setVisible(true));
             editarVaga.setOnAction(e -> abrirEdicao(row));
@@ -276,9 +274,8 @@ public class GestaoController extends ApplicationController implements TelaContr
             ContextMenu rowMenu = new ContextMenu();
 
             MenuItem aceitar = new MenuItem("Aceitar contratação");
-            MenuItem recusar = new MenuItem("Recusar contratação");
 
-            rowMenu.getItems().addAll(aceitar, recusar);
+            rowMenu.getItems().addAll(aceitar);
 
             aceitar.setOnAction(e -> {
                 row.getItem().autorizar();
@@ -297,27 +294,6 @@ public class GestaoController extends ApplicationController implements TelaContr
 
                 relatorio.addPedidos(row.getItem());
                 relatorio.aceitarPedido();
-
-                pdb.editObject(row.getItem(), "pedidos");
-            });
-
-            recusar.setOnAction(e -> {
-                row.getItem().recusar();
-
-                // dando update no candidatura para aprovar ele
-                try {
-                    Candidatura can = cs.getCandidaturaPorId(row.getItem().getEntrevista().getCandidaturaId());
-                    can.setStatus(StatusCandidatura.REPROVADO);
-                    cs.atualizarCandidatura(can);
-                }
-                catch (IOException error) {
-                    error.printStackTrace();
-                }
-
-                tabela_pedidos.refresh();
-
-                relatorio.addPedidos(row.getItem());
-                relatorio.recusarPedido();
 
                 pdb.editObject(row.getItem(), "pedidos");
             });
@@ -370,7 +346,7 @@ public class GestaoController extends ApplicationController implements TelaContr
                 Entrevista entrevista = pdb.convertMaptoObject((Map<String, Object>) mapa.get("entrevista"), Entrevista.class);
 
                 contratacoesBase.add(new Contratacao(
-                        Integer.parseInt(mapa.get("id").toString()), recrutador, entrevista, LocalDate.parse(mapa.get("dataPedido").toString(), DateTimeFormatter.ofPattern("dd/MM/yyyy")), mapa.get("regime").toString()
+                        recrutador, entrevista, LocalDate.parse(mapa.get("dataPedido").toString(), DateTimeFormatter.ofPattern("dd/MM/yyyy")), mapa.get("regime").toString()
                 ));
             }
 
@@ -517,7 +493,7 @@ public class GestaoController extends ApplicationController implements TelaContr
 
     @FXML
     private void gerarRelatorio() {
-        if (acessoAdm) { // significa que foi iniciado por um admin
+        if (relatorio == null) { // significa que foi iniciado por um admin
             System.out.println("Inicialização por admin");
             return;
         }

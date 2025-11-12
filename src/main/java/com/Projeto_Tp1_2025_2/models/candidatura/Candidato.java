@@ -15,6 +15,7 @@ public class Candidato extends Usuario {
 
     //nao apagar
     public Candidato() {super();}
+    //nao apagar
 
     public Candidato(String nome, String senha, String cpf, String email, String cargo, String formacao) throws InvalidPassword, InvalidCPF {
         //CONSTRUTOR DE CANDIDATO PASSANDO OS PARAMETROS PARA A SUPER CLASSE USUARIO
