@@ -73,7 +73,7 @@ public abstract class Usuario {
     }
 
     public boolean validarCPF(String cpf) {
-
+       /*
         cpf = cpf.replaceAll("\\D", ""); // tira os . e -
 
         if (cpf.length() != 11) return false;
@@ -100,12 +100,13 @@ public abstract class Usuario {
         } catch (Exception e) {
             return false;
         }
-        
+        */
+        return true;
     }
 
     // a senha vai precisar ter no mínimo 8 de tamanho, ter letras maiusculas e numeros
     private String validarSenha(String senha) {
-
+        /*
         if (senha.length() < 8) {
             return "A senha deve ter no mínimo 8 caracteres.";
         }
@@ -119,7 +120,7 @@ public abstract class Usuario {
         }
 
         if (maiusculas == 0 || numeros == 0) return "A senha deve conter letras maiúsculas e números.";
-
+         */
 
         return "\0";
     }
