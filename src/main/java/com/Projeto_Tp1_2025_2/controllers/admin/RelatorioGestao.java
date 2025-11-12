@@ -28,6 +28,7 @@ public class RelatorioGestao {
 
     ArrayList<Contratacao> pedidos;
     private int pedidos_aceitos;
+    private int pedidos_recusados;
     private int pedidos_recebidos;
 
     ArrayList<Vaga> vagas;
@@ -40,6 +41,7 @@ public class RelatorioGestao {
         this.pedidos_recebidos = 0;
         this.vagas_criadas = 0;
         this.vagas_excluidas = 0;
+        this.pedidos_recusados = 0;
         data_criacao = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
         pedidos = new ArrayList<>();
@@ -53,6 +55,7 @@ public class RelatorioGestao {
         this.pedidos_recebidos = 0;
         this.vagas_criadas = 0;
         this.vagas_excluidas = 0;
+        this.pedidos_recusados = 0;
         data_criacao = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
         pedidos = new ArrayList<>();
@@ -77,6 +80,7 @@ public class RelatorioGestao {
    public void aceitarPedido() {
         pedidos_aceitos++;
    }
+   public void recusarPedido(){pedidos_recusados++;}
 
    public void gerar(String path) {
         Document doc = new Document(PageSize.A4, 50, 50, 60, 60);
@@ -115,6 +119,7 @@ public class RelatorioGestao {
            adicionarLinhaResumo(resumo, "Total de Vagas Excluídas", String.valueOf(vagas_excluidas));
            adicionarLinhaResumo(resumo, "Pedidos de Contratação Recebidos", String.valueOf(pedidos_recebidos));
            adicionarLinhaResumo(resumo, "Pedidos de Contratação Aceitos", String.valueOf(pedidos_aceitos));
+           adicionarLinhaResumo(resumo, "Pedidos de Contratação Aceitos", String.valueOf(pedidos_recusados));
 
            doc.add(criarTituloSecao("Resumo do Período"));
            doc.add(resumo);

@@ -8,12 +8,16 @@ public interface TelaController {
     enum DATABASES {
         USUARIOS,
         VAGAS,
-        PEDIDOS
+        PEDIDOS,
+        CANDIDATURAS,
+        ENTREVISTAS
     }
     Map<DATABASES, String> db_paths = Map.of(
             DATABASES.USUARIOS, "src/main/resources/usuarios_login.json",
             DATABASES.VAGAS, "src/main/resources/vagas.json",
-            DATABASES.PEDIDOS, "src/main/resources/contratacoes.json"
+            DATABASES.PEDIDOS, "src/main/resources/contratacoes.json",
+            DATABASES.CANDIDATURAS, "src/main/resources/candidaturas.json",
+            DATABASES.ENTREVISTAS, "src/main/resources/entrevistas.json"
     );
 
     Map<String, String> telas_path = Map.of(

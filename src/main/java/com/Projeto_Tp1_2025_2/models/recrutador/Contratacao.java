@@ -94,4 +94,8 @@ public class Contratacao {
     public void autorizar(){
         this.status = "Aprovado";
     }
+
+    public void recusar() {
+        this.status = "Recusado";
+    }
 }

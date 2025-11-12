@@ -1,4 +1,11 @@
 {
-  "id" : "0",
-  "candidaturas" : []
+  "id" : "1",
+  "candidaturas" : [ {
+    "dataCandidatura" : "11/11/2025",
+    "vagaId" : 1,
+    "contador" : 1,
+    "candidatoId" : 2,
+    "id" : 1,
+    "status" : "APROVADO"
+  } ]
 }

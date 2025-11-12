@@ -108,7 +108,7 @@ public class AdminController extends ApplicationController implements TelaContro
             MenuItem excluirItem = new MenuItem("Excluir funcionário");
             MenuItem alterarStatus = new MenuItem("Alterar status");
 
-            rowMenu.getItems().addAll(adicionarFuncionarioMenu, editarItem, excluirItem, alterarStatus);
+            rowMenu.getItems().addAll(adicionarFuncionarioMenu, editarItem, excluirItem, new SeparatorMenuItem() ,alterarStatus);
 
             // linka as ações
 
@@ -268,7 +268,6 @@ public class AdminController extends ApplicationController implements TelaContro
         try {
             if (event.getSource() instanceof Button botao) {
                 switch (botao.getText()) {
-                    case "Candidato" : SceneSwitcher.sceneswitcher(stage, "Candidatura", telas_path.get("CANDIDATO"), true); break;
                     case "Recrutador" : SceneSwitcher.sceneswitcher(stage, "Recrutamento", telas_path.get("RECRUTADOR"), true); break;
                     case "Gestor" : SceneSwitcher.sceneswitcher(stage, "Gestão", telas_path.get("GESTOR"), true); break;
                     default : System.out.println("erro no getText");

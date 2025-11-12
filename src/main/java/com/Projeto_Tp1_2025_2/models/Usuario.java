@@ -42,7 +42,7 @@ public abstract class Usuario {
             throw new InvalidCPF();
         };
 
-        if (cargo == null || !cargo.equals("CANDIDATO")) {
+        if (cargo == null) {
             String msg = validarSenha(senha); //
             if (!msg.equals("\0")) { //
                 throw new InvalidPassword(msg); //
