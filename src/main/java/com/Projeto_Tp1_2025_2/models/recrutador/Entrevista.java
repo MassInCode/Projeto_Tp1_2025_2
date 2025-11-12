@@ -48,7 +48,7 @@ public class Entrevista {
         this.candidaturaId = candidaturaId;
         this.recrutadorId = recrutadorId;
         this.dataEntrevista = dataEntrevista;
-        this.nota = -1; // -1 pode significar "ainda não avaliado"
+        this.nota = -1;
     }
 
     // --- Getters e Setters ---

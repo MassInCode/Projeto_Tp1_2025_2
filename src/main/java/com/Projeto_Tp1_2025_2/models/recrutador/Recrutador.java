@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Recrutador extends Funcionario {
-    private ArrayList<Vaga> vagas;
+    private ArrayList<Vaga> vagas = new ArrayList<>();
 
     public Recrutador(String nome, String senha, String cpf, String email, String cargo, double salario, boolean status, String dataContratacao, String regime, String departamento, List<Vaga> vagas) {
         super(nome, senha, cpf, email, cargo, salario, status, dataContratacao, regime, departamento);

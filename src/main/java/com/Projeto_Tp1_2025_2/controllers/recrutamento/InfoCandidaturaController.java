@@ -1,10 +1,12 @@
 package com.Projeto_Tp1_2025_2.controllers.recrutamento;
 import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.exceptions.BadFilter;
+import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
 import com.Projeto_Tp1_2025_2.models.candidatura.StatusCandidatura;
 import com.Projeto_Tp1_2025_2.models.recrutador.InfoCandidaturaViewModel;
+import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
 import com.Projeto_Tp1_2025_2.util.*;
 import javafx.beans.property.SimpleStringProperty;
@@ -49,17 +51,19 @@ public class InfoCandidaturaController extends ApplicationController implements 
     CandidaturaService candidaturaService;
     EntrevistaService entrevistaService;
     List<Vaga> vagas;
+    private Usuario usuarioLogado;
     private final ObservableList<InfoCandidaturaViewModel> candidaturasBase = FXCollections.observableArrayList();
 
 
     //RECEBE AS INFORMAÇÕES DA TELA QUE CHAMOU ELE
-    @FXML public void initData(Candidato candidatoSelecionado, String tela, VagaService vs, CandidaturaService cs, UsuarioService us, EntrevistaService es) throws IOException {
+    @FXML public void initData(Candidato candidatoSelecionado, Usuario usuarioLogado, String tela, VagaService vs, CandidaturaService cs, UsuarioService us, EntrevistaService es) throws IOException {
 
         this.candidato = candidatoSelecionado;
         vagaService = vs;
         candidaturaService = cs;
         usuarioService = us;
         entrevistaService = es;
+        this.usuarioLogado =  usuarioLogado;
         vagas = candidaturaService.getAllVagasPorCandidato(candidatoSelecionado);
 
         if(tela.equals("Candidaturas de ")){
@@ -89,16 +93,32 @@ public class InfoCandidaturaController extends ApplicationController implements 
 
 
     private void carregarVagas(){
+        if (usuarioLogado == null || candidato == null) return;
+
         try{
             List<InfoCandidaturaViewModel> candidaturasViewModel = new ArrayList<>();
-            List<Candidatura> candidaturas = candidaturaService.getAllCandidaturasPorCandidato(this.candidato);
-            for(Candidatura c : candidaturas) {
-                int vagaid = c.getVagaId();
-                Vaga v = vagaService.getVagaPorId(vagaid);
-                candidaturasViewModel.add(new InfoCandidaturaViewModel(v, c));
+
+            List<Candidatura> candidaturasDoCandidato = candidaturaService.getAllCandidaturasPorCandidato(this.candidato);
+
+            Recrutador recrutadorLogado = (Recrutador) this.usuarioLogado;
+            java.util.Set<Integer> minhasVagaIds = new java.util.HashSet<>();
+            if (recrutadorLogado.getVagas() != null) {
+                for (Vaga v : recrutadorLogado.getVagas()) {
+                    minhasVagaIds.add(v.getId());
+                }
             }
+
+            for(Candidatura c : candidaturasDoCandidato) {
+                if (minhasVagaIds.contains(c.getVagaId())) {
+                    int vagaid = c.getVagaId();
+                    Vaga v = vagaService.getVagaPorId(vagaid);
+                    candidaturasViewModel.add(new InfoCandidaturaViewModel(this.candidato, v, c));
+                }
+            }
+
             candidaturasBase.clear();
             candidaturasBase.addAll(candidaturasViewModel);
+
         } catch (IOException e){
             e.printStackTrace();
         }
