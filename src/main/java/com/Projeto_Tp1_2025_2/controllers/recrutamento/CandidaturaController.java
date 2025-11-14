@@ -10,7 +10,6 @@ import com.Projeto_Tp1_2025_2.models.candidatura.StatusCandidatura;
 import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
 import com.Projeto_Tp1_2025_2.models.recrutador.*;
 import com.Projeto_Tp1_2025_2.util.*;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,7 +24,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-import javax.swing.text.TabableView;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -216,10 +214,10 @@ public class CandidaturaController extends ApplicationController implements Tela
         btn_filtrar.setItems(FXCollections.observableArrayList("Nome", "CPF", "Email", "Formação"));
         btn_filtrar.setValue("Nome");
 
-        search(tabCandidatos, barraPesquisar, btn_filtrar, this::filtro, candidatosBase);
-        search(tabelaRegistrarVagas, barraPesquisar, btn_filtrar, this::filtro, vagasBase);
-        search(tabEntrevistas, barraPesquisar, btn_filtrar, this::filtro, entrevistasBase);
-        search(tabTodasCandidaturas, barraPesquisar, btn_filtrar, this::filtro, todasCandidaturasBase);
+        setSearch(tabCandidatos, barraPesquisar, btn_filtrar, this::filtro, candidatosBase);
+        setSearch(tabelaRegistrarVagas, barraPesquisar, btn_filtrar, this::filtro, vagasBase);
+        setSearch(tabEntrevistas, barraPesquisar, btn_filtrar, this::filtro, entrevistasBase);
+        setSearch(tabTodasCandidaturas, barraPesquisar, btn_filtrar, this::filtro, todasCandidaturasBase);
 
         nowVisible = tab_candidatos;
         nowVisible.setVisible(false);
@@ -395,14 +393,10 @@ public class CandidaturaController extends ApplicationController implements Tela
 
             Entrevista entrevistaParaExcluir = viewModelSelecionado.getEntrevista();
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Excluir Entrevista");
-            alert.setHeaderText("Tem certeza que deseja excluir esta entrevista?");
-            alert.setContentText("Candidato: " + viewModelSelecionado.getNomeCandidato() +
-                    "\nVaga: " + viewModelSelecionado.getCargoVaga() +
-                    "\nData: " + viewModelSelecionado.getDataFormatada());
-
-            Optional<ButtonType> result = alert.showAndWait();
+            var result = lancarAlert(Alert.AlertType.CONFIRMATION, "Excluir Entrevista", "Tem certeza que deseja excluir esta entrevista?",
+                    "Candidato: " + viewModelSelecionado.getNomeCandidato() +
+                            "\nVaga: " + viewModelSelecionado.getCargoVaga() +
+                            "\nData: " + viewModelSelecionado.getDataFormatada());
 
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 try {
@@ -416,7 +410,7 @@ public class CandidaturaController extends ApplicationController implements Tela
                 }
             }
         });
-
+        /*
         reagendarItem.setOnAction(event -> {
             AgendaViewModel viewModel = tabEntrevistas.getSelectionModel().getSelectedItem();
             if (viewModel == null) return;
@@ -431,6 +425,7 @@ public class CandidaturaController extends ApplicationController implements Tela
                 e.printStackTrace();
             }
         });
+         */
 
         atribuirNotaItem.setOnAction(event -> {
             AgendaViewModel viewModel = tabEntrevistas.getSelectionModel().getSelectedItem();
@@ -461,11 +456,7 @@ public class CandidaturaController extends ApplicationController implements Tela
                     tabEntrevistas.refresh();
 
                 } catch (NumberFormatException e) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Erro de Formato");
-                    alert.setHeaderText("Valor inválido.");
-                    alert.setContentText("Por favor, insira apenas números (ex: 8.5).");
-                    alert.showAndWait();
+                    lancarAlert(Alert.AlertType.ERROR, "Erro de Formato", "Valor inválido", "Por favor, insira apenas números (ex: 8.5).");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -474,17 +465,34 @@ public class CandidaturaController extends ApplicationController implements Tela
 
         solicitarContratacao.setOnAction(e -> {
             var entrevistaSelecioanda = tabEntrevistas.getSelectionModel().getSelectedItem();
-            if (entrevistaSelecioanda != null) {
-                realizarPedidoDeContratacao(entrevistaSelecioanda);
-            } else {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setHeaderText(null);
-                alert.setContentText("Selecione uma entrevista antes de solicitar a contratação!");
-                alert.showAndWait();
+
+            if (entrevistaSelecioanda == null) {
+                lancarAlert(Alert.AlertType.WARNING, "Aviso", "Selecione uma entrevista antes de solicitar a contratação!");
+                return;
+            }
+
+            double nota = entrevistaSelecioanda.getEntrevista().getNota();
+            if (nota == -1.0) { // ainda não tem nota
+                lancarAlert(Alert.AlertType.ERROR, "Erro", "A entrevista selecionada ainda não possui uma nota a ser avaliada.");
+            }
+
+            else if (nota >= 5.0) {  // nota adequada
+                var resultado = lancarAlert(Alert.AlertType.CONFIRMATION, "Confirmação", "Tem certeza que deseja solicitar uma contratação?");
+
+                if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+                    realizarPedidoDeContratacao(entrevistaSelecioanda);
+
+                    lancarAlert(Alert.AlertType.INFORMATION, "Sucesso", "Pedido de contratação enviado com sucesso!");
+                }
+            }
+
+            else { // nota abaixo de 5
+                lancarAlert(Alert.AlertType.INFORMATION, "Falha", "Candidato não adquiriu uma nota alta suficiente.");
             }
         });
 
-        contextMenu.getItems().addAll(solicitarContratacao, reagendarItem, atribuirNotaItem, new SeparatorMenuItem(), excluirItem);
+        //contextMenu.getItems().addAll(solicitarContratacao, reagendarItem, atribuirNotaItem, new SeparatorMenuItem(), excluirItem);
+        contextMenu.getItems().addAll(solicitarContratacao, atribuirNotaItem, new SeparatorMenuItem(), excluirItem);
         tabEntrevistas.setRowFactory(tv -> {
             TableRow<AgendaViewModel> row = new TableRow<>();
             row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
@@ -510,17 +518,15 @@ public class CandidaturaController extends ApplicationController implements Tela
             InfoCandidaturaViewModel viewModel = tabTodasCandidaturas.getSelectionModel().getSelectedItem();
             if (viewModel == null) return;
 
-            if(viewModel.getStatusCandidatura() == StatusCandidatura.APROVADO){
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Confirmação");
-                alert.setHeaderText("Você realmente deseja recrutar este candidato?");
-
-                var resultado = alert.showAndWait();
+            if(viewModel.getStatusCandidatura() == StatusCandidatura.APROVADO){ // se a candidatura for aprovada
+                var resultado = lancarAlert(Alert.AlertType.CONFIRMATION, "Confirmação", "Você realmente deseja recrutar este candidato?");
 
                 if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
                     Vaga vaga = viewModel.getVaga();
+                    // adiciona-se o novo funcionario com cargo principal "Funcionario"
                     Funcionario funcionario = new Funcionario(viewModel.getCandidatura().getCandidatoId(), viewModel.getUsuario(), vaga.getSalarioBase(), vaga.getRegimeContratacao(), vaga.getDepartamento(), vaga.getCargo());
 
+                    // troca o candidato pelo funcionario
                     dbRecrutadores.deleteObject(viewModel.getUsuario(), "usuarios");
                     dbRecrutadores.addObject(funcionario, "usuarios");
 
@@ -529,12 +535,17 @@ public class CandidaturaController extends ApplicationController implements Tela
                     try {
                         candidaturaService.excluirCandidatura(viewModel.getCandidatura());
                         carregarTodasCandidaturas();
-                        tabTodasCandidaturas.refresh();
                         carregarVagas();
                         carregarCandidatos();
                         this.allCandidaturas = candidaturaService.getAllCandidaturas();
+                        tabTodasCandidaturas.refresh();
                         tabCandidatos.refresh();
                         tabelaRegistrarVagas.refresh();
+
+                        // remove de novo aqui porque o carregarCandidatos() coloca novamente
+                        candidatosBase.remove(viewModel.getUsuario());
+                        tabCandidatos.getItems().remove(viewModel.getUsuario());
+                        tabCandidatos.refresh();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -542,10 +553,7 @@ public class CandidaturaController extends ApplicationController implements Tela
             }
 
             else{
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setHeaderText(null);
-                alert.setContentText("É necessário que a candidatura esteja aprovada.");
-                alert.showAndWait();
+                lancarAlert(Alert.AlertType.WARNING, "Alerta", "É necessário que a candidatura esteja aprovada.");
             }
 
         });
@@ -578,26 +586,18 @@ public class CandidaturaController extends ApplicationController implements Tela
             Candidatura candidaturaParaExcluir = viewModel.getCandidatura();
 
             if (candidaturaParaExcluir.getStatus() != StatusCandidatura.PENDENTE) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Ação Bloqueada");
-                alert.setHeaderText("Não é possível excluir esta candidatura.");
-                alert.setContentText("Apenas candidaturas com o status 'PENDENTE' podem ser excluídas.");
-                alert.showAndWait();
+                lancarAlert(Alert.AlertType.INFORMATION, "Ação bloqueada", "Não é possível excluir esta candidatura.", "Apenas candidaturas com o status 'PENDENTE' podem ser excluídas.");
                 return;
             }
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Excluir Candidatura");
-            alert.setHeaderText("Tem certeza que deseja excluir esta candidatura?");
-            alert.setContentText("Candidato: " + viewModel.getNomeCandidato() +
-                    "\nVaga: " + viewModel.getCargoVaga() +
-                    "\nStatus: " + viewModel.getStatusCandidatura());
-
-            Optional<ButtonType> result = alert.showAndWait();
+            var result = lancarAlert(Alert.AlertType.CONFIRMATION, "Excluir Candidatura", "Tem certeza que deseja excluir esta candidatura?",
+                    "Candidato: " + viewModel.getNomeCandidato() +
+                            "\nVaga: " + viewModel.getCargoVaga() +
+                            "\nStatus: " + viewModel.getStatusCandidatura());
 
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 try {
-                    candidaturaService.excluirCandidatura(candidaturaParaExcluir);
+                    candidaturaService.excluirCandidatura(candidaturaParaExcluir); // exclui a candidatura e dá refresh em todas as tabelas, para atualizá-las
                     carregarTodasCandidaturas();
                     tabTodasCandidaturas.refresh();
                     carregarVagas();
@@ -629,27 +629,22 @@ public class CandidaturaController extends ApplicationController implements Tela
 
     @FXML private void excluirCandidato(Candidato candidatoSelecionado) throws IOException {
         if(candidatoSelecionado == null){
-            System.out.println("Nenhum candidato selecionado para excluir.");
+            lancarAlert(Alert.AlertType.INFORMATION, "Candidato não selecionado", "Por favor, selecione um candidato válido.");
             return;
         }
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Excluir Candidato");
-        alert.setHeaderText("Excluir Candidato");
-        alert.setContentText("Nome: " + candidatoSelecionado.getNome() + "\nCPF: " + candidatoSelecionado.getCpf());
+        var result = lancarAlert(Alert.AlertType.CONFIRMATION, "Excluir Candidato", "Excluir Candidato", "Nome: " + candidatoSelecionado.getNome() + "\nCPF: " + candidatoSelecionado.getCpf());
 
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if(result.get() == ButtonType.OK && result.isPresent()){
+        if (result.isPresent()&& result.get() == ButtonType.OK){
 
             List<Candidatura> candidaturas = candidaturaService.getAllCandidaturasPorCandidato(candidatoSelecionado);
-            for(var candidatura : candidaturas){
-                candidaturaService.excluirCandidatura(candidatura);
+            for (var candidatura : candidaturas){
+                candidaturaService.excluirCandidatura(candidatura); // exclui todas as candidaturas em que aquele candidato estava participandp
             }
             this.allCandidaturas = candidaturaService.getAllCandidaturas();
             boolean veri = usuarioService.excluirUsuario(candidatoSelecionado);
-            if(veri){
-                candidatosBase.remove(candidatoSelecionado);
+            if (veri){
+                candidatosBase.remove(candidatoSelecionado); // remove o candidato do observablelist que compreende a tabela
                 tabCandidatos.refresh();
                 System.out.println("Candidato excluido com sucesso.");
             } else{
@@ -660,27 +655,22 @@ public class CandidaturaController extends ApplicationController implements Tela
 
     @FXML private void excluirVaga(Vaga vagaSelecionada) throws IOException {
         if(vagaSelecionada == null){
-            System.out.println("Nenhuma vaga selecionada para excluir.");
+            lancarAlert(Alert.AlertType.INFORMATION, "Vaga não selecionada", "Por favor, selecione uma vaga válida.");
             return;
         }
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Excluir Vaga");
-        alert.setHeaderText("Excluir Vaga");
-        alert.setContentText("Vaga: " + vagaSelecionada.getId() + "\nCargo: " + vagaSelecionada.getCargo());
+        var result = lancarAlert(Alert.AlertType.CONFIRMATION, "Excluir Vaga", "Excluir Vaga", "Vaga: " + vagaSelecionada.getId() + "\nCargo: " + vagaSelecionada.getCargo());
 
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if(result.get() == ButtonType.OK && result.isPresent()){
+        if (result.isPresent() && result.get() == ButtonType.OK){
 
             List<Candidatura> candidaturas = candidaturaService.getAllCandidaturasPorVaga(vagaSelecionada);
             for(var candidatura : candidaturas){
-                candidaturaService.excluirCandidatura(candidatura);
+                candidaturaService.excluirCandidatura(candidatura); // deleta todas as candidaturas associadas à essa vaga
             }
             this.allVagas = vagaService.getAllVagas();
             boolean veri = vagaService.excluirVaga(vagaSelecionada);
-            if(veri){
-                tabelaRegistrarVagas.getItems().remove(vagaSelecionada);
+            if (veri){
+                tabelaRegistrarVagas.getItems().remove(vagaSelecionada); // remove diretamente da observablelist de vagas
                 tabelaRegistrarVagas.refresh();
                 System.out.println("Vaga excluida com sucesso.");
             } else{
@@ -983,10 +973,6 @@ public class CandidaturaController extends ApplicationController implements Tela
 
 
     //==============ON CLICKS==============
-    @FXML private void onClickSair(ActionEvent event) throws IOException {
-        SceneSwitcher.sceneswitcher(event, "Login", telas_path.get("LOGIN"));
-    }
-
     @FXML protected void onClickCadastroBtn() {
 
         mensagem_erro2.setText("");
@@ -1019,14 +1005,11 @@ public class CandidaturaController extends ApplicationController implements Tela
             TableRow<Vaga> row = new TableRow<>(); // row especifica
             ContextMenu rowMenu = new ContextMenu();
 
-            Vaga vaga_atual = row.getItem();
-
             MenuItem editarItem = new MenuItem("Editar vaga");
             MenuItem excluirItem = new MenuItem("Excluir vaga");
-            MenuItem solicitarContratacao = new MenuItem("Solicitar Contratação");
             //solicitarContratacao.setOnAction(e -> realizarPedidoDeContratação(candidaturaSelecionada));
 
-            rowMenu.getItems().addAll(editarItem, excluirItem, solicitarContratacao);
+            rowMenu.getItems().addAll(editarItem, excluirItem);
 
             editarItem.setOnAction(e -> {
                 Vaga vagaSelecionada = tabelaRegistrarVagas.getSelectionModel().getSelectedItem();

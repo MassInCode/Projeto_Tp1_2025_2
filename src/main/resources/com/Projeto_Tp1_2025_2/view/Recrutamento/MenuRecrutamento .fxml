@@ -30,7 +30,7 @@
                         <Button mnemonicParsing="false" onAction="#btn_ListarEntrevistas" prefHeight="35.0" prefWidth="165.0" text="Listar Entrevistas" textFill="WHITE" />
                         <Button mnemonicParsing="false" onAction="#btn_ListarCandidaturas" prefHeight="35.0" prefWidth="165.0" text="Listar Candidaturas" textFill="WHITE" />
                         <Region prefHeight="382.0" prefWidth="128.0" />
-                                <Button fx:id="btn_sair" mnemonicParsing="false" onAction="#onClickSair" prefHeight="35.0" prefWidth="165.0" text="Sair" textFill="WHITE" />
+                                <Button fx:id="btn_sair" mnemonicParsing="false" onAction="#sair" prefHeight="35.0" prefWidth="165.0" text="Sair" textFill="WHITE" />
                      </children>
                   </VBox>
                         <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />

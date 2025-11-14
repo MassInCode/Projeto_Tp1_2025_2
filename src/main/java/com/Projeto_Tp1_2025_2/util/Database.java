@@ -53,7 +53,7 @@ public class Database {
         file = new File(path);
 
         if (file.exists()) {
-            jsonMap = mapper.readValue(file, Map.class);
+            jsonMap = mapper.readValue(file, Map.class);            // o mapper transforma o arquivo json em um Map valido
         }
 
         else {
@@ -72,7 +72,7 @@ public class Database {
             mapper.writerWithDefaultPrettyPrinter().writeValue(file, jsonMap);
 
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 
@@ -85,7 +85,7 @@ public class Database {
         List<Map<String, Object>> info = (List<Map<String, Object>>) jsonMap.get(data);
 
         if (info == null) {
-            return List.of(Map.of("", ""));
+            return List.of(Map.of("", ""));     // retorna uma lista contendo um unico map vazio
         }
 
         return info;
@@ -102,6 +102,11 @@ public class Database {
                 return false;
             }
             v &= current.toString().equals(kvalues[i + 1]);
+            /*
+            Simplesmente verifica se o valor referente à key do mapa é equivalente ao próximo kvalue. Assim, ele vai acumulando
+            essa igualdade (por meio de um AND) até o final dos kvalues. Se retornar verdadeiro, é porque TODAS são verdade. Caso contrário,
+            ao menos uma é falso, falhando o objeto.
+             */
         }
 
         return v;
@@ -120,7 +125,6 @@ public class Database {
             List<Map<String, Object>> info = this.getData(data);
 
             for (Map<String, Object> mapa : info) {
-                System.out.println(mapa + " " + Arrays.toString(kvalues));
                 if (comparator(kvalues, mapa)) {
                     return mapa;
                 }
@@ -149,7 +153,9 @@ public class Database {
             Field[] campos = clazz.getDeclaredFields();
             for (Field campo : campos) {
 
-                campo.setAccessible(true); // pega todos os atributos dela e bota no mapa
+                // pega os atributos da classe e bota no array. Mas antes disso, os privados são deixados acessíveis, de modo com que
+                // essa função consiga acessá-los.
+                campo.setAccessible(true);
                 try {
                     Object valor = campo.get(objeto);
 
@@ -163,7 +169,11 @@ public class Database {
                     e.printStackTrace();
                 }
             }
-            clazz = clazz.getSuperclass();
+            clazz = clazz.getSuperclass(); // com isso, a classe pode ir para sua classe-pai
+            /*
+            basicamente, se existe a relação de herança ClassA -> ClassB, e você aplicar a função na ClassB,
+            então essa linha faz com que transforme a ClassA também.
+             */
         }
         return mapa;
     }
@@ -388,7 +398,4 @@ public class Database {
 
         return listaDeCandidaturas;
     }
-
-
-
 }

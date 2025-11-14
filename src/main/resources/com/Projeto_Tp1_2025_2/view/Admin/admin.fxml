@@ -19,7 +19,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="anchorpane" stylesheets="@admin.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.admin.AdminController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="anchorpane" stylesheets="@admin.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Projeto_Tp1_2025_2.controllers.admin.AdminController">
     <children>
         <AnchorPane layoutX="26.0" layoutY="21.0" prefHeight="678.0" prefWidth="1228.0" styleClass="telaaction" stylesheets="@admin.css" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="21.0">
             <children>
@@ -81,7 +81,6 @@
                            </font>
                         </Label>
                         <Separator orientation="VERTICAL" prefHeight="40.0" visible="false" />
-                        <Button fx:id="btn_candidato" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#alterarPerfil" prefHeight="30.0" prefWidth="200.0" text="Candidato" textFill="WHITE" />
                         <Button fx:id="btn_recrutador" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#alterarPerfil" prefHeight="30.0" prefWidth="200.0" text="Recrutador" textFill="WHITE" />
                         <Button fx:id="btn_gestor" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#alterarPerfil" prefHeight="30.0" prefWidth="200.0" text="Gestor" textFill="WHITE" />
                         <Separator orientation="VERTICAL" prefHeight="20.0" visible="false" />
@@ -251,14 +250,14 @@
 
                         <HBox alignment="CENTER" prefHeight="33.0" prefWidth="478.0">
                            <children>
+                              <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#salvarRS" prefHeight="30.0" prefWidth="90.0" styleClass="btn_confirmar" text="Salvar" textFill="WHITE">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </Button>
                               <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelarRS" prefHeight="30.0" prefWidth="90.0" styleClass="btn_cancelar" text="Cancelar" textFill="WHITE">
                                  <HBox.margin>
                                     <Insets right="10.0" />
-                                 </HBox.margin>
-                              </Button>
-                              <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#salvarRS" prefHeight="30.0" prefWidth="90.0" styleClass="btn_cancelar" text="Salvar" textFill="WHITE">
-                                 <HBox.margin>
-                                    <Insets left="10.0" />
                                  </HBox.margin>
                               </Button>
                            </children>

@@ -28,6 +28,7 @@ public class RelatorioGestao {
 
     ArrayList<Contratacao> pedidos;
     private int pedidos_aceitos;
+    private int pedidos_recusados;
     private int pedidos_recebidos;
 
     ArrayList<Vaga> vagas;
@@ -40,6 +41,7 @@ public class RelatorioGestao {
         this.pedidos_recebidos = 0;
         this.vagas_criadas = 0;
         this.vagas_excluidas = 0;
+        this.pedidos_recusados = 0;
         data_criacao = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
         pedidos = new ArrayList<>();
@@ -53,6 +55,7 @@ public class RelatorioGestao {
         this.pedidos_recebidos = 0;
         this.vagas_criadas = 0;
         this.vagas_excluidas = 0;
+        this.pedidos_recusados = 0;
         data_criacao = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
         pedidos = new ArrayList<>();
@@ -72,6 +75,10 @@ public class RelatorioGestao {
    public void removeVagas(Vaga vaga) {
         vagas.remove(vaga);
         vagas_excluidas++;
+   }
+
+   public void recusarPedido() {
+        this.pedidos_recusados++;
    }
 
    public void aceitarPedido() {
@@ -106,11 +113,12 @@ public class RelatorioGestao {
            doc.add(subtitulo);
 
            // resumo
-           PdfPTable resumo = new PdfPTable(2);
+           PdfPTable resumo = new PdfPTable(2); // cria uma tabela pro resumo
            resumo.setWidthPercentage(100);
            resumo.setSpacingAfter(15);
            resumo.getDefaultCell().setPadding(8);
 
+           // adicionam uma linha à tabela
            adicionarLinhaResumo(resumo, "Total de Vagas Criadas", String.valueOf(vagas_criadas));
            adicionarLinhaResumo(resumo, "Total de Vagas Excluídas", String.valueOf(vagas_excluidas));
            adicionarLinhaResumo(resumo, "Pedidos de Contratação Recebidos", String.valueOf(pedidos_recebidos));
@@ -147,11 +155,11 @@ public class RelatorioGestao {
            tabelaPedidos.setWidthPercentage(100);
            adicionarCabecalhoTabela(tabelaPedidos, "Candidato", "Vaga", "Status", "Data Contratação");
 
-           for (Contratacao c : pedidos) {
-               UsuarioService us = new UsuarioService();
-               CandidaturaService cs = new CandidaturaService();
-               VagaService vs = new VagaService();
+           UsuarioService us = new UsuarioService();
+           CandidaturaService cs = new CandidaturaService();
+           VagaService vs = new VagaService();
 
+           for (Contratacao c : pedidos) {
                try {
                    Candidato candidato = (Candidato) us.getUsuarioPorId(cs.getCandidaturaPorId(c.getEntrevista().getCandidaturaId()).getCandidatoId());
                    Vaga vaga = vs.getVagaPorId(cs.getCandidaturaPorId(c.getEntrevista().getCandidaturaId()).getVagaId());
@@ -178,7 +186,7 @@ public class RelatorioGestao {
            doc.add(rodape);
 
            doc.close();
-           System.out.println("✅ Relatório PDF gerado com sucesso: " + path);
+           System.out.println("✅Relatório gerado: " + path);
 
        }
        catch (DocumentException | IOException e) {

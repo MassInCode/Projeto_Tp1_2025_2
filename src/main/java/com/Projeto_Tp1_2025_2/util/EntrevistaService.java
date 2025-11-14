@@ -1,5 +1,6 @@
 package com.Projeto_Tp1_2025_2.util;
 
+import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.models.recrutador.Entrevista;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ public class EntrevistaService {
     private Database dbEntrevistas;
     private static final String ENTREVISTAS_KEY = "entrevistas";
     public EntrevistaService() throws IOException {
-        this.dbEntrevistas = new Database("src/main/resources/entrevistas.json");
+        this.dbEntrevistas = new Database(TelaController.db_paths.get(TelaController.DATABASES.ENTREVISTAS));
     }
 
 
@@ -56,7 +57,7 @@ public class EntrevistaService {
     }
 
     public void excluirEntrevista(Entrevista entrevista) throws IOException {
-        dbEntrevistas.deleteObject(entrevista, "entrevistas");
+        dbEntrevistas.deleteObject(entrevista, ENTREVISTAS_KEY);
     }
 
     public void atualizarEntrevista(Entrevista entrevista) throws IOException {

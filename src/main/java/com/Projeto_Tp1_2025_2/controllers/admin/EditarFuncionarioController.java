@@ -34,7 +34,7 @@ public class EditarFuncionarioController {
     }
 
     @FXML
-    public void presetData(Funcionario user) {
+    public void initData(Funcionario user) {
         ed_nome.setText(user.getNome());
         ed_cpf.setText(user.getCpf());
         ed_email.setText(user.getEmail());

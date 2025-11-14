@@ -122,11 +122,6 @@
                                  </font>
                               </Button>
                               <Separator orientation="VERTICAL" prefHeight="20.0" visible="false" />
-                              <Button fx:id="btn_login1" mnemonicParsing="false" onAction="#btn_recrutamento" prefHeight="40.0" prefWidth="195.0" text="Sou recrutador (temporário)" textFill="WHITE">
-                                 <font>
-                                    <Font name="Arial Black" size="11.0" />
-                                 </font>
-                              </Button>
                            </children>
                         </VBox>
                      </children>

@@ -32,6 +32,14 @@ import java.util.Map;
 
 public class AdminController extends ApplicationController implements TelaController {
     Database db;
+
+    /*
+    Como o setSearch modifica o ObservableList responsável pela tabela, os dados não podem ser editados depois de aplicados,
+    pois o que retorna do db.getData é uma lista imutável. Portanto, cria-se uma lista mutável que representa esse ObservableList agora,
+    de modo que seja possível editá-la ao invés da lista imutável do getData.
+
+    Essa lógica se aplica a todos os Controllers que utilizam setSearch, isto é, implementam TelaController
+     */
     private final ObservableList<Funcionario> funcionariosBase = FXCollections.observableArrayList();
 
     RegrasSalario regras = RegrasSalario.carregar();
@@ -132,7 +140,7 @@ public class AdminController extends ApplicationController implements TelaContro
             MenuItem excluirItem = new MenuItem("Excluir funcionário");
             MenuItem alterarStatus = new MenuItem("Alterar status");
 
-            rowMenu.getItems().addAll(adicionarFuncionarioMenu, editarItem, excluirItem, alterarStatus);
+            rowMenu.getItems().addAll(adicionarFuncionarioMenu, editarItem, excluirItem, new SeparatorMenuItem() ,alterarStatus);
 
             // linka as ações
 
@@ -147,10 +155,10 @@ public class AdminController extends ApplicationController implements TelaContro
             });
 
             // so vai aparecer quando clicado em cima de uma linha
-            row.contextMenuProperty().bind(
+            row.contextMenuProperty().bind(             // essa função liga cada linha genérica da tabela a um contextMenu especifico
                     Bindings.when(row.emptyProperty())
-                            .then(tabela_menu)
-                            .otherwise(rowMenu)
+                            .then(tabela_menu)          // adiciona o tabela_menu se a linha estiver vazia
+                            .otherwise(rowMenu)         // adiciona o rowmenu caso contrario
             );
 
             return row;
@@ -158,13 +166,14 @@ public class AdminController extends ApplicationController implements TelaContro
 
         // ----------- Mecânica de pesqusia na Tabela -----------
 
+        // bota os filtros no comboBox
         btn_filtrar.setItems(FXCollections.observableArrayList(
                 "Nome", "CPF", "Email", "Perfil", "Departamento", "Status"
         ));
 
         btn_filtrar.setValue("Nome");
 
-        search(tabelaFuncionarios, barraBuscar, btn_filtrar, this::filtro, funcionariosBase);
+        setSearch(tabelaFuncionarios, barraBuscar, btn_filtrar, this::filtro, funcionariosBase);
 
         // ----------- Configurações Gerais -----------
         cf_cargo_box.setItems(FXCollections.observableArrayList(
@@ -180,6 +189,12 @@ public class AdminController extends ApplicationController implements TelaContro
 
     @FXML
     public <T> String filtro(String campo, T classe) throws BadFilter {
+        /*
+        * Basicamente, o filtro diz com que dados o método de TelaController `setSearch` buscará os elementos.
+        * se você escolher, por exemplo, no comboBox, a caixinha "CPF", o filtro irá informar ao setSearch que deve filtrar
+        * os elementos pelo CPF de cada um dos itens.
+         */
+
         if (classe instanceof Funcionario funcionario) {
             return switch (campo) {
                 case "CPF" -> funcionario.getCpf();
@@ -191,7 +206,7 @@ public class AdminController extends ApplicationController implements TelaContro
             };
         }
         else {
-            throw new BadFilter();
+            throw new BadFilter();              // ocorre quando o filtro não é aplicado à classe correta
         }
     }
 
@@ -204,28 +219,32 @@ public class AdminController extends ApplicationController implements TelaContro
 
             try{
                 Usuario user = us.registrar(cf_nome.getText(), cf_email.getText(), cf_cpf.getText(), cf_senha.getText(), cf_senha2.getText(), cf_cargo_box.getValue());
-                funcionariosBase.add((Funcionario) user);
+                funcionariosBase.add((Funcionario) user);           // modificação da ObservableList correspondente à tabela
                 tabelaFuncionarios.refresh();
                 cancelar();
             } catch(ValidationException | IOException e){
                 mensagem_erro.setManaged(true);
                 mensagem_erro.setText(e.getMessage());
             }
+
+            mensagem_erro.setText("");
+            mensagem_erro.setManaged(false);
         });
     }
 
     @FXML
     private void editarFuncionario(ActionEvent e, Funcionario funcionario) {
+        // nesse caso, vai abrir um novo controller para editar os dados
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(
                     "/com/Projeto_Tp1_2025_2/view/Admin/editar_funcionario.fxml"));
             Parent root = loader.load();
 
             EditarFuncionarioController controller = loader.getController();
-            controller.presetData(funcionario);
+            controller.initData(funcionario);
 
             Stage modal = new Stage();
-            modal.initOwner(tabelaFuncionarios.getScene().getWindow());
+            modal.initOwner(tabelaFuncionarios.getScene().getWindow());         // inicia uma nova telinha
             modal.initModality(Modality.APPLICATION_MODAL);
             modal.setTitle("Editar Funcionário");
             modal.setScene(new Scene(root));
@@ -234,10 +253,10 @@ public class AdminController extends ApplicationController implements TelaContro
             if (controller.isConfirmado()) { // ocorreu edição do objeto
                 tabelaFuncionarios.refresh();
                 if (db.editObject(funcionario, "usuarios")) {
-                    System.out.println("foi");
+                    System.out.println("Edição realizada com sucesso.");
                 }
                 else {
-                    System.out.println("erro");
+                    System.out.println("Falha na edição.");
                 }
 
             }
@@ -251,16 +270,12 @@ public class AdminController extends ApplicationController implements TelaContro
 
     @FXML
     private void excluirFuncionario(ActionEvent e, Funcionario funcionario) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmação");
-        alert.setHeaderText("Tem certeza que deseja excluir este usuário?");
-
-        var resultado = alert.showAndWait();
+        var resultado = lancarAlert(Alert.AlertType.CONFIRMATION, "Confirmação", "Tem certeza que deseja excluir este usuário?");
 
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
             funcionariosBase.remove(funcionario);
             db.deleteObject(funcionario, "usuarios");
-            tabelaFuncionarios.refresh();
+            tabelaFuncionarios.refresh();           // como editou um dado na tabela, dá-se o refresh
         }
     }
 
@@ -270,10 +285,12 @@ public class AdminController extends ApplicationController implements TelaContro
             List<Map<String, Object>> dados = db.getData("usuarios");
 
             for (Map<String, Object> mapa : dados) {
+                // o converMaptoObject resgata um Map<String, Object> e o transforma na classe especificada
+                // ou seja, está adicionando na verdade um Funcionario à lista
                 funcionariosBase.add(db.convertMaptoObject(mapa, Funcionario.class));
             }
 
-            tabelaFuncionarios.setItems(funcionariosBase);
+            tabelaFuncionarios.setItems(funcionariosBase);      // aqui ocorre o link entre a tabela e o observableList
         }
         catch (IOException e) {
             System.out.println(e.getMessage());
@@ -290,11 +307,10 @@ public class AdminController extends ApplicationController implements TelaContro
     private void alterarPerfil(ActionEvent event) {
         Stage stage = (Stage) btn_gestor.getScene().getWindow(); // tanto faz o botao
         try {
-            if (event.getSource() instanceof Button botao) {
-                switch (botao.getText()) {
-                    case "Candidato" : SceneSwitcher.sceneswitcher(stage, "Candidatura", telas_path.get("CANDIDATO"), true); break;
-                    case "Recrutador" : SceneSwitcher.sceneswitcher(stage, "Recrutamento", telas_path.get("RECRUTADOR"), true); break;
-                    case "Gestor" : SceneSwitcher.sceneswitcher(stage, "Gestão", telas_path.get("GESTOR"), true); break;
+            if (event.getSource() instanceof Button botao) { // pega o evento que lançou o evento e verifica se é um botão
+                switch (botao.getText()) { // se for, analisa o texto dele
+                    case "Recrutador" : SceneSwitcher.sceneswitcher(stage, "Recrutamento", telas_paths.get("RECRUTADOR"), true); break; // admin mode injeta o botão para voltar à administração
+                    case "Gestor" : SceneSwitcher.sceneswitcher(stage, "Gestão", telas_paths.get("GESTOR"), true); break;
                     default : System.out.println("erro no getText");
                 }
             }

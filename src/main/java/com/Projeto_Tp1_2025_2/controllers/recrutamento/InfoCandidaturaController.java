@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.Projeto_Tp1_2025_2.controllers.ApplicationController;
 import javafx.collections.ObservableList;
-import java.time.format.DateTimeFormatter;
+
 import java.util.Optional;
 
 public class InfoCandidaturaController extends ApplicationController implements TelaController{
@@ -84,7 +84,7 @@ public class InfoCandidaturaController extends ApplicationController implements 
 
         btn_filtrar.setItems(FXCollections.observableArrayList("Vaga", "Departamento", "Data de Candidatura", "Status da Vaga", "Status do Candidato"));
         btn_filtrar.setValue("Vaga");
-        search(tabVagas, barraPesquisar, btn_filtrar, this::filtro, candidaturasBase);
+        setSearch(tabVagas, barraPesquisar, btn_filtrar, this::filtro, candidaturasBase);
 
         carregarVagas();
         tabVagas.refresh();
@@ -164,20 +164,11 @@ public class InfoCandidaturaController extends ApplicationController implements 
             Candidatura candidaturaParaExcluir = viewModel.getCandidatura();
 
             if (candidaturaParaExcluir.getStatus() != StatusCandidatura.PENDENTE) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Ação Bloqueada");
-                alert.setHeaderText("Não é possível excluir esta candidatura.");
-                alert.setContentText("Apenas candidaturas com o status 'PENDENTE' podem ser excluídas.");
-                alert.showAndWait();
+                lancarAlert(Alert.AlertType.INFORMATION, "Ação Bloqueada", "Não é possível excluir esta candidatura", "Apenas candidaturas com o status 'PENDENTE' podem ser excluídas");
                 return;
             }
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Excluir Candidatura");
-            alert.setHeaderText("Tem certeza que deseja excluir esta candidatura?");
-            alert.setContentText("Vaga: " + viewModel.getCargoVaga() + "\nStatus: " + viewModel.getStatusCandidatura());
-
-            Optional<ButtonType> result = alert.showAndWait();
+            var result = lancarAlert(Alert.AlertType.CONFIRMATION, "Excluir Candidatura", "Tem certeza que deseja excluir esta candidatura?", "Vaga: " + viewModel.getCargoVaga() + "\nStatus: " + viewModel.getStatusCandidatura());
 
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 try {

@@ -69,8 +69,8 @@
 
         //para contratação ^^
         public Funcionario(int id, Usuario usuario, double salariobruto, String regime, String departamento, String cargoContratado) throws InvalidPassword, InvalidCPF {
-            //A SENHA PADRÃO VAI SER O CPF + A PRIMEIRA LETRA DO NOME
-            super(id, usuario.getNome(), usuario.getCpf()+usuario.getNome().toUpperCase().charAt(0), usuario.getCpf(), usuario.getEmail(), "FUNCIONARIO");
+            //A SENHA PADRÃO VAI SER O 4 PRIMEIROS DIGITOS DO NOME + 4 PRIMEIROS DIGITOS DO CPF
+            super(id, usuario.getNome(), usuario.getNome().toUpperCase().substring(0, 4) + usuario.getCpf().substring(0, 4), usuario.getCpf(), usuario.getEmail(), "FUNCIONARIO");
             this.salariobruto = salariobruto;
             this.status = true;
             this.dataContratacao = LocalDate.now();
@@ -91,12 +91,12 @@
         }
 
         public void editarDados(String nome, String cpf, String email, String cargo, String departamento, boolean status) throws InvalidCPF {
-            this.setCpf(cpf);
-            this.setNome(nome);
-            this.setEmail(email);
-            this.setCargo(cargo);
-            this.departamento = departamento;
-            this.status = status;
+                this.setCpf(cpf);
+                this.setNome(nome);
+                this.setEmail(email);
+                this.setCargo(cargo);
+                this.departamento = departamento;
+                this.status = status;
         }
         public Regime descobrirRegime(String regime)
         {

@@ -1,5 +1,6 @@
 package com.Projeto_Tp1_2025_2.util;
 
+import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
@@ -16,7 +17,7 @@ public class CandidaturaService {
 
     public CandidaturaService() {
         try {
-            this.dbCandidaturas = new Database("src/main/resources/candidaturas.json");
+            this.dbCandidaturas = new Database(TelaController.db_paths.get(TelaController.DATABASES.CANDIDATURAS));
         }
         catch (IOException e) {
             e.printStackTrace();

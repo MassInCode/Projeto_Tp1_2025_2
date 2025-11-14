@@ -1,5 +1,6 @@
 package com.Projeto_Tp1_2025_2.models.recrutador;
 
+import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.util.Database;
 
@@ -15,7 +16,7 @@ public class Vaga {
 
     static {
         try {
-            Database db = new Database("src/main/resources/vagas.json");
+            Database db = new Database(TelaController.db_paths.get(TelaController.DATABASES.VAGAS));
             contador = db.getActualId();
         }
         catch (IOException e) {

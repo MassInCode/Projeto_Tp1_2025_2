@@ -48,13 +48,13 @@ public class VagaService {
 
 
     public List<Vaga> getAllVagas() throws IOException {
-        this.db = new Database("src/main/resources/vagas.json");
+        this.db = new Database(TelaController.db_paths.get(TelaController.DATABASES.VAGAS));
         return db.getAllVagas("vagas");
     }
 
 
     public Vaga getVagaPorId(int id) throws IOException {
-        this.db = new Database("src/main/resources/vagas.json");
+        this.db = new Database(TelaController.db_paths.get(TelaController.DATABASES.VAGAS));
         List<Vaga> allVagas = db.getAllVagas("vagas");
         for(Vaga vaga : allVagas){
             if(vaga.getId() == id){

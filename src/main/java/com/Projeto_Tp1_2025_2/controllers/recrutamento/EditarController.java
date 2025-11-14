@@ -1,5 +1,6 @@
 package com.Projeto_Tp1_2025_2.controllers.recrutamento;
 
+import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.models.Usuario;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.recrutador.Recrutador;
@@ -68,7 +69,7 @@ public class EditarController {
         }
 
         try{
-            this.db = new Database("src/main/resources/usuarios_login.json");
+            this.db = new Database(TelaController.db_paths.get(TelaController.DATABASES.USUARIOS));
         } catch (IOException e) {
             e.printStackTrace();
         }

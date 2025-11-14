@@ -1,5 +1,6 @@
 package com.Projeto_Tp1_2025_2.models.recrutador;
 
+import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.util.Database;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -23,7 +24,7 @@ public class Entrevista {
     static {
         try {
             // A Entrevista terá seu próprio arquivo JSON
-            Database db = new Database("src/main/resources/entrevistas.json");
+            Database db = new Database(TelaController.db_paths.get(TelaController.DATABASES.ENTREVISTAS));
             contador = db.getActualId();
         } catch (IOException e) {
             contador = 0;

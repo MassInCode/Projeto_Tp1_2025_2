@@ -7,6 +7,8 @@ import com.Projeto_Tp1_2025_2.models.candidatura.StatusCandidatura;
 
 import java.time.LocalDate;
 
+// essa classe serve para representar um item (row) da tabela de candidaturas
+// ela fornece, portanto, funções para representar a associação entre vaga, usuario (candidato) e candidatura
 public class InfoCandidaturaViewModel {
 
     private Vaga vaga;

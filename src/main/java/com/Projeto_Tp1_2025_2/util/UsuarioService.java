@@ -35,7 +35,7 @@ public class UsuarioService {
         Funcionario usuario = (Funcionario) db.searchUsuario("usuarios", "cpf", cpf, "senha", senha);
 
         if(usuario == null){
-            throw new AuthenticationException("Usuario ou senha inválidos.");
+            throw new AuthenticationException("CPF ou senha inválidos.");
         }
 
         else if (!usuario.getStatus()) {
@@ -51,10 +51,10 @@ public class UsuarioService {
             throw new ValidationException("Senhas não conferem.");
         }
         if(email.isEmpty() || nome.isEmpty() || cpf.isEmpty() || senha.isEmpty()){
-            throw new ValidationException("Campos Obrigatorios Vazios.");
+            throw new ValidationException("Campos obrigatórios vazios.");
         }
-        if(db.searchMap("usuarios", "cpf", cpf, "nome", nome) != null){
-            throw new ValidationException("Cpf ou nome ja cadastrados.");
+        if(db.searchMap("usuarios", "cpf", cpf) != null){
+            throw new ValidationException("CPF já cadastrado no sistema.");
         }
 
         Usuario user = criarUsuarioPorCargo(nome, email, cpf, senha, cargo, "");
@@ -84,10 +84,10 @@ public class UsuarioService {
     public void registrar(String nome, String email, String cpf, String formacao, String cargo) throws IOException, ValidationException { // candidato. houve uma alteração nos parâmetros para o overload funcionar
 
         if(email.isEmpty() || nome.isEmpty() || cpf.isEmpty()){
-            throw new ValidationException("Campos Obrigatorios Vazios.");
+            throw new ValidationException("Campos Obrigatórios Vazios.");
         }
         if(db.searchMap("usuarios", "cpf", cpf, "nome", nome) != null){
-            throw new ValidationException("Cpf ou nome ja cadastrados.");
+            throw new ValidationException("Cpf ou nome já cadastrados.");
         }
 
         Usuario user = criarUsuarioPorCargo(nome, email, cpf, null, cargo, formacao);

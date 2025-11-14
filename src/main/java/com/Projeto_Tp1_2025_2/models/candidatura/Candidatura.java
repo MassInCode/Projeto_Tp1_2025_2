@@ -1,5 +1,6 @@
 package com.Projeto_Tp1_2025_2.models.candidatura;
 
+import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.models.recrutador.Entrevista;
 import com.Projeto_Tp1_2025_2.models.recrutador.Vaga;
 import com.Projeto_Tp1_2025_2.util.Database;
@@ -18,7 +19,7 @@ public class Candidatura {
 
     static {
         try {
-            Database db = new Database("src/main/resources/candidaturas.json");
+            Database db = new Database(TelaController.db_paths.get(TelaController.DATABASES.CANDIDATURAS));
             contador = db.getActualId();
         } catch (IOException e) {
             contador = 0;

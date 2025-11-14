@@ -87,7 +87,7 @@ public class TelinhaAuxController {
         }
 
         try{
-            this.db = new Database("src/main/resources/candidaturas.json");
+            this.db = new Database(TelaController.db_paths.get(TelaController.DATABASES.CANDIDATURAS));
         } catch (IOException e) {
             e.printStackTrace();
         }

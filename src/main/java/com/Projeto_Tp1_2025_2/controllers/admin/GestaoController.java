@@ -38,6 +38,7 @@ public class GestaoController extends ApplicationController implements TelaContr
     Database db;
     Database udb;
     Database pdb;
+    boolean acessoAdm = false; // guarda se foi um admin que acessou aqui ou não
     ArrayList<Recrutador> recrutadores;
     private final ObservableList<Vaga> vagasBase = FXCollections.observableArrayList();
     private final ObservableList<Contratacao> contratacoesBase = FXCollections.observableArrayList();
@@ -114,6 +115,7 @@ public class GestaoController extends ApplicationController implements TelaContr
     public void initialize() {
         if (relatorio == null) {
             System.out.println("Acesso por admin");
+            acessoAdm = true;
             relatorio = new RelatorioGestao();
         }
         // ------------- Inicialização das Databases -------------
@@ -128,6 +130,8 @@ public class GestaoController extends ApplicationController implements TelaContr
         }
 
         // ------------- Carregamento de CACHE -------------
+        // como o cellValueFactory é carregado toda visualização (muitas vezes), para evitar de recuperar dados constantemente
+        // da database, foi feito esse cache, que armazena os recrutadores em um Map, podendo ser acessado com complexidade O(1)
         try {
             for (Map<String,Object> mapa : udb.getData("usuarios")) {
                 if ("RECRUTADOR".equals(mapa.get("cargo"))) {
@@ -150,7 +154,7 @@ public class GestaoController extends ApplicationController implements TelaContr
         colunaDataAbertura.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataAbertura().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
         colunaRecrutador.setCellValueFactory(cellData -> {
                     int a = cellData.getValue().getRecrutadorId();
-                    return new SimpleStringProperty(cacheRecrutadores.getOrDefault(a, "Nenhum"));
+                    return new SimpleStringProperty(cacheRecrutadores.getOrDefault(a, "Nenhum")); // se não achar o recrutador no map, então não tem
         });
 
         colunaRNome.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNome()));
@@ -158,13 +162,11 @@ public class GestaoController extends ApplicationController implements TelaContr
         colunaRVagas.setCellValueFactory(cellData -> {
             StringBuilder builder = new StringBuilder();
 
-            System.out.println(cellData.getValue().getNome());
-
             for (Vaga v : cellData.getValue().getVagas()) {
-                builder.append(v.getCargo()).append(", ");
+                builder.append(v.getCargo()).append(", "); // vai adicionando os cargos das vagas atribuidas ao recrutador em um stringbuilder
             }
 
-            return new SimpleStringProperty(builder.toString());
+            return new SimpleStringProperty(builder.toString()); // retorna-a
         });
 
         UsuarioService us = new UsuarioService();
@@ -173,6 +175,7 @@ public class GestaoController extends ApplicationController implements TelaContr
 
         colunaCandidato.setCellValueFactory(cellData -> {
             try {
+                // contratação tem uma entrevista, que por sua vez tem uma candidatura, que por sua vez tem um candidato. Essa linha abaixo pega o candidato
                 Candidato candidato = (Candidato) us.getUsuarioPorId(cs.getCandidaturaPorId(cellData.getValue().getEntrevista().getCandidaturaId()).getCandidatoId());
                 return new SimpleStringProperty(candidato.getNome());
             }
@@ -187,6 +190,7 @@ public class GestaoController extends ApplicationController implements TelaContr
         });
         colunaVaga.setCellValueFactory(cellData -> {
             try {
+                // mesma logica da acima
                 Vaga vaga = vs.getVagaPorId(cs.getCandidaturaPorId(cellData.getValue().getEntrevista().getCandidaturaId()).getVagaId());
 
                 return new SimpleStringProperty(vaga.getCargo());
@@ -229,20 +233,18 @@ public class GestaoController extends ApplicationController implements TelaContr
             MenuItem excluirVaga = new MenuItem("Excluir vaga");
             MenuItem atribuirRecrutador = new MenuItem("Atribuir recrutador");
 
-            rowMenu.getItems().addAll(cadastrarVaga, editarVaga, excluirVaga, atribuirRecrutador);
+            rowMenu.getItems().addAll(cadastrarVaga, editarVaga, excluirVaga, new SeparatorMenuItem(), atribuirRecrutador);
 
             cadastrarVaga.setOnAction(e -> criacaoVagaJanela.setVisible(true));
             editarVaga.setOnAction(e -> abrirEdicao(row));
 
             excluirVaga.setOnAction(e -> {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Confirmação");
-                alert.setHeaderText("Tem certeza que deseja excluir esta vaga?");
-
-                var resultado = alert.showAndWait();
+                var resultado = lancarAlert(Alert.AlertType.CONFIRMATION, "Confirmação", "Tem certeza que deseja excluir esta vaga?");
 
                 if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
                     Vaga vaga = row.getItem();
+                    // se o recrutadorId da vaga não for -1, isto é, TEM um recrutador atribuido a ela, então ela é removida de todos os recrutadores
+                    // que são atribuidos a ela
                     if (vaga.getRecrutadorId() != -1) {
                         removerRecrutadoresVagas(vaga.getId());
                         tabela_recrutadores.refresh();
@@ -252,17 +254,17 @@ public class GestaoController extends ApplicationController implements TelaContr
                     tabela_vagas.refresh();
                     db.deleteObject(vaga, "vagas");
 
-                    relatorio.removeVagas(vaga);
+                    relatorio.removeVagas(vaga); // atualiza o relatorio
                 }
             });
 
             atribuirRecrutador.setOnAction(e -> abrirRecrutador(row)); // esperar terminarem recrutador
 
             // so vai aparecer quando clicado em cima de uma linha
-            row.contextMenuProperty().bind(
+            row.contextMenuProperty().bind(                 // essa função liga cada linha genérica da tabela a um contextMenu especifico
                     Bindings.when(row.emptyProperty())
-                            .then(tabela_menu)
-                            .otherwise(rowMenu)
+                            .then(tabela_menu)          // adiciona o tabela_menu se a linha estiver vazia
+                            .otherwise(rowMenu)         // adiciona o rowmenu caso contrario
             );
 
             return row;
@@ -274,28 +276,73 @@ public class GestaoController extends ApplicationController implements TelaContr
             ContextMenu rowMenu = new ContextMenu();
 
             MenuItem aceitar = new MenuItem("Aceitar contratação");
+            MenuItem recusar = new MenuItem("Recusar contratação");
 
-            rowMenu.getItems().addAll(aceitar);
+            rowMenu.getItems().addAll(aceitar, recusar);
 
             aceitar.setOnAction(e -> {
-                row.getItem().autorizar();
-
-                // dando update no candidatura para aprovar ele
-                try {
-                    Candidatura can = cs.getCandidaturaPorId(row.getItem().getEntrevista().getCandidaturaId());
-                    can.setStatus(StatusCandidatura.APROVADO);
-                    cs.atualizarCandidatura(can);
-                }
-                catch (IOException error) {
-                    error.printStackTrace();
+                if (row.getItem().getStatus().equals("Aprovado") || row.getItem().getStatus().equals("Recusado")) {
+                    lancarAlert(Alert.AlertType.ERROR, "Ação bloqueada", "Não é possível modificar o status do pedido após modificado.");
+                    return;
                 }
 
-                tabela_pedidos.refresh();
+                var resultado = lancarAlert(Alert.AlertType.CONFIRMATION, "Autorizar pedido", "Tem certeza que deseja autorizar esse pedido?", "Não é possível reverter essa ação.");
 
-                relatorio.addPedidos(row.getItem());
-                relatorio.aceitarPedido();
+                if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+                    row.getItem().autorizar();
 
-                pdb.editObject(row.getItem(), "pedidos");
+                    // dando update no candidatura para aprovar ele
+                    try {
+                        Candidatura can = cs.getCandidaturaPorId(row.getItem().getEntrevista().getCandidaturaId());
+                        can.setStatus(StatusCandidatura.APROVADO);
+                        cs.atualizarCandidatura(can);
+                    }
+                    catch (IOException error) {
+                        error.printStackTrace();
+                    }
+
+                    tabela_pedidos.refresh();
+
+                    relatorio.addPedidos(row.getItem());
+                    relatorio.aceitarPedido();
+
+                    pdb.editObject(row.getItem(), "pedidos");
+
+                    lancarAlert(Alert.AlertType.INFORMATION, "Sucesso", "Pedido autorizado com sucesso!", "Verifique a candidatura associada para mais informações.");
+                }
+            });
+
+            recusar.setOnAction(e -> {
+                if (row.getItem().getStatus().equals("Aprovado") || row.getItem().getStatus().equals("Recusado")) {
+                    lancarAlert(Alert.AlertType.ERROR, "Ação bloqueada", "Não é possível modificar o status do pedido após modificado.");
+                    return;
+                }
+
+                var resultado = lancarAlert(Alert.AlertType.CONFIRMATION, "Recusar pedido", "Tem certeza que deseja autorizar esse pedido?", "Não é possível reverter essa ação.");
+
+                if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+                    row.getItem().recusar();
+
+                    // dando update no candidatura para reprovar ele
+                    try {
+                        Candidatura can = cs.getCandidaturaPorId(row.getItem().getEntrevista().getCandidaturaId());
+                        can.setStatus(StatusCandidatura.REPROVADO);
+                        cs.atualizarCandidatura(can);
+                    }
+                    catch (IOException error) {
+                        error.printStackTrace();
+                    }
+
+                    tabela_pedidos.refresh();
+
+                    relatorio.addPedidos(row.getItem());
+                    relatorio.recusarPedido();
+
+                    pdb.editObject(row.getItem(), "pedidos");
+
+                    lancarAlert(Alert.AlertType.INFORMATION, "Sucesso", "Pedido recusado com sucesso!", "Verifique a candidatura associada para mais informações.");
+                }
+
             });
 
             row.contextMenuProperty().setValue(rowMenu);
@@ -305,6 +352,7 @@ public class GestaoController extends ApplicationController implements TelaContr
 
         // ------------- Mecânica de Busca -------------
         this.abrirVagas();
+        setSearch(tabela_pedidos, barraPesquisar, btn_filtrar, this::filtro);
 
         // ------------- Configurações Gerais -------------
         cv_error.setManaged(false);
@@ -318,7 +366,7 @@ public class GestaoController extends ApplicationController implements TelaContr
             List<Map<String, Object>> dados = udb.getData("usuarios");
 
             for (Map<String, Object> mapa : dados) {
-                if (mapa.get("cargo") != null && mapa.get("cargo").equals("RECRUTADOR")) {
+                if (mapa.get("cargo") != null && mapa.get("cargo").equals("RECRUTADOR")) { // pega so os recrutadores
                     recrutadores.add(udb.convertMaptoObject(mapa, Recrutador.class));
                 }
             }
@@ -334,7 +382,6 @@ public class GestaoController extends ApplicationController implements TelaContr
 
             for (Map<String, Object> mapa : dados) {
                 vagasBase.add(db.convertMaptoObject(mapa, Vaga.class));
-
             }
 
             tabela_vagas.setItems(vagasBase);
@@ -345,8 +392,9 @@ public class GestaoController extends ApplicationController implements TelaContr
                 Recrutador recrutador = pdb.convertMaptoObject((Map<String, Object>) mapa.get("recrutador"), Recrutador.class);
                 Entrevista entrevista = pdb.convertMaptoObject((Map<String, Object>) mapa.get("entrevista"), Entrevista.class);
 
+                // o id é passado no construtor para que não mude o índice
                 contratacoesBase.add(new Contratacao(
-                        recrutador, entrevista, LocalDate.parse(mapa.get("dataPedido").toString(), DateTimeFormatter.ofPattern("dd/MM/yyyy")), mapa.get("regime").toString()
+                        Integer.parseInt(mapa.get("id").toString()), recrutador, entrevista, LocalDate.parse(mapa.get("dataPedido").toString(), DateTimeFormatter.ofPattern("dd/MM/yyyy")), mapa.get("regime").toString()
                 ));
             }
 
@@ -368,7 +416,7 @@ public class GestaoController extends ApplicationController implements TelaContr
             Vaga vaga = new Vaga(cv_cargo.getText(), Double.parseDouble(cv_salario.getText()), cv_requisitos.getText(), cv_departamento.getText(), cv_regime.getText(), LocalDate.now(), StatusVaga.ATIVO);
             db.addObject(vaga, "vagas");
             int id = vaga.getId();
-            db.setActualId(++id);
+            db.setActualId(++id); // seta o id atual como o proximo imediato do atual
 
             vagasBase.add(vaga);
             tabela_vagas.refresh();
@@ -456,9 +504,10 @@ public class GestaoController extends ApplicationController implements TelaContr
 
     private void removerRecrutadoresVagas(int vagaId) {
         for (Recrutador r : recrutadores) {
+            // esse removeIf apagará a vaga apenas se o id for igual ao vagaId
             boolean apagou = r.getVagas().removeIf(v -> v.getId() == vagaId);
             if (apagou) {
-                udb.editObject(r, "usuarios");
+                udb.editObject(r, "usuarios"); // se apagou, algum, tem que editar
             }
         }
     }
@@ -477,14 +526,25 @@ public class GestaoController extends ApplicationController implements TelaContr
             };
         }
 
-        /*else if (classe instanceof Contratacao pedido) {
-            return switch (campo) {
-                case "Vaga" -> pedido.getVaga().getCargo();
-                case "Data Contratação" -> pedido.getDataContratacao();
-                case "Regime" -> pedido.getRegime();
-                default -> pedido.getCandidato().getNome();
-            };
-        }*/
+        else if (classe instanceof Contratacao pedido) {
+            CandidaturaService cs = new CandidaturaService();
+            VagaService vs = new VagaService();
+
+            try {
+                return switch (campo) {
+                    case "Vaga" -> vs.getVagaPorId(cs.getCandidaturaPorId(pedido.getEntrevista().getCandidaturaId()).getVagaId()).getCargo();
+                    case "Data Contratação" -> pedido.getDataPedido().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    case "Regime" -> pedido.getRegime();
+                    default -> udb.searchUsuario("usuarios", "id", String.valueOf(
+                            cs.getCandidaturaPorId(pedido.getEntrevista().getCandidaturaId()).getCandidatoId() // resgata o candidato pelo id vindo da candidatura
+                    )).getNome();
+                };
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                return "ERRO";
+            }
+        }
 
         else {
             throw new BadFilter();
@@ -493,8 +553,8 @@ public class GestaoController extends ApplicationController implements TelaContr
 
     @FXML
     private void gerarRelatorio() {
-        if (relatorio == null) { // significa que foi iniciado por um admin
-            System.out.println("Inicialização por admin");
+        if (acessoAdm) { // significa que foi iniciado por um admin
+            lancarAlert(Alert.AlertType.WARNING, "Ação bloqueada", "Acesso por administrador", "Não é possível gerar um relatório de gestão sem um gestor válido.\nAcesse como um Gestor na página inicial.");
             return;
         }
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -574,7 +634,7 @@ public class GestaoController extends ApplicationController implements TelaContr
 
         btn_filtrar.setValue("Cargo");
 
-        search(tabela_vagas, barraPesquisar, btn_filtrar, this::filtro, vagasBase);
+        setSearch(tabela_vagas, barraPesquisar, btn_filtrar, this::filtro, vagasBase);
 
         tabela_pedidos.setVisible(false);
         tabela_vagas.setVisible(true);
@@ -588,7 +648,7 @@ public class GestaoController extends ApplicationController implements TelaContr
 
         btn_filtrar.setValue("Candidato");
 
-        search(tabela_pedidos, barraPesquisar, btn_filtrar, this::filtro, contratacoesBase);
+        setSearch(tabela_pedidos, barraPesquisar, btn_filtrar, this::filtro, contratacoesBase);
 
         tabela_vagas.setVisible(false);
         tabela_pedidos.setVisible(true);

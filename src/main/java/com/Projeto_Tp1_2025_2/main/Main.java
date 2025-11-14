@@ -37,6 +37,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        System.setProperty("glass.win.uiScale", "100%");
         launch(args);
     }
 }
