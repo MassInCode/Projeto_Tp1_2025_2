@@ -1053,10 +1053,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         try {
             for(var mapa : db.getData("pedidos")){
                 if(db.convertMaptoObject((Map<String, Object>) mapa.get("entrevista"), Entrevista.class).getId() == entrevista.getEntrevista().getId()){
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setHeaderText(null);
-                    alert.setContentText("Já foi realizado um pedido a essa entrevista.");
-                    alert.showAndWait();
+                    lancarAlert(Alert.AlertType.WARNING, "Realização de Pedidos", "Já foi realizado um pedido a essa entrevista.");
                     return;
                 }
             }
@@ -1068,10 +1065,7 @@ public class CandidaturaController extends ApplicationController implements Tela
             db.setActualId(++id);
         } catch (Exception e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Erro ao registrar pedido");
-            alert.setContentText("Ocorreu um erro ao salvar o pedido de contratação.");
-            alert.showAndWait();
+            lancarAlert(Alert.AlertType.ERROR, "Error", "Erro ao registrar pedido", "Ocorreu um erro ao salvar o pedido de contratação.");
         }
     }
 
