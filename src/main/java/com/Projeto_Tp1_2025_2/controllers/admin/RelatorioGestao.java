@@ -123,6 +123,7 @@ public class RelatorioGestao {
            adicionarLinhaResumo(resumo, "Total de Vagas Excluídas", String.valueOf(vagas_excluidas));
            adicionarLinhaResumo(resumo, "Pedidos de Contratação Recebidos", String.valueOf(pedidos_recebidos));
            adicionarLinhaResumo(resumo, "Pedidos de Contratação Aceitos", String.valueOf(pedidos_aceitos));
+           adicionarLinhaResumo(resumo, "Pedidos de Contratação Recusados", String.valueOf(pedidos_recusados));
 
            doc.add(criarTituloSecao("Resumo do Período"));
            doc.add(resumo);

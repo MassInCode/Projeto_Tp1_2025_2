@@ -1,4 +1,43 @@
 {
-  "id" : "0",
-  "pedidos" : []
+  "id" : "1",
+  "pedidos" : [ {
+    "recrutador" : {
+      "id" : 1,
+      "nome" : "recrutador1",
+      "senha" : "Kaio1234",
+      "cpf" : "83140922078",
+      "email" : "recrutador1@gmail.com",
+      "cargo" : "RECRUTADOR",
+      "salariobruto" : 0.0,
+      "status" : true,
+      "dataContratacao" : "16/11/2025",
+      "regime" : "FORADEREGIME",
+      "departamento" : "departamento",
+      "vagas" : [ {
+        "id" : 1,
+        "cargo" : "Estoquista",
+        "salarioBase" : 1518.0,
+        "requisitos" : "Ensino Médio Completo",
+        "regimeContratacao" : "CLT",
+        "departamento" : "departamento",
+        "dataAbertura" : "16/11/2025",
+        "status" : "ATIVO",
+        "recrutadorId" : 1,
+        "dataAberturaLD" : "16/11/2025"
+      } ]
+    },
+    "contador" : 1,
+    "regime" : "CLT",
+    "entrevista" : {
+      "id" : 1,
+      "candidaturaId" : 1,
+      "recrutadorId" : 1,
+      "dataEntrevista" : "19/11/2025 09:00",
+      "nota" : 8.7,
+      "aprovada" : true
+    },
+    "dataPedido" : "16/11/2025",
+    "id" : 0,
+    "status" : "Pendente"
+  } ]
 }

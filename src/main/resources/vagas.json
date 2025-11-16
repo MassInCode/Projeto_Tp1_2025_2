@@ -1,4 +1,26 @@
 {
-  "id" : "0",
-  "vagas" : []
+  "id" : "3",
+  "vagas" : [ {
+    "requisitos" : "Ensino Médio Completo",
+    "contador" : 2,
+    "regimeContratacao" : "CLT",
+    "salarioBase" : 1518.0,
+    "departamento" : "departamento",
+    "id" : 1,
+    "cargo" : "Estoquista",
+    "recrutadorId" : 1,
+    "dataAbertura" : "16/11/2025",
+    "status" : "ATIVO"
+  }, {
+    "requisitos" : "Administração",
+    "contador" : 2,
+    "regimeContratacao" : "CLT",
+    "salarioBase" : 3020.0,
+    "departamento" : "departamento",
+    "id" : 2,
+    "cargo" : "Analista",
+    "recrutadorId" : -1,
+    "dataAbertura" : "16/11/2025",
+    "status" : "ATIVO"
+  } ]
 }

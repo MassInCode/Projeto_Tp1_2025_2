@@ -149,6 +149,11 @@ public class AdminController extends ApplicationController implements TelaContro
             excluirItem.setOnAction(e -> excluirFuncionario(e, row.getItem()));
 
             alterarStatus.setOnAction(e -> {
+                if (row.getItem().getCargo().equals("CANDIDATO")) {
+                    lancarAlert(Alert.AlertType.WARNING, "Ação bloqueada", "Não é possível ativar ou desativar um Candidato");
+                    return;
+                }
+
                 row.getItem().changeStatus();
                 db.editObject(row.getItem(), "usuarios");
                 tabelaFuncionarios.refresh();

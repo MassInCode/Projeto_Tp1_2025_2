@@ -1,4 +1,86 @@
 {
-  "id" : "0",
-  "usuarios" : []
+  "id" : "5",
+  "usuarios" : [ {
+    "regime" : "FORADEREGIME",
+    "nome" : "admin",
+    "senha" : "Kaio1234",
+    "dataContratacao" : "16/11/2025",
+    "contador" : 5,
+    "cargoContratado" : null,
+    "cpf" : "58782211019",
+    "departamento" : "Administração",
+    "salarioliquido" : 0.0,
+    "id" : 0,
+    "salariobruto" : 0.0,
+    "cargo" : "ADMIN",
+    "email" : "admin@gmail.com",
+    "status" : true
+  }, {
+    "vagas" : [ {
+      "id" : 1,
+      "cargo" : "Estoquista",
+      "salarioBase" : 1518.0,
+      "requisitos" : "Ensino Médio Completo",
+      "regimeContratacao" : "CLT",
+      "departamento" : "departamento",
+      "dataAbertura" : "16/11/2025",
+      "status" : "ATIVO",
+      "recrutadorId" : 1,
+      "dataAberturaLD" : "16/11/2025"
+    } ],
+    "regime" : "FORADEREGIME",
+    "nome" : "recrutador1",
+    "senha" : "Kaio1234",
+    "dataContratacao" : "16/11/2025",
+    "contador" : 5,
+    "cargoContratado" : null,
+    "cpf" : "83140922078",
+    "departamento" : "departamento",
+    "salarioliquido" : 0.0,
+    "id" : 1,
+    "salariobruto" : 0.0,
+    "cargo" : "RECRUTADOR",
+    "email" : "recrutador1@gmail.com",
+    "status" : true
+  }, {
+    "vagas" : [ ],
+    "regime" : "FORADEREGIME",
+    "nome" : "recrutador2",
+    "senha" : "Kaio1234",
+    "dataContratacao" : "16/11/2025",
+    "contador" : 3,
+    "cargoContratado" : "RECRUTADOR",
+    "cpf" : "63347866010",
+    "departamento" : "NULL",
+    "salarioliquido" : 0.0,
+    "id" : 2,
+    "salariobruto" : 0.0,
+    "cargo" : "RECRUTADOR",
+    "email" : "recrutador2@gmail.com",
+    "status" : false
+  }, {
+    "regime" : "FORADEREGIME",
+    "nome" : "gestor",
+    "senha" : "Kaio1234",
+    "dataContratacao" : "16/11/2025",
+    "contador" : 4,
+    "cargoContratado" : "GESTOR",
+    "cpf" : "72785668006",
+    "departamento" : "NULL",
+    "salarioliquido" : 0.0,
+    "id" : 3,
+    "salariobruto" : 0.0,
+    "cargo" : "GESTOR",
+    "email" : "gestor@gmail.com",
+    "status" : false
+  }, {
+    "senha" : null,
+    "formacao" : "Ensino Médio Completo",
+    "contador" : 5,
+    "cpf" : "75245606054",
+    "nome" : "candidato",
+    "id" : 4,
+    "cargo" : "CANDIDATO",
+    "email" : "candidato@gmail.com"
+  } ]
 }

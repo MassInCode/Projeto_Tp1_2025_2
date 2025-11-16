@@ -1,4 +1,11 @@
 {
-  "id" : "0",
-  "entrevistas" : []
+  "id" : "1",
+  "entrevistas" : [ {
+    "dataEntrevista" : "19/11/2025 09:00",
+    "contador" : 1,
+    "candidaturaId" : 1,
+    "id" : 1,
+    "recrutadorId" : 1,
+    "nota" : 8.7
+  } ]
 }
