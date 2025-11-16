@@ -1,6 +1,7 @@
 package com.Projeto_Tp1_2025_2.models;
 
 import com.Projeto_Tp1_2025_2.exceptions.InvalidCPF;
+import com.Projeto_Tp1_2025_2.exceptions.InvalidEmail;
 import com.Projeto_Tp1_2025_2.exceptions.InvalidPassword;
 import com.Projeto_Tp1_2025_2.util.Database;
 
@@ -32,7 +33,7 @@ public abstract class Usuario {
     //nao apagar
 
 
-    public Usuario(String nome, String senha, String cpf, String email, String cargo) throws InvalidPassword, InvalidCPF {
+    public Usuario(String nome, String senha, String cpf, String email, String cargo) throws InvalidPassword, InvalidCPF, InvalidEmail {
         this.nome = nome;
         this.email = email;
         this.cargo = cargo;
@@ -40,7 +41,11 @@ public abstract class Usuario {
 
         if (!validarCPF(cpf)) {
             throw new InvalidCPF();
-        };
+        }
+
+        if (!validarEmail(email)) {
+            throw new InvalidEmail();
+        }
 
         if (cargo == null) {
             String msg = validarSenha(senha); //
@@ -118,6 +123,33 @@ public abstract class Usuario {
         if (maiusculas == 0 || numeros == 0) return "A senha deve conter letras maiúsculas e números.";
 
         return "\0";
+    }
+
+    private boolean validarEmail(String email) {
+        if (email.contains(" ")){
+            return false;
+        }
+
+        int arrobaIndex = email.indexOf("@");
+
+        if (arrobaIndex == -1 || arrobaIndex != email.lastIndexOf("@")){ // se o arroba nao existe ou se existe mais de um
+            return false;
+        }
+
+        String nome = email.substring(0, arrobaIndex);
+        String dominio = email.substring(arrobaIndex + 1);
+
+        if (nome.isEmpty() || !dominio.endsWith(".com")) {
+            return false;
+        }
+
+        String dominioSemCom = dominio.substring(0, dominio.length() - 4); // verificas e tem algo entre o @ e o .com, isto é, o dominio
+
+        if (dominioSemCom.isEmpty()) {
+            return false;
+        }
+
+        return true;
     }
 
     public int getId() {
