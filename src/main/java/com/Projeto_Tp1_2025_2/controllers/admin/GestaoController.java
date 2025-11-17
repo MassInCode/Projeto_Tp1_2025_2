@@ -8,6 +8,9 @@ import com.Projeto_Tp1_2025_2.models.admin.Gestor;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidato;
 import com.Projeto_Tp1_2025_2.models.candidatura.Candidatura;
 import com.Projeto_Tp1_2025_2.models.candidatura.StatusCandidatura;
+import com.Projeto_Tp1_2025_2.models.funcionario.Funcionario;
+import com.Projeto_Tp1_2025_2.models.funcionario.Regime;
+import com.Projeto_Tp1_2025_2.models.funcionario.RegrasSalario;
 import com.Projeto_Tp1_2025_2.models.recrutador.*;
 import com.Projeto_Tp1_2025_2.util.CandidaturaService;
 import com.Projeto_Tp1_2025_2.util.Database;
@@ -51,6 +54,7 @@ public class GestaoController extends ApplicationController implements TelaContr
 
     @FXML Button btn_sair;
     @FXML Button atribuirSelecao;
+    @FXML Button btn_funcionarios;
 
     @FXML AnchorPane janelaSobreposta;
     @FXML AnchorPane criacaoVagaJanela;
@@ -60,6 +64,7 @@ public class GestaoController extends ApplicationController implements TelaContr
     @FXML TableView<Vaga> tabela_vagas;
     @FXML TableView<Contratacao> tabela_pedidos;
     @FXML TableView<Recrutador> tabela_recrutadores;
+    @FXML private TableView<Funcionario> tabela_funcionarios;
 
     @FXML TextField cv_cargo;
     @FXML TextField cv_salario;
@@ -89,7 +94,7 @@ public class GestaoController extends ApplicationController implements TelaContr
     @FXML private TableColumn<Vaga, String> colunaDataAbertura;
     @FXML private TableColumn<Vaga, String> colunaRecrutador;
 
-    @FXML private TableColumn<Recrutador, String> colunaRNome;
+    @FXML private TableColumn<Funcionario, String> colunaRNome;
     @FXML private TableColumn<Recrutador, String> colunaREmail;
     @FXML private TableColumn<Recrutador, String> colunaRVagas;
 
@@ -98,6 +103,16 @@ public class GestaoController extends ApplicationController implements TelaContr
     @FXML private TableColumn<Contratacao, String> colunaData;
     @FXML private TableColumn<Contratacao, String> colunaPRegime;
     @FXML private TableColumn<Contratacao, String> colunaAutorizado;
+
+    @FXML private TableColumn<Funcionario, String> colunaFNome;
+    @FXML private TableColumn<Funcionario, String> colunaFCargo;
+    @FXML private TableColumn<Funcionario, String> colunaFRegime;
+    @FXML private TableColumn<Funcionario, String> colunaFSalario;
+    @FXML private TableColumn<Funcionario, String> colunaFSalarioFinal;
+    @FXML private TableColumn<Funcionario, String> colunaFValeAlimentacao;
+    @FXML private TableColumn<Funcionario, String> colunaFValeTransporte;
+    @FXML private TableColumn<Funcionario, String> colunaFBonus;
+    @FXML private TableColumn<Funcionario, String> colunaFData;
 
     @FXML
     public void initData(Gestor gestor) {
@@ -357,6 +372,88 @@ public class GestaoController extends ApplicationController implements TelaContr
         // ------------- Configurações Gerais -------------
         cv_error.setManaged(false);
         ev_error.setManaged(false);
+
+        //--------------- Tabela Funcionarios------------------
+        RegrasSalario regrasFunc = RegrasSalario.carregar();
+
+        colunaFNome.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getNome()));
+        colunaFCargo.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getCargo()));
+        colunaFRegime.setCellValueFactory(cell ->
+                new SimpleStringProperty(cell.getValue().getRegime() != null ? cell.getValue().getRegime().name() : "-")
+        );
+
+// Formata corretamente a data de contratação para dd/MM/yyyy,
+// aceitando tanto String quanto LocalDate (e tratando nulos)
+        colunaFData.setCellValueFactory(cell -> {
+            String formatted = "-";
+            try {
+                Object raw = cell.getValue().getDataContratacao();
+                if (raw == null) {
+                    formatted = "-";
+                } else if (raw instanceof LocalDate ld) {
+                    formatted = ld.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                } else {
+                    String s = raw.toString().trim();
+                    if (s.isEmpty()) {
+                        formatted = "-";
+                    } else {
+                        try {
+                            LocalDate parsed = LocalDate.parse(s, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                            formatted = parsed.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        } catch (Exception e1) {
+                            try {
+                                LocalDate parsedIso = LocalDate.parse(s); // tenta ISO yyyy-MM-dd
+                                formatted = parsedIso.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                            } catch (Exception e2) {
+                                // não conseguiu parsear — mostra a string original (fallback)
+                                formatted = s;
+                            }
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                formatted = "-";
+            }
+            return new SimpleStringProperty(formatted);
+        });
+
+        colunaFSalario.setCellValueFactory(cell -> {
+            double sb = cell.getValue().getSalariobruto();
+            return new SimpleStringProperty(String.format("R$ %.2f", sb));
+        });
+
+        colunaFSalarioFinal.setCellValueFactory(cell -> {
+            Funcionario f = cell.getValue();
+            double finalSal = regrasFunc.calcularSalario(f);
+            return new SimpleStringProperty(String.format("R$ %.2f", finalSal));
+        });
+
+        colunaFValeAlimentacao.setCellValueFactory(cell -> {
+            Funcionario f = cell.getValue();
+            double vale = 0;
+            Regime r = f.getRegime();
+            if (r == Regime.CLT) vale = regrasFunc.isValealiCLT() ? regrasFunc.getValeAlimento() : 0;
+            else if (r == Regime.ESTAGIARIO) vale = regrasFunc.isValealiEST() ? regrasFunc.getValeAlimento() : 0;
+            return new SimpleStringProperty(String.format("R$ %.2f", vale));
+        });
+
+        colunaFValeTransporte.setCellValueFactory(cell -> {
+            Funcionario f = cell.getValue();
+            double valeT = 0;
+            Regime r = f.getRegime();
+            if (r == Regime.CLT) valeT = regrasFunc.isValetransCLT() ? regrasFunc.getValeTransport() : 0;
+            else if (r == Regime.ESTAGIARIO) valeT = regrasFunc.isValetransEST() ? regrasFunc.getValeTransport() : 0;
+            return new SimpleStringProperty(String.format("R$ %.2f", valeT));
+        });
+
+        colunaFBonus.setCellValueFactory(cell -> {
+            Funcionario f = cell.getValue();
+            double bonus = 0;
+            if (f.getRegime() == Regime.PJ) bonus = regrasFunc.isBonusPJ() ? regrasFunc.getBonus_PJ() : 0;
+            return new SimpleStringProperty(String.format("R$ %.2f", bonus));
+        });
+
+        carregarFuncionariosTabela();
     }
 
     @FXML
@@ -664,4 +761,28 @@ public class GestaoController extends ApplicationController implements TelaContr
     public void sair() throws IOException {
         super.sair(btn_sair);
     }
+
+    @FXML
+    private void abrirFuncionarios(ActionEvent event) {
+        tabela_vagas.setVisible(false);
+        tabela_pedidos.setVisible(false);
+        tabela_funcionarios.setVisible(true);
+    }
+
+    private void carregarFuncionariosTabela() {
+        try {
+            // usa o leitor existente — ele já filtra por status = true
+            ArrayList<Funcionario> funcionarios = FolhaPagamento.lerFuncionarios("src/main/resources/usuarios_login.json");
+
+            // se quiser ordenação/filtro extra, faça aqui. Por enquanto, pega todos ativos.
+            ObservableList<Funcionario> obs = FXCollections.observableArrayList(funcionarios);
+            tabela_funcionarios.setItems(obs);
+            tabela_funcionarios.refresh();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // opcional: mostrar alerta para o usuário
+            lancarAlert(Alert.AlertType.ERROR, "Erro", "Não foi possível carregar funcionários", e.getMessage());
+        }
+    }
+
 }
