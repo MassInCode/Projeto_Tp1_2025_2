@@ -85,7 +85,7 @@ public class Database {
         List<Map<String, Object>> info = (List<Map<String, Object>>) jsonMap.get(data);
 
         if (info == null) {
-            return List.of(Map.of("", ""));     // retorna uma lista contendo um unico map vazio
+            return Collections.emptyList();
         }
 
         return info;
