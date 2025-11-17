@@ -17,9 +17,9 @@
          <children>
             <VBox alignment="CENTER" layoutX="32.0" layoutY="29.0" prefHeight="358.0" prefWidth="548.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <Label alignment="CENTER" prefHeight="69.0" prefWidth="485.0" text="Editar Funcionario">
+                  <Label alignment="CENTER" prefHeight="69.0" prefWidth="485.0" text="Editar Funcionário">
                      <font>
-                        <Font size="36.0" />
+                        <Font name="System Bold" size="36.0" />
                      </font>
                   </Label>
                   <VBox alignment="CENTER" prefHeight="189.0" prefWidth="454.0">

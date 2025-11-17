@@ -2,6 +2,7 @@ package com.Projeto_Tp1_2025_2.util;
 
 import com.Projeto_Tp1_2025_2.controllers.TelaController;
 import com.Projeto_Tp1_2025_2.exceptions.InvalidCPF;
+import com.Projeto_Tp1_2025_2.exceptions.InvalidEmail;
 import com.Projeto_Tp1_2025_2.exceptions.InvalidPassword;
 import com.Projeto_Tp1_2025_2.exceptions.ValidationException;
 import com.Projeto_Tp1_2025_2.models.Usuario;
@@ -108,7 +109,7 @@ public class UsuarioService {
                 case "GESTOR" -> new Gestor(nome, senha, cpf, email, cargo);
                 default -> null;
             };
-        } catch (InvalidCPF | InvalidPassword e){
+        } catch (InvalidCPF | InvalidPassword | InvalidEmail e){
             throw new ValidationException(e.getMessage());
         }
     }
