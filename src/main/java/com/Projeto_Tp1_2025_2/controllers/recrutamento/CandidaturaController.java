@@ -218,7 +218,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         setSearch(tabelaRegistrarVagas, barraPesquisar, btn_filtrar, this::filtro, vagasBase);
         setSearch(tabEntrevistas, barraPesquisar, btn_filtrar, this::filtro, entrevistasBase);
         setSearch(tabTodasCandidaturas, barraPesquisar, btn_filtrar, this::filtro, todasCandidaturasBase);
-
+        
         nowVisible = tab_candidatos;
         nowVisible.setVisible(false);
 
@@ -410,7 +410,7 @@ public class CandidaturaController extends ApplicationController implements Tela
                 }
             }
         });
-        /*
+
         reagendarItem.setOnAction(event -> {
             AgendaViewModel viewModel = tabEntrevistas.getSelectionModel().getSelectedItem();
             if (viewModel == null) return;
@@ -425,7 +425,7 @@ public class CandidaturaController extends ApplicationController implements Tela
                 e.printStackTrace();
             }
         });
-         */
+
 
         atribuirNotaItem.setOnAction(event -> {
             AgendaViewModel viewModel = tabEntrevistas.getSelectionModel().getSelectedItem();
@@ -492,7 +492,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         });
 
         //contextMenu.getItems().addAll(solicitarContratacao, reagendarItem, atribuirNotaItem, new SeparatorMenuItem(), excluirItem);
-        contextMenu.getItems().addAll(solicitarContratacao, atribuirNotaItem, new SeparatorMenuItem(), excluirItem);
+        contextMenu.getItems().addAll(reagendarItem, new SeparatorMenuItem(),solicitarContratacao, atribuirNotaItem, new SeparatorMenuItem(), excluirItem);
         tabEntrevistas.setRowFactory(tv -> {
             TableRow<AgendaViewModel> row = new TableRow<>();
             row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
@@ -533,19 +533,18 @@ public class CandidaturaController extends ApplicationController implements Tela
                     //EXCLUIR CANDIDATURA PQ TA DANDOE RRO DPS Q O CANDIDATO É EFETIVADO
                     //TALVEZ MODIFICAR DEPOIS PARA OUTRA ABORDAGEM
                     try {
+
                         candidaturaService.excluirCandidatura(viewModel.getCandidatura());
                         carregarTodasCandidaturas();
                         carregarVagas();
+                        this.usuarioService = new UsuarioService();
                         carregarCandidatos();
                         this.allCandidaturas = candidaturaService.getAllCandidaturas();
                         tabTodasCandidaturas.refresh();
-                        tabCandidatos.refresh();
                         tabelaRegistrarVagas.refresh();
-
-                        // remove de novo aqui porque o carregarCandidatos() coloca novamente
-                        candidatosBase.remove(viewModel.getUsuario());
-                        tabCandidatos.getItems().remove(viewModel.getUsuario());
                         tabCandidatos.refresh();
+
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -1069,9 +1068,7 @@ public class CandidaturaController extends ApplicationController implements Tela
         }
     }
 
-
-    @FXML
-    private void editarVaga(Vaga vagaSelecionada) {
+    @FXML private void editarVaga(Vaga vagaSelecionada) {
 
         tab_editarVagas.setVisible(true);
 

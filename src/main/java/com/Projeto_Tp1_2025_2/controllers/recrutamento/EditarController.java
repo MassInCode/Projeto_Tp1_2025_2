@@ -20,39 +20,73 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Controller para a tela modal de edição de candidato e registro de candidatura.
+ * Esta tela possui dois modos de operação, controlados pelo método initData:
+ * 1. Editar Candidato: Permite alterar os dados de um Candidato existente.
+ * 2. Registrar Candidatura: Permite associar um Candidato a uma Vaga.
+ */
 public class EditarController {
 
-    @FXML TextField txtNomeCad, txtEmailCad, txtCpfCad, txtFormCad;
-    @FXML TextField txtCargo, txtSalario, txtDepart, txtRegime;
-    @FXML ChoiceBox<Vaga> cbNomesVagas;
+    //<editor-fold desc="Declarações FXML: Tela Editar Candidato">
+    //================CAMPOS DE EDIÇÃO DE CANDIDATO================
     @FXML TextField txtNome;
     @FXML TextField txtEmail;
     @FXML TextField txtCpf;
     @FXML TextField txtForm;
-    @FXML AnchorPane tabRegistrarCandidatura;
     @FXML AnchorPane tabEditarCandidato;
-    @FXML Label mensagem_erro;
     @FXML Label mensagem_erro_edit;
+    //================CAMPOS DE EDIÇÃO DE CANDIDATO================
+    //</editor-fold>
 
-    private Candidato candidato;
-    private Database db;
+    //<editor-fold desc="Declarações FXML: Tela Registrar Candidatura">
+    //================CAMPOS DE REGISTRO DE CANDIDATURA================
+
+    // Campos (não editáveis) para mostrar os dados do candidato selecionado
+    @FXML TextField txtNomeCad, txtEmailCad, txtCpfCad, txtFormCad;
+
+    // ChoiceBox para selecionar a vaga
+    @FXML ChoiceBox<Vaga> cbNomesVagas;
+
+    // Campos (não editáveis) que mostram os detalhes da vaga selecionada
+    @FXML TextField txtCargo, txtSalario, txtDepart, txtRegime;
+
+    @FXML AnchorPane tabRegistrarCandidatura;
+    @FXML Label mensagem_erro;
+    //================CAMPOS DE REGISTRO DE CANDIDATURA================
+    //</editor-fold>
+
+    //<editor-fold desc="Declarações Importantes">
+    private Candidato candidato;                // O candidato sendo editado ou registrado em uma vaga
     UsuarioService usuarioService;
     VagaService vagaService;
     CandidaturaService candidaturaService;
     List<Vaga> vagasAtivas = new ArrayList<>();
-    private Usuario usuarioLogado;
+    private Usuario usuarioLogado;              // O recrutador que abriu esta modal
+    //</editor-fold>
 
 
-    //RECEBE AS INFORMAÇÕES DA TELA QUE CHAMOU ELE
+    /**
+     * Inicializa o controller da modal, configurando-o para um modo de operação.
+     * Este método é chamado pelo CandidaturaController ao abrir a modal.
+     *
+     * @param candidatoSelecionado O candidato que será editado ou registrado.
+     * @param usuarioLogado O recrutador logado.
+     * @param tela A string de controle que define o modo ("Editar Candidato: " ou "Registrar Candidatura: ").
+     * @param vs Instância do VagaService.
+     * @param cs Instância do CandidaturaService.
+     * @param us Instância do UsuarioService.
+     */
     @FXML public void initData(Candidato candidatoSelecionado, Usuario usuarioLogado, String tela, VagaService vs, CandidaturaService cs, UsuarioService us) throws IOException {
 
+        // Armazena as instâncias e objetos recebidos
         this.candidato = candidatoSelecionado;
         vagaService = vs;
         candidaturaService = cs;
         usuarioService = us;
         this.usuarioLogado = usuarioLogado;
 
+        // MODIFICA A TELA PARA SER DE REGISTRO DE CANDIDATURA
         if(tela.equals("Registrar Candidatura: ")){
             carregarNomesVagas();
             txtNomeCad.setText(candidato.getNome());
@@ -60,7 +94,9 @@ public class EditarController {
             txtEmailCad.setText(candidato.getEmail());
             txtFormCad.setText(candidato.getFormacao());
             tabRegistrarCandidatura.setVisible(true);
-        } else if(tela.equals("Editar Candidato: ")){
+        }
+        // MODIFICA A TELA PARA SER DE EDIÇÃO DE CANDIDATO
+        else if(tela.equals("Editar Candidato: ")){
             txtNome.setText(candidato.getNome());
             txtCpf.setText(candidato.getCpf());
             txtEmail.setText(candidato.getEmail());
@@ -68,14 +104,13 @@ public class EditarController {
             tabEditarCandidato.setVisible(true);
         }
 
-        try{
-            this.db = new Database(TelaController.db_paths.get(TelaController.DATABASES.USUARIOS));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    //CARREGA AS VAGAS NA CHOICE BOX
+
+    /**
+     * Carrega a ChoiceBox (cbNomesVagas) com as vagas ativas
+     * que pertencem ao recrutador logado.
+     */
     private void carregarNomesVagas() throws IOException {
         // Proteção para garantir que o initData já correu
         if (usuarioLogado == null) {
@@ -91,6 +126,7 @@ public class EditarController {
 
             for(Vaga vaga : todasAsVagas){
 
+                //Pega apenas as vagas ativas E gerenciadas pelo recrutador
                 if(vaga.getRecrutadorId() == recrutadorId && vaga.getStatus() == StatusVaga.ATIVO){
                     vagasAtivasDoRecrutador.add(vaga);
                 }
