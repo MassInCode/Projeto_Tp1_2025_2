@@ -585,7 +585,7 @@ public class GestaoController extends ApplicationController implements TelaContr
         File pasta = directoryChooser.showDialog(stage);
         FolhaPagamento folha;
         if (gestor == null) {
-            folha = new FolhaPagamento(admin);
+            folha = new FolhaPagamento(new Gestor("Admin", "58782211019", "32713885043", "", ""));
         }
         else
         {

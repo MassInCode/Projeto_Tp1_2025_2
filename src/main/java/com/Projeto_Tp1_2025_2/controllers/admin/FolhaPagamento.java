@@ -23,7 +23,6 @@ public class FolhaPagamento {
     private static final BaseColor AZUL = new BaseColor(41, 128, 185);
     private static final BaseColor CINZA = new BaseColor(240, 240, 240);
 
-    // 🔹 Fontes menores para caber mais conteúdo
     private static final Font FONT_TITULO = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD, AZUL);
     private static final Font FONT_SUBTITULO = new Font(Font.FontFamily.HELVETICA, 11, Font.NORMAL, BaseColor.DARK_GRAY);
     private static final Font FONT_TEXTO = new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL, BaseColor.BLACK);
@@ -86,7 +85,6 @@ public class FolhaPagamento {
             // Lista de salários
             doc.add(criarTituloSecao("Lista de Salários Detalhada"));
 
-            // 🔹 Removido o CPF → Agora temos 9 colunas
             PdfPTable tabelaSalarios = new PdfPTable(new float[]{2, 1.5f, 1.3f, 1, 1, 1, 1, 1, 2});
             tabelaSalarios.setWidthPercentage(100);
             tabelaSalarios.getDefaultCell().setPadding(3);
@@ -192,29 +190,46 @@ public class FolhaPagamento {
         RegrasSalario regras = RegrasSalario.carregar();
         ArrayList<Funcionario> funcionarios = new ArrayList<>();
         String json = Files.readString(Path.of(caminhoArquivo), StandardCharsets.UTF_8);
-        Pattern pattern = Pattern.compile("\\{([^{}]*)\\}");
-        Matcher matcher = pattern.matcher(json);
+
+        int inicio = json.indexOf("\"usuarios\"");
+        if (inicio == -1) return funcionarios;
+
+        json = json.substring(inicio);
+        int abre = json.indexOf("[");
+        int fecha = json.lastIndexOf("]");
+        String usuariosArray = json.substring(abre + 1, fecha);
+
+        Pattern pattern = Pattern.compile("\\{(?:[^{}]|\\{[^{}]*\\})*\\}");
+        Matcher matcher = pattern.matcher(usuariosArray);
 
         while (matcher.find()) {
-            String bloco = matcher.group(1);
+            String bloco = matcher.group();
+
             boolean status = extrairBoolean(bloco, "\"status\"");
-            if (status) {
-                String nome = extrairValor(bloco, "\"nome\"");
-                String senha = extrairValor(bloco, "\"senha\"");
-                String cpf = extrairValor(bloco, "\"cpf\"");
-                String email = extrairValor(bloco, "\"email\"");
-                String cargo = extrairValor(bloco, "\"cargo\"");
-                double salario = extrairDouble(bloco, "\"salariobruto\"");
-                String regime = extrairValor(bloco, "\"regime\"");
-                if (regime.equals("ESTAGIARIO")){salario = regras.bolsa_fixa;}
-                String departamento = extrairValor(bloco, "\"departamento\"");
-                String data = extrairValor(bloco, "\"dataContratacao\"");
-                Funcionario f = new Funcionario(nome, senha, cpf, email, cargo, salario, status, data, regime, departamento);
-                funcionarios.add(f);
+            if (!status) continue;
+
+            String nome = extrairValor(bloco, "\"nome\"");
+            String senha = extrairValor(bloco, "\"senha\"");
+            String cpf = extrairValor(bloco, "\"cpf\"");
+            String email = extrairValor(bloco, "\"email\"");
+            String cargo = extrairValor(bloco, "\"cargo\"");
+            double salario = extrairDouble(bloco, "\"salariobruto\"");
+            String regime = extrairValor(bloco, "\"regime\"");
+            String departamento = extrairValor(bloco, "\"departamento\"");
+            String data = extrairValor(bloco, "\"dataContratacao\"");
+
+            // Regra salário
+            if (regime.equals("ESTAGIARIO")) {
+                salario = regras.bolsa_fixa;
             }
+
+            Funcionario f = new Funcionario(nome, senha, cpf, email, cargo, salario, status, data, regime, departamento);
+            funcionarios.add(f);
         }
+
         return funcionarios;
     }
+
 
     private static String extrairValor(String texto, String campo) {
         Pattern p = Pattern.compile(campo + "\\s*:\\s*\"([^\"]*)\"");

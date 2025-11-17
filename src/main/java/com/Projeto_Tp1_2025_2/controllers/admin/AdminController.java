@@ -315,7 +315,10 @@ public class AdminController extends ApplicationController implements TelaContro
             if (event.getSource() instanceof Button botao) { // pega o evento que lançou o evento e verifica se é um botão
                 switch (botao.getText()) { // se for, analisa o texto dele
                     case "Recrutador" : SceneSwitcher.sceneswitcher(stage, "Recrutamento", telas_paths.get("RECRUTADOR"), true); break; // admin mode injeta o botão para voltar à administração
-                    case "Gestor" : SceneSwitcher.sceneswitcher(stage, "Gestão", telas_paths.get("GESTOR"), true); break;
+                    case "Gestor" :
+                        
+                        SceneSwitcher.sceneswitcher(stage, "Gestão", telas_paths.get("GESTOR"), true);
+                        break;
                     default : System.out.println("erro no getText");
                 }
             }
