@@ -749,12 +749,14 @@ public class GestaoController extends ApplicationController implements TelaContr
 
         tabela_vagas.setVisible(false);
         tabela_pedidos.setVisible(true);
+        tabela_funcionarios.setVisible(false);
     }
 
     @FXML
     private void abrirRegrasSal() {
         tabela_vagas.setVisible(false);
         tabela_pedidos.setVisible(true);
+        tabela_funcionarios.setVisible(false);
     }
 
     @FXML
@@ -764,6 +766,7 @@ public class GestaoController extends ApplicationController implements TelaContr
 
     @FXML
     private void abrirFuncionarios(ActionEvent event) {
+        tabela_funcionarios.refresh();
         tabela_vagas.setVisible(false);
         tabela_pedidos.setVisible(false);
         tabela_funcionarios.setVisible(true);
