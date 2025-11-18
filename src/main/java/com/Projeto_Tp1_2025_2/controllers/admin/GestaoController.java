@@ -117,6 +117,7 @@ public class GestaoController extends ApplicationController implements TelaContr
     @FXML
     public void initData(Gestor gestor) {
         relatorio = new RelatorioGestao(gestor);
+        acessoAdm = false;
         this.gestor = gestor;
         System.out.println("Instanciando relatório");
     }
