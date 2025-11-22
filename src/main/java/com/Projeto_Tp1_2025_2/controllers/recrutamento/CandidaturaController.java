@@ -480,9 +480,9 @@ public class CandidaturaController extends ApplicationController implements Tela
                 var resultado = lancarAlert(Alert.AlertType.CONFIRMATION, "Confirmação", "Tem certeza que deseja solicitar uma contratação?");
 
                 if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                    realizarPedidoDeContratacao(entrevistaSelecioanda);
-
-                    lancarAlert(Alert.AlertType.INFORMATION, "Sucesso", "Pedido de contratação enviado com sucesso!");
+                    if(realizarPedidoDeContratacao(entrevistaSelecioanda)){
+                        lancarAlert(Alert.AlertType.INFORMATION, "Sucesso", "Pedido de contratação enviado com sucesso!");
+                    }
                 }
             }
 
@@ -669,7 +669,7 @@ public class CandidaturaController extends ApplicationController implements Tela
             this.allVagas = vagaService.getAllVagas();
             boolean veri = vagaService.excluirVaga(vagaSelecionada);
             if (veri){
-                tabelaRegistrarVagas.getItems().remove(vagaSelecionada); // remove diretamente da observablelist de vagas
+                vagasBase.remove(vagaSelecionada); // remove diretamente da observablelist de vagas
                 tabelaRegistrarVagas.refresh();
                 System.out.println("Vaga excluida com sucesso.");
             } else{
@@ -1038,14 +1038,14 @@ public class CandidaturaController extends ApplicationController implements Tela
         });
     }
 
-    private void realizarPedidoDeContratacao(AgendaViewModel entrevista) {
+    private boolean realizarPedidoDeContratacao(AgendaViewModel entrevista) {
         //isAprovado tem q implementar usando a nota
         if (!entrevista.getEntrevista().isAprovada()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText(null);
             alert.setContentText("Somente candidatos aprovados podem ser contratados!");
             alert.showAndWait();
-            return;
+            return false;
         }
 
 
@@ -1053,7 +1053,7 @@ public class CandidaturaController extends ApplicationController implements Tela
             for(var mapa : db.getData("pedidos")){
                 if(db.convertMaptoObject((Map<String, Object>) mapa.get("entrevista"), Entrevista.class).getId() == entrevista.getEntrevista().getId()){
                     lancarAlert(Alert.AlertType.WARNING, "Realização de Pedidos", "Já foi realizado um pedido a essa entrevista.");
-                    return;
+                    return false;
                 }
             }
 
@@ -1062,9 +1062,11 @@ public class CandidaturaController extends ApplicationController implements Tela
             db.addObject(contratacao, "pedidos");
             int id = contratacao.getId();
             db.setActualId(++id);
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
             lancarAlert(Alert.AlertType.ERROR, "Error", "Erro ao registrar pedido", "Ocorreu um erro ao salvar o pedido de contratação.");
+            return false;
         }
     }
 
